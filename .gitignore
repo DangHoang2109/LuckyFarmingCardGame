@@ -3,3 +3,6 @@ LuckyFarmCardGame/LuckyFarmCardGame.sln
 LuckyFarmCardGame/Library/
 LuckyFarmCardGame/Logs/
 LuckyFarmCardGame/Temp/
+*.csproj
+*.suo
+LuckyFarmCardGame/obj/
