@@ -617,4 +617,38 @@ public static class InGameUtils
             currentIndex = minIndex;
         return currentIndex;
     }
+
+    public static string DebugListCardInGame(this List<InGame_CardDataModelInPallet> cards)
+    {
+        string debug = "";
+        for (int i = 0; i < 6; i++)
+        {
+            InGame_CardDataModelInPallet c = cards.Find(x => x._cardID == i);
+            if (c != null)
+            {
+                debug = string.Format($"{debug}Card {i} - {c._amountCard}\n");
+            }
+            else
+            {
+                debug = string.Format($"{debug}Card {i} - {0}\n");
+            }
+        }
+        return debug;
+    }
+    public static string DebugDicCardInGame(this Dictionary<int,InGame_CardDataModelInPallet> cards)
+    {
+        string debug = "";
+        for (int i = 0; i < 6; i++)
+        {
+            if (cards.TryGetValue(i, out InGame_CardDataModelInPallet c))
+            {
+                debug = string.Format($"{debug}Card {i} - {c._amountCard}\n");
+            }
+            else
+            {
+                debug = string.Format($"{debug}Card {i} - {0}\n");
+            }
+        }
+        return debug;
+    }
 }

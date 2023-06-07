@@ -65,15 +65,17 @@ public class InGameManager : MonoSingleton<InGameManager>
         _playersModels ??= new List<BaseInGamePlayerDataModel>();
         if (this._players != null && this._players.Count > 0)
         {
+            //Pull a random goal Config to this player;
+            List<InGameMissionGoalCardConfig> goalConfigs = InGameMissionGoalCardConfigs.Instance.GetRandomConfigs(amountPlayerJoin);
             for (int i = 0; i < this._players.Count; i++)
             {
                 _players[i].gameObject.SetActive(i < amountPlayerJoin);
                 if (i >= amountPlayerJoin)
                     break;
 
-
                 BaseInGamePlayerDataModel playerModel = new BaseInGamePlayerDataModel()
-                                                                .SetSeatID(id: i, isMain: i == 0);
+                                                                .SetSeatID(id: i, isMain: i == 0)
+                                                                .AddMissionGoal(goalConfigs[i]);
 
                 _players[i].SetAPlayerModel(playerModel);
                 this._playersModels.Add(playerModel);
@@ -108,10 +110,16 @@ public class InGameManager : MonoSingleton<InGameManager>
     }
     private void OnLogicEndTurn()
     {
+        //Check end game
+        if (this.CurrentTurnPlayer.IsWin())
+        {
+            Debug.Log($"INGAME MANGE: Seat {CurrentTurnPlayer.ID} won the game");
+            OnEndGame();
+            return;
+        }
+
         //roll to next index
         this._turnIndex = InGameUtils.RollIndex(this._turnIndex, this._playersModels.Count);
-
-        //Check end game
 
         //if not endgame
         //begin next user turn
@@ -132,4 +140,8 @@ public class InGameManager : MonoSingleton<InGameManager>
         OnLogicEndTurn();
     }
 
+    public void OnEndGame()
+    {
+        Debug.Log($"INGAME MANGE: End Game");
+    }
 }

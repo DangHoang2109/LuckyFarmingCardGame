@@ -36,19 +36,12 @@ public class BaseInGamePlayer : MonoBehaviour
             this.PlayerModel.AddCardsToPallet(cardReceive);
         }
 
-        string bag = "";
-        for (int i = 0; i < 6; i++)
-        {
-            if(this.TryGetCardInBag(id: i, out InGame_CardDataModelInPallet c))
-            {
-                bag = string.Format($"{bag}Card {i} - {c._amountCard}\n");
-            }
-            else
-            {
-                bag = string.Format($"{bag}Card {i} - {0}\n");
-            }
-        }
-        Debug.Log($"PLAYER {this.ID} bag: {bag}");
+        Debug.Log($"PLAYER {this.ID} bag: {this.PlayerModel._dictionaryBags.DebugDicCardInGame()}");
+    }
+
+    public virtual bool IsWin()
+    {
+        return this.PlayerModel?.IsWin() ?? false;
     }
 }
 
@@ -60,6 +53,8 @@ public class BaseInGamePlayerDataModel
     public List<InGame_CardDataModelInPallet> _bag;
     public Dictionary<int,InGame_CardDataModelInPallet> _dictionaryBags;
 
+    protected InGameMissionGoalCardConfig _goalCardConfig;
+    public InGameMissionGoalCardConfig GoalCardConfig => _goalCardConfig;
     public BaseInGamePlayerDataModel()
     {
         this._bag = new List<InGame_CardDataModelInPallet>();
@@ -69,6 +64,14 @@ public class BaseInGamePlayerDataModel
     {
         this._id = id;
         this._isMainPlayer = isMain;
+        return this;
+    }
+    public BaseInGamePlayerDataModel AddMissionGoal(InGameMissionGoalCardConfig goalCardConfig)
+    {
+        this._goalCardConfig = goalCardConfig;
+
+        Debug.Log($"PLAYER {_id} goal: {goalCardConfig._requirement.DebugListCardInGame()}");
+
         return this;
     }
 
@@ -104,6 +107,26 @@ public class BaseInGamePlayerDataModel
             }
         }
     }
+
+    public bool IsWin()
+    {
+        if(this.GoalCardConfig != null)
+        {
+            foreach (InGame_CardDataModelInPallet require in GoalCardConfig._requirement)
+            {
+                //Not have requirement card or have but amount is not enough => return false
+                if (TryGetCardInBag(require._cardID, out InGame_CardDataModelInPallet cardInBag))
+                {
+                    if (!cardInBag.CompareEnoughOrHigher(require))
+                        return false;
+                }
+                else
+                    return false;
+            }
+            return true;
+        }
+        return false;
+    }
 }
 
 [System.Serializable]
@@ -134,4 +157,10 @@ public class InGame_CardDataModelInPallet
         }
         return this;
     }
+
+    public bool CompareEnoughOrHigher(InGame_CardDataModelInPallet other)
+    {
+        return this._cardID == other._cardID && this._amountCard >= other._amountCard;
+    }
+
 }

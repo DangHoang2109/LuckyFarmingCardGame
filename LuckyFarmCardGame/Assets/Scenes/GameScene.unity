@@ -1983,6 +1983,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _gameController: {fileID: 150424095}
+  _players:
+  - {fileID: 1296347981}
+  - {fileID: 1408338976}
+  - {fileID: 1134552998}
+  - {fileID: 796805946}
 --- !u!1 &1902237132
 GameObject:
   m_ObjectHideFlags: 0
