@@ -9,13 +9,13 @@ public class CardGameController : MonoBehaviour
     //Pallet conflict after: roll dice nhưng bị destroy
     public System.Action _onPalletDestroyed;
     //Pallet conflict after: roll dice và thắng roll
-    public System.Action _onRuleMakeUserPullCard;
+    public System.Action<List<InGame_CardDataModel>> _onRuleMakeUserPullCard;
 
-    public List<InGameCardDataModel> _cardsOnPallet;
+    public List<InGame_CardDataModel> _cardsOnPallet;
 
     public void InitGame()
     {
-        _cardsOnPallet = new List<InGameCardDataModel>();
+        _cardsOnPallet = new List<InGame_CardDataModel>();
     }
 
     public void AddCallback_PalletConflict(System.Action cb)
@@ -28,7 +28,7 @@ public class CardGameController : MonoBehaviour
         _onPalletDestroyed -= cb;
         _onPalletDestroyed += cb;
     }
-    public void AddCallback_PalletPulledByRule(System.Action cb)
+    public void AddCallback_PalletPulledByRule(System.Action<List<InGame_CardDataModel>> cb)
     {
         _onRuleMakeUserPullCard -= cb;
         _onRuleMakeUserPullCard += cb;
@@ -39,19 +39,19 @@ public class CardGameController : MonoBehaviour
     public void OnDrawACard()
     {
         //Get a card from deck
-        InGameCardDataModel topDeckCard = GetDeckTopCard(isWillPopThatCardOut: true);
+        InGame_CardDataModel topDeckCard = GetDeckTopCard(isWillPopThatCardOut: true);
         //put it to pallet
         PutACardToPallet(topDeckCard);
     }
 
-    private InGameCardDataModel GetDeckTopCard(bool isWillPopThatCardOut)
+    private InGame_CardDataModel GetDeckTopCard(bool isWillPopThatCardOut)
     {
         int newCardID = Random.Range(0, 6);
-        return new InGameCardDataModel().SetCardID(newCardID);
+        return new InGame_CardDataModel().SetCardID(newCardID);
     }
-    private void PutACardToPallet(InGameCardDataModel card)
+    private void PutACardToPallet(InGame_CardDataModel card)
     {
-        _cardsOnPallet ??= new List<InGameCardDataModel>();
+        _cardsOnPallet ??= new List<InGame_CardDataModel>();
 
         //if in pallet already has this card
         int indexOfSameIDCardIfExistOnPallet = _cardsOnPallet.FindIndex(x => x._id == card._id);
@@ -77,7 +77,7 @@ public class CardGameController : MonoBehaviour
         //ask the rule to see what to do?
         ThisFuncShouldOnRule_TellControllerToRollingDice(this._cardsOnPallet);
 
-        void ThisFuncShouldOnRule_TellControllerToRollingDice(List<InGameCardDataModel> cardsOnPallet)
+        void ThisFuncShouldOnRule_TellControllerToRollingDice(List<InGame_CardDataModel> cardsOnPallet)
         {
             //you may replace 'this' with the 'GameController'
             if (cardsOnPallet == null || cardsOnPallet.Count == 0)
@@ -111,18 +111,22 @@ public class CardGameController : MonoBehaviour
     {
         Debug.Log("CONTROLER: RULE PULL PALLET");
 
-        PullCardFromPalletToUser();
-        _onRuleMakeUserPullCard?.Invoke();
+        List<InGame_CardDataModel> receiveCards = PullCardFromPalletToUser();
+        _onRuleMakeUserPullCard?.Invoke(receiveCards);
     }
-    public void PullCardFromPalletToUser()
+    public List<InGame_CardDataModel> PullCardFromPalletToUser()
     {
         Debug.Log("CONTROLER: PULL PALLET");
 
+        List<InGame_CardDataModel> cacheCardsInPallet = new List<InGame_CardDataModel>(this._cardsOnPallet);
+
         ClearPallet();
+
+        return cacheCardsInPallet;
     }
     private void ClearPallet()
     {
-        this._cardsOnPallet ??= new List<InGameCardDataModel>();
+        this._cardsOnPallet ??= new List<InGame_CardDataModel>();
         this._cardsOnPallet.Clear();
     }
     private int RollADice()
@@ -130,25 +134,4 @@ public class CardGameController : MonoBehaviour
         return UnityEngine.Random.Range(0, 6);
     }
     #endregion Draw and Interacting with Pallet
-}
-
-[System.Serializable]
-public class InGameCardDataModel
-{
-    public int _id;
-
-    public InGameCardDataModel SetCardID(int id)
-    {
-        this._id = id;
-        ParseUIInfo();
-        return this;
-    }
-    private void ParseUIInfo()
-    {
-
-    }
-    private void RefreshUI()
-    {
-
-    }
 }

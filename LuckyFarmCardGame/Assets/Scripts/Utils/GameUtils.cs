@@ -607,3 +607,14 @@ public static class GameUtils
 
 #endif
 }
+
+public static class InGameUtils
+{
+    public static int RollIndex(int currentIndex, int maxIndexExclude, int minIndex = 0)
+    {
+        currentIndex++;
+        if (currentIndex >= maxIndexExclude)
+            currentIndex = minIndex;
+        return currentIndex;
+    }
+}
