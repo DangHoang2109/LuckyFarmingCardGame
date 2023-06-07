@@ -6,6 +6,8 @@ public class BaseRule : MonoBehaviour
 {
     public System.Action _onNewRound;
     public System.Action _onChangeTurnState;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -17,4 +19,6 @@ public class BaseRule : MonoBehaviour
     {
         
     }
+
+
 }
