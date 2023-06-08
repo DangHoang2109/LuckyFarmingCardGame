@@ -63,7 +63,7 @@ public class InGameMissionGoalCardConfig
 {
     public int _id;
 
-    public List<InGame_CardDataModelInPallet> _requirement;
+    public List<InGame_CardDataModelWithAmount> _requirement;
 
     public InGameMissionGoalCardConfig()
     {
@@ -72,7 +72,7 @@ public class InGameMissionGoalCardConfig
     public InGameMissionGoalCardConfig(InGameMissionGoalCardConfig c)
     {
         this._id = c._id;
-        this._requirement = new List<InGame_CardDataModelInPallet>(c._requirement);
+        this._requirement = new List<InGame_CardDataModelWithAmount>(c._requirement);
     }
 }
 

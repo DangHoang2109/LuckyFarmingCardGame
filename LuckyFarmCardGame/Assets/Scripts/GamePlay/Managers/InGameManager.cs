@@ -209,7 +209,7 @@ public class InGameManager : MonoSingleton<InGameManager>
         if (cardTOPull >= 0)
             this.GameController?.PullPlayerCardToHisPallet(this.CurrentTurnPlayer, Test_RandACardIDToPull(CurrentTurnPlayer.PlayerModel));
         else
-            Debug.LogError("INGAME MANAGE: NO CARD IN BAG TO PULL");
+            Debug.Log("INGAME MANAGE: NO CARD IN BAG TO PULL");
         int Test_RandACardIDToPull(BaseInGamePlayerDataModel player)
         {
             if (player._bag.Count > 0)

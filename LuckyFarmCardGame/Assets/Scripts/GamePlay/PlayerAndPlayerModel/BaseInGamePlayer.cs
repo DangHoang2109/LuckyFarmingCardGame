@@ -16,7 +16,7 @@ public class BaseInGamePlayer : MonoBehaviour
     {
         this._playerModel = model;
     }
-    public bool TryGetCardInBag(int id, out InGame_CardDataModelInPallet card)
+    public bool TryGetCardInBag(int id, out InGame_CardDataModelWithAmount card)
     {
         card = null;
         return PlayerModel?.TryGetCardInBag(id, out card) ?? false;
@@ -45,11 +45,11 @@ public class BaseInGamePlayer : MonoBehaviour
             PlayerModel.DestroyMyCardByOther(cardIDToDestroy, amountToDestroy);
         }
     }
-    public InGame_CardDataModelInPallet PullMyCardToThePallet(int cardIdToPull)
+    public InGame_CardDataModelWithAmount PullMyCardToThePallet(int cardIdToPull)
     {
         if (this.PlayerModel != null)
         {
-             PlayerModel.PullMyCardToThePallet(cardIdToPull, out InGame_CardDataModelInPallet splitCard);
+             PlayerModel.PullMyCardToThePallet(cardIdToPull, out InGame_CardDataModelWithAmount splitCard);
             return splitCard;
         }
         return null;
@@ -65,15 +65,15 @@ public class BaseInGamePlayerDataModel
     public int _id;
     public bool _isMainPlayer;
 
-    public List<InGame_CardDataModelInPallet> _bag;
-    public Dictionary<int,InGame_CardDataModelInPallet> _dictionaryBags;
+    public List<InGame_CardDataModelWithAmount> _bag;
+    public Dictionary<int,InGame_CardDataModelWithAmount> _dictionaryBags;
 
     protected InGameMissionGoalCardConfig _goalCardConfig;
     public InGameMissionGoalCardConfig GoalCardConfig => _goalCardConfig;
     public BaseInGamePlayerDataModel()
     {
-        this._bag = new List<InGame_CardDataModelInPallet>();
-        this._dictionaryBags = new Dictionary<int, InGame_CardDataModelInPallet>();
+        this._bag = new List<InGame_CardDataModelWithAmount>();
+        this._dictionaryBags = new Dictionary<int, InGame_CardDataModelWithAmount>();
     }
     public BaseInGamePlayerDataModel SetSeatID(int id, bool isMain)
     {
@@ -90,9 +90,9 @@ public class BaseInGamePlayerDataModel
         return this;
     }
 
-    public bool TryGetCardInBag(int id, out InGame_CardDataModelInPallet card)
+    public bool TryGetCardInBag(int id, out InGame_CardDataModelWithAmount card)
     {
-        _dictionaryBags ??= new Dictionary<int, InGame_CardDataModelInPallet>();
+        _dictionaryBags ??= new Dictionary<int, InGame_CardDataModelWithAmount>();
         return _dictionaryBags.TryGetValue(id, out card);
     }
 
@@ -103,19 +103,19 @@ public class BaseInGamePlayerDataModel
     /// <param name="cards"></param>
     public void AddCardsToPallet(List<InGame_CardDataModel> cards)
     {
-        _bag ??= new List<InGame_CardDataModelInPallet>();
-        this._dictionaryBags ??= new Dictionary<int, InGame_CardDataModelInPallet>();
+        _bag ??= new List<InGame_CardDataModelWithAmount>();
+        this._dictionaryBags ??= new Dictionary<int, InGame_CardDataModelWithAmount>();
         if (cards != null && cards.Count >0)
         {
             foreach (InGame_CardDataModel cardDataModel in cards)
             {
-                if(_dictionaryBags.TryGetValue(cardDataModel._id, out InGame_CardDataModelInPallet cardInBag))
+                if(_dictionaryBags.TryGetValue(cardDataModel._id, out InGame_CardDataModelWithAmount cardInBag))
                 {
                     cardInBag.AddACard(cardDataModel);
                 }
                 else
                 {
-                    InGame_CardDataModelInPallet c = new InGame_CardDataModelInPallet(cardDataModel);
+                    InGame_CardDataModelWithAmount c = new InGame_CardDataModelWithAmount(cardDataModel);
                     this._bag.Add(c);
                     this._dictionaryBags.Add(c._cardID, c);
                 }
@@ -124,10 +124,10 @@ public class BaseInGamePlayerDataModel
     }
     public void DestroyMyCardByOther(int cardIDToDestroy, int amountToDestroy = 1)
     {
-        _bag ??= new List<InGame_CardDataModelInPallet>();
-        this._dictionaryBags ??= new Dictionary<int, InGame_CardDataModelInPallet>();
+        _bag ??= new List<InGame_CardDataModelWithAmount>();
+        this._dictionaryBags ??= new Dictionary<int, InGame_CardDataModelWithAmount>();
 
-        if (_bag.Count > 0 && TryGetCardInBag(cardIDToDestroy, out InGame_CardDataModelInPallet card))
+        if (_bag.Count > 0 && TryGetCardInBag(cardIDToDestroy, out InGame_CardDataModelWithAmount card))
         {
             card.SubtractCard(amountToDestroy);
             //refresh card bag 
@@ -137,12 +137,12 @@ public class BaseInGamePlayerDataModel
         else
             Debug.LogError("PLAYER: ERROR NOT FOUND CARD TO DESTROY");
     }
-    public bool PullMyCardToThePallet(int cardIdToPull, out InGame_CardDataModelInPallet splitedCard)
+    public bool PullMyCardToThePallet(int cardIdToPull, out InGame_CardDataModelWithAmount splitedCard)
     {
-        _bag ??= new List<InGame_CardDataModelInPallet>();
-        this._dictionaryBags ??= new Dictionary<int, InGame_CardDataModelInPallet>();
+        _bag ??= new List<InGame_CardDataModelWithAmount>();
+        this._dictionaryBags ??= new Dictionary<int, InGame_CardDataModelWithAmount>();
 
-        if (_bag.Count > 0 && TryGetCardInBag(cardIdToPull, out InGame_CardDataModelInPallet card))
+        if (_bag.Count > 0 && TryGetCardInBag(cardIdToPull, out InGame_CardDataModelWithAmount card))
         {
             card.PullSplitCard(out bool splitToTwoSuccess, out splitedCard);
             if (!splitToTwoSuccess)
@@ -159,10 +159,10 @@ public class BaseInGamePlayerDataModel
         splitedCard = null;
         return false;
     }
-    public void RemoveACard(InGame_CardDataModelInPallet card)
+    public void RemoveACard(InGame_CardDataModelWithAmount card)
     {
-        _bag ??= new List<InGame_CardDataModelInPallet>();
-        this._dictionaryBags ??= new Dictionary<int, InGame_CardDataModelInPallet>();
+        _bag ??= new List<InGame_CardDataModelWithAmount>();
+        this._dictionaryBags ??= new Dictionary<int, InGame_CardDataModelWithAmount>();
         if (this._dictionaryBags.ContainsKey(card._cardID))
         {
             _bag.Remove(card);
@@ -173,10 +173,10 @@ public class BaseInGamePlayerDataModel
     {
         if(this.GoalCardConfig != null)
         {
-            foreach (InGame_CardDataModelInPallet require in GoalCardConfig._requirement)
+            foreach (InGame_CardDataModelWithAmount require in GoalCardConfig._requirement)
             {
                 //Not have requirement card or have but amount is not enough => return false
-                if (TryGetCardInBag(require._cardID, out InGame_CardDataModelInPallet cardInBag))
+                if (TryGetCardInBag(require._cardID, out InGame_CardDataModelWithAmount cardInBag))
                 {
                     if (!cardInBag.CompareEnoughOrHigher(require))
                         return false;
@@ -191,26 +191,26 @@ public class BaseInGamePlayerDataModel
 }
 
 [System.Serializable]
-public class InGame_CardDataModelInPallet
+public class InGame_CardDataModelWithAmount
 {
     public int _cardID;
     public int _amountCard;
 
-    public InGame_CardDataModelInPallet()
+    public InGame_CardDataModelWithAmount()
     {
         _amountCard = 1;
     }
-    public InGame_CardDataModelInPallet(InGame_CardDataModelInPallet c)
+    public InGame_CardDataModelWithAmount(InGame_CardDataModelWithAmount c)
     {
         this._cardID = c._cardID;
         this._amountCard = c._amountCard;
     }
-    public InGame_CardDataModelInPallet(InGame_CardDataModel palletCard)
+    public InGame_CardDataModelWithAmount(InGame_CardDataModel palletCard)
     {
         this._cardID = palletCard._id;
         this._amountCard = 1;
     }
-    public InGame_CardDataModelInPallet AddACard(InGame_CardDataModel palletCard, int amount = 1)
+    public InGame_CardDataModelWithAmount AddACard(InGame_CardDataModel palletCard, int amount = 1)
     {
         if(this._cardID == palletCard._id)
         {
@@ -218,14 +218,14 @@ public class InGame_CardDataModelInPallet
         }
         return this;
     }
-    public InGame_CardDataModelInPallet SubtractCard(int amount = 1)
+    public InGame_CardDataModelWithAmount SubtractCard(int amount = 1)
     {
         this._amountCard = Mathf.Clamp(_amountCard - amount, 0, _amountCard);
         return this;
     }
-    public InGame_CardDataModelInPallet PullSplitCard(out bool splitToTwoSuccess ,out InGame_CardDataModelInPallet splitedCard, int amountToSplit = 1)
+    public InGame_CardDataModelWithAmount PullSplitCard(out bool splitToTwoSuccess ,out InGame_CardDataModelWithAmount splitedCard, int amountToSplit = 1)
     {
-        splitedCard = new InGame_CardDataModelInPallet(this) { _amountCard = amountToSplit };
+        splitedCard = new InGame_CardDataModelWithAmount(this) { _amountCard = amountToSplit };
         splitToTwoSuccess = true;
         if(this._amountCard <= amountToSplit)
         {
@@ -242,7 +242,7 @@ public class InGame_CardDataModelInPallet
 
         return this;
     }
-    public bool CompareEnoughOrHigher(InGame_CardDataModelInPallet other)
+    public bool CompareEnoughOrHigher(InGame_CardDataModelWithAmount other)
     {
         return this._cardID == other._cardID && this._amountCard >= other._amountCard;
     }

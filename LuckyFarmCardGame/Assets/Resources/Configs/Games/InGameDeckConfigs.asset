@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40fffaaae2e80a2429d4040c73249150, type: 3}
+  m_Name: InGameDeckConfigs
+  m_EditorClassIdentifier: 
+  _configs:
+  - _id: 0
+    _deckContain:
+    - _cardID: 0
+      _amountCard: 9
+    - _cardID: 1
+      _amountCard: 9
+    - _cardID: 2
+      _amountCard: 9
+    - _cardID: 3
+      _amountCard: 9
+    - _cardID: 4
+      _amountCard: 9
+    - _cardID: 5
+      _amountCard: 9

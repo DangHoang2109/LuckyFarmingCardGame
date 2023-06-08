@@ -618,12 +618,12 @@ public static class InGameUtils
         return currentIndex;
     }
 
-    public static string DebugListCardInGame(this List<InGame_CardDataModelInPallet> cards)
+    public static string DebugListCardInGame(this List<InGame_CardDataModelWithAmount> cards)
     {
         string debug = "";
         for (int i = 0; i < 6; i++)
         {
-            InGame_CardDataModelInPallet c = cards.Find(x => x._cardID == i);
+            InGame_CardDataModelWithAmount c = cards.Find(x => x._cardID == i);
             if (c != null)
             {
                 debug = string.Format($"{debug}Card {i} - {c._amountCard}\n");
@@ -635,12 +635,12 @@ public static class InGameUtils
         }
         return debug;
     }
-    public static string DebugDicCardInGame(this Dictionary<int,InGame_CardDataModelInPallet> cards)
+    public static string DebugDicCardInGame(this Dictionary<int,InGame_CardDataModelWithAmount> cards)
     {
         string debug = "";
         for (int i = 0; i < 6; i++)
         {
-            if (cards.TryGetValue(i, out InGame_CardDataModelInPallet c))
+            if (cards.TryGetValue(i, out InGame_CardDataModelWithAmount c))
             {
                 debug = string.Format($"{debug}Card {i} - {c._amountCard}\n");
             }

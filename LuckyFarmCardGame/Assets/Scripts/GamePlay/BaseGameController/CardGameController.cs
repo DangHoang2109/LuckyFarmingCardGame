@@ -4,19 +4,56 @@ using UnityEngine;
 
 public class CardGameController : MonoBehaviour
 {
+    #region Callback 
     //Khi user draw ra 1 card đã có trên pallet
     public System.Action _onPalletConflict;
     //Pallet conflict after: roll dice nhưng bị destroy
     public System.Action _onPalletDestroyed;
     //Pallet conflict after: roll dice và thắng roll
     public System.Action<List<InGame_CardDataModel>> _onRuleMakeUserPullCard;
+    #endregion Callback
 
+    #region Data Prop
     public List<InGame_CardDataModel> _cardsOnPallet;
 
+    protected InGameDeckConfig _deckConfig;
+    protected List<int> _currentDeck;
+
+    public int DeckCardAmount => _currentDeck?.Count ?? 0;
+
+    #endregion Data Prop
     public void InitGame()
     {
         _cardsOnPallet = new List<InGame_CardDataModel>();
+
+        //get deck contain
+        _deckConfig = InGameDeckConfigs.Instance.GetStandardDeck();
+        RecreateTheDeck();
     }
+
+    #region Action with Deck
+    protected virtual void RecreateTheDeck()
+    {
+        if (_deckConfig != null)
+        {
+            _currentDeck ??= new List<int>();
+            foreach (InGame_CardDataModelWithAmount cardDataModelWithAmount in _deckConfig._deckContain)
+            {
+                for (int i = 0; i < cardDataModelWithAmount._amountCard; i++)
+                {
+                    _currentDeck.Add(cardDataModelWithAmount._cardID);
+                }
+            }
+
+            _currentDeck.Shuffle();
+        }
+    }
+    protected void CheckDeck()
+    {
+        if (DeckCardAmount <= 0)
+            RecreateTheDeck();
+    }
+    #endregion Action with Deck
 
     public void AddCallback_PalletConflict(System.Action cb)
     {
@@ -64,15 +101,21 @@ public class CardGameController : MonoBehaviour
     }
     private InGame_CardDataModel GetDeckTopCard(bool isWillPopThatCardOut)
     {
-        int newCardID = Random.Range(0, 6);
-        return CreateCardDataModel(newCardID);
+        CheckDeck();
+
+        int topCardId = this._currentDeck?[0] ?? 0;
+
+        if (isWillPopThatCardOut)
+            _currentDeck.RemoveAt(0);
+
+        return CreateCardDataModel(topCardId);
     }
     private List<InGame_CardDataModel> GetDeckTopCards(int amount,bool isWillPopThatCardOut)
     {
         List<InGame_CardDataModel> top = new List<InGame_CardDataModel>();
         for (int i = 0; i < amount; i++)
         {
-            top.Add(GetDeckTopCard(false));
+            top.Add(GetDeckTopCard(isWillPopThatCardOut));
         }
         return top;
     }
@@ -190,7 +233,7 @@ public class CardGameController : MonoBehaviour
     {
         if (player != null)
         {
-            InGame_CardDataModelInPallet cardPulled = player.PullMyCardToThePallet(cardIDToPull);
+            InGame_CardDataModelWithAmount cardPulled = player.PullMyCardToThePallet(cardIDToPull);
             PutACardToPallet(CreateCardDataModel(cardPulled._cardID));
 
         }
