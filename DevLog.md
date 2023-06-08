@@ -32,3 +32,20 @@
   - Luật choi được test trên Debug Console để giảm thiểu thời gian lãng phí cho việc set up UI vốn chưa được sketch
 
   ![Test Debug](https://github.com/DangHoang2109/LuckyFarmingCardGame/assets/32613745/06e4f87f-1767-4531-b2ce-cfb7a202e04d)
+  
+  
+## Day 2: 07.06.2023
+
+**Time Track:** 1H30M
+
+**Work done:**
+- Hoàn thành core loop trong toàn game:
+  - Random một lượng player và cho join game
+  - Implement turn base game, khi một user kết thúc lươt chủ động hoặc do pallet thì sẽ next turn qua user kế bên và xoay vòng
+  - Kiểm tra kết thúc game bằng compare với card mission goal
+- Implement card mission goal:
+  - Add code và cho user model check để kiểm tra end game
+  - Nhập liệu 9 card temp theo doc cũ
+  
+![image](https://github.com/DangHoang2109/LuckyFarmingCardGame/assets/32613745/0a6a1e0d-0579-4fc8-9c0d-bae6c27915d9)
+
