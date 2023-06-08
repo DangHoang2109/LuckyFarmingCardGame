@@ -38,7 +38,22 @@ public class BaseInGamePlayer : MonoBehaviour
 
         Debug.Log($"PLAYER {this.ID} bag: {this.PlayerModel._dictionaryBags.DebugDicCardInGame()}");
     }
-
+    public void DestroyMyCardByOther(int cardIDToDestroy, int amountToDestroy = 1)
+    {
+        if(this.PlayerModel != null)
+        {
+            PlayerModel.DestroyMyCardByOther(cardIDToDestroy, amountToDestroy);
+        }
+    }
+    public InGame_CardDataModelInPallet PullMyCardToThePallet(int cardIdToPull)
+    {
+        if (this.PlayerModel != null)
+        {
+             PlayerModel.PullMyCardToThePallet(cardIdToPull, out InGame_CardDataModelInPallet splitCard);
+            return splitCard;
+        }
+        return null;
+    }
     public virtual bool IsWin()
     {
         return this.PlayerModel?.IsWin() ?? false;
@@ -107,7 +122,53 @@ public class BaseInGamePlayerDataModel
             }
         }
     }
+    public void DestroyMyCardByOther(int cardIDToDestroy, int amountToDestroy = 1)
+    {
+        _bag ??= new List<InGame_CardDataModelInPallet>();
+        this._dictionaryBags ??= new Dictionary<int, InGame_CardDataModelInPallet>();
 
+        if (_bag.Count > 0 && TryGetCardInBag(cardIDToDestroy, out InGame_CardDataModelInPallet card))
+        {
+            card.SubtractCard(amountToDestroy);
+            //refresh card bag 
+
+            Debug.Log($"PLAYER {this._id}: Destroy card complete {InGameUtils.DebugDicCardInGame(this._dictionaryBags)}");
+        }
+        else
+            Debug.LogError("PLAYER: ERROR NOT FOUND CARD TO DESTROY");
+    }
+    public bool PullMyCardToThePallet(int cardIdToPull, out InGame_CardDataModelInPallet splitedCard)
+    {
+        _bag ??= new List<InGame_CardDataModelInPallet>();
+        this._dictionaryBags ??= new Dictionary<int, InGame_CardDataModelInPallet>();
+
+        if (_bag.Count > 0 && TryGetCardInBag(cardIdToPull, out InGame_CardDataModelInPallet card))
+        {
+            card.PullSplitCard(out bool splitToTwoSuccess, out splitedCard);
+            if (!splitToTwoSuccess)
+            {
+                RemoveACard(card);
+            }
+            //refresh card bag 
+            Debug.Log($"PLAYER {this._id}: Pull card complete {InGameUtils.DebugDicCardInGame(this._dictionaryBags)}");
+            return true;
+        }
+        else
+            Debug.LogError("PLAYER: ERROR NOT FOUND CARD TO PULL");
+
+        splitedCard = null;
+        return false;
+    }
+    public void RemoveACard(InGame_CardDataModelInPallet card)
+    {
+        _bag ??= new List<InGame_CardDataModelInPallet>();
+        this._dictionaryBags ??= new Dictionary<int, InGame_CardDataModelInPallet>();
+        if (this._dictionaryBags.ContainsKey(card._cardID))
+        {
+            _bag.Remove(card);
+            _dictionaryBags.Remove(card._cardID);
+        }
+    }
     public bool IsWin()
     {
         if(this.GoalCardConfig != null)
@@ -157,7 +218,30 @@ public class InGame_CardDataModelInPallet
         }
         return this;
     }
+    public InGame_CardDataModelInPallet SubtractCard(int amount = 1)
+    {
+        this._amountCard = Mathf.Clamp(_amountCard - amount, 0, _amountCard);
+        return this;
+    }
+    public InGame_CardDataModelInPallet PullSplitCard(out bool splitToTwoSuccess ,out InGame_CardDataModelInPallet splitedCard, int amountToSplit = 1)
+    {
+        splitedCard = new InGame_CardDataModelInPallet(this) { _amountCard = amountToSplit };
+        splitToTwoSuccess = true;
+        if(this._amountCard <= amountToSplit)
+        {
+            splitToTwoSuccess = false;
+            splitedCard._amountCard = this._amountCard;
+            this._amountCard = 0;
+        }
+        else 
+        {
+            splitToTwoSuccess = true;
+            splitedCard._amountCard = amountToSplit;
+            this._amountCard -= amountToSplit;
+        }
 
+        return this;
+    }
     public bool CompareEnoughOrHigher(InGame_CardDataModelInPallet other)
     {
         return this._cardID == other._cardID && this._amountCard >= other._amountCard;

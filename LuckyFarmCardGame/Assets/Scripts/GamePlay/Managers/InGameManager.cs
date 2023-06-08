@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 /// <summary>
@@ -83,6 +84,7 @@ public class InGameManager : MonoSingleton<InGameManager>
         }
     }
 
+    #region Turn Action
     public void OnBeginTurn()
     {
         Debug.Log($"GAME MANGE: Player seat {this._turnIndex} begin turn");
@@ -125,7 +127,9 @@ public class InGameManager : MonoSingleton<InGameManager>
         //begin next user turn
         OnBeginTurn();
     }
+    #endregion Turn Actions
 
+    #region Pallet behavior
     public void OnPalletConflict()
     {
 
@@ -139,9 +143,80 @@ public class InGameManager : MonoSingleton<InGameManager>
         OnUserPullCardFromPalletToBag(cardsReceive);
         OnLogicEndTurn();
     }
+    #endregion Pallet behavior
 
+    #region End game behavior
     public void OnEndGame()
     {
         Debug.Log($"INGAME MANGE: End Game");
     }
+    #endregion End game behavior
+
+    #region Card activator behavior
+    public void OnTellControllerToRollDice()
+    {
+        this.GameController?.RollADiceAndCheckPalletCondition();
+    }
+    public void OnTellControllerToDrawCards(int cardToDraw)
+    {
+        for (int i = 0; i < cardToDraw; i++)
+        {
+            this.OnDrawCard();
+        }
+    }
+    public void OnTellControllerToRevealTopCard(int cardToReveal)
+    {
+        this.GameController?.OnRevealTopDeck(cardToReveal);
+    }
+    public void OnTellControllerToDestroyOtherCard()
+    {
+        Debug.Log("GAME MANGE: Pick a player to destroy");
+        int idPlayerDestroy = Test_RandAPlayerToDestroy();
+
+        if(idPlayerDestroy >= 0 && idPlayerDestroy < this._playersModels.Count)
+        {
+            int cardTODesrtoy = Test_RandACardIDToDestroy(_playersModels[idPlayerDestroy]);
+            GameController?.DestroyPlayerCard(player: this._players[idPlayerDestroy], cardTODesrtoy);
+        }
+        else
+        {
+            Debug.Log("GAME MANGE: No player has card in bag to destroy");
+        }
+
+        int Test_RandAPlayerToDestroy()
+        {
+            List<int> idNotMe = new List<int>();
+            foreach (BaseInGamePlayerDataModel item in this._playersModels)
+            {
+                if (item._id != this.CurrentTurnPlayer.ID && item._bag.Count > 0)
+                    idNotMe.Add(item._id);
+            }
+            if (idNotMe.Count == 0)
+                return -1;
+
+            return idNotMe[Random.Range(0, idNotMe.Count)];
+        }
+        int Test_RandACardIDToDestroy(BaseInGamePlayerDataModel player)
+        {
+            return player._bag.GetRandom()._cardID;
+        }
+    }
+
+    public void OnTellControllerToPullMyCard()
+    {
+        int cardTOPull = Test_RandACardIDToPull(CurrentTurnPlayer.PlayerModel);
+
+        if (cardTOPull >= 0)
+            this.GameController?.PullPlayerCardToHisPallet(this.CurrentTurnPlayer, Test_RandACardIDToPull(CurrentTurnPlayer.PlayerModel));
+        else
+            Debug.LogError("INGAME MANAGE: NO CARD IN BAG TO PULL");
+        int Test_RandACardIDToPull(BaseInGamePlayerDataModel player)
+        {
+            if (player._bag.Count > 0)
+                return player._bag.GetRandom()._cardID;
+            else
+                return -1;
+        }
+    }
+    #endregion Card activator behavior
 }

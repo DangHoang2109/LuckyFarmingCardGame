@@ -36,18 +36,45 @@ public class CardGameController : MonoBehaviour
 
 
     #region Draw and Interacting with Pallet
+    public void OnRevealTopDeck(int amount)
+    {
+        List<InGame_CardDataModel> topCards = GetDeckTopCards(amount,isWillPopThatCardOut: false);
+        string topContent = "";
+        foreach (InGame_CardDataModel item in topCards)
+        {
+            topContent += $"{item._id} ";
+        }
+        Debug.Log($"CONTROLLER: Reveal {amount} top card {topContent}");
+    }
     public void OnDrawACard()
     {
         //Get a card from deck
         InGame_CardDataModel topDeckCard = GetDeckTopCard(isWillPopThatCardOut: true);
+
+        //activate that card effect
+        topDeckCard?.OnDrawedFromDeck();
+
         //put it to pallet
         PutACardToPallet(topDeckCard);
     }
 
+    private InGame_CardDataModel CreateCardDataModel(int id)
+    {
+        return new InGame_CardDataModel().SetCardID(id);
+    }
     private InGame_CardDataModel GetDeckTopCard(bool isWillPopThatCardOut)
     {
         int newCardID = Random.Range(0, 6);
-        return new InGame_CardDataModel().SetCardID(newCardID);
+        return CreateCardDataModel(newCardID);
+    }
+    private List<InGame_CardDataModel> GetDeckTopCards(int amount,bool isWillPopThatCardOut)
+    {
+        List<InGame_CardDataModel> top = new List<InGame_CardDataModel>();
+        for (int i = 0; i < amount; i++)
+        {
+            top.Add(GetDeckTopCard(false));
+        }
+        return top;
     }
     private void PutACardToPallet(InGame_CardDataModel card)
     {
@@ -66,34 +93,37 @@ public class CardGameController : MonoBehaviour
         {
             _cardsOnPallet.Add(card);
             Debug.Log($"RULE: ADD CARD {card._id} at index {_cardsOnPallet.Count - 1}");
+
+            //activate that card effect
+            card?.OnPlacedToPallet();
         }
-
-        //active card effect
-
     }
 
     private void OnPalletConflict()
     {
         //ask the rule to see what to do?
-        ThisFuncShouldOnRule_TellControllerToRollingDice(this._cardsOnPallet);
+        ThisFuncShouldOnRule_TellControllerToRollingDice();
 
-        void ThisFuncShouldOnRule_TellControllerToRollingDice(List<InGame_CardDataModel> cardsOnPallet)
+        void ThisFuncShouldOnRule_TellControllerToRollingDice()
         {
-            //you may replace 'this' with the 'GameController'
-            if (cardsOnPallet == null || cardsOnPallet.Count == 0)
-                return;
+            RollADiceAndCheckPalletCondition();
+        }
+    }
+    public void RollADiceAndCheckPalletCondition()
+    {
+        if (this._cardsOnPallet == null || this._cardsOnPallet.Count == 0)
+            return;
 
-            int diceResult = this.RollADice();
-            Debug.Log($"RULE: Rolling dice {diceResult} compare to pallet {cardsOnPallet.Count}");
-            //if dice result > pallet amount card => the pallet will be destroyed
-            if(diceResult > cardsOnPallet.Count)
-            {
-                this.DestroyPallet();
-            }
-            else
-            {
-                this.RuleForce_PullCardFromPalletToUser();
-            }
+        int diceResult = this.RollADice();
+        Debug.Log($"RULE: Rolling dice {diceResult} compare to pallet {this._cardsOnPallet.Count}");
+        //if dice result > pallet amount card => the pallet will be destroyed
+        if (diceResult > _cardsOnPallet.Count)
+        {
+            this.DestroyPallet();
+        }
+        else
+        {
+            this.RuleForce_PullCardFromPalletToUser();
         }
     }
     public void DestroyPallet()
@@ -102,8 +132,15 @@ public class CardGameController : MonoBehaviour
         if (this._cardsOnPallet == null || this._cardsOnPallet.Count == 0)
             return;
 
+        //active effect of card
+        foreach (InGame_CardDataModel cardDataModel in _cardsOnPallet)
+        {
+            cardDataModel.OnDestroyedByConflict();
+        }
+
         Debug.Log("CONTROLER: DESTROY PALLET");
         _onPalletDestroyed?.Invoke();
+
 
         ClearPallet();
     }
@@ -120,6 +157,12 @@ public class CardGameController : MonoBehaviour
 
         List<InGame_CardDataModel> cacheCardsInPallet = new List<InGame_CardDataModel>(this._cardsOnPallet);
 
+        //active effect of card
+        foreach (InGame_CardDataModel cardDataModel in _cardsOnPallet)
+        {
+            cardDataModel.OnPulledToBag();
+        }
+
         ClearPallet();
 
         return cacheCardsInPallet;
@@ -134,4 +177,23 @@ public class CardGameController : MonoBehaviour
         return UnityEngine.Random.Range(0, 6);
     }
     #endregion Draw and Interacting with Pallet
+
+    #region Interacting with player bag
+    public void DestroyPlayerCard(BaseInGamePlayer player, int cardIDToDestroy)
+    {
+        if(player != null)
+        {
+            player.DestroyMyCardByOther(cardIDToDestroy);
+        }
+    }
+    public void PullPlayerCardToHisPallet(BaseInGamePlayer player, int cardIDToPull)
+    {
+        if (player != null)
+        {
+            InGame_CardDataModelInPallet cardPulled = player.PullMyCardToThePallet(cardIDToPull);
+            PutACardToPallet(CreateCardDataModel(cardPulled._cardID));
+
+        }
+    }
+    #endregion Interacting with player bag
 }
