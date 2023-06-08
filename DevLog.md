@@ -49,3 +49,12 @@
   
 ![image](https://github.com/DangHoang2109/LuckyFarmingCardGame/assets/32613745/0a6a1e0d-0579-4fc8-9c0d-bae6c27915d9)
 
+## Day 3: 08.06.2023
+**Time Track:** 2H
+
+**Work done:**
+- Hoàn thành hệ thống card effect, dễ mở rộng, đơn giản, hiện có 5 card effect trong proto ban đầu
+- Hoàn thành hệ thống deck, có thể shuffle khi hết deck
+![image](https://github.com/DangHoang2109/LuckyFarmingCardGame/assets/32613745/bc839f8e-6d92-403f-aeb6-8b6161980232)
+
+
