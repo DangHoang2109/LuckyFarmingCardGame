@@ -57,4 +57,17 @@
 - Hoàn thành hệ thống deck, có thể shuffle khi hết deck
 ![image](https://github.com/DangHoang2109/LuckyFarmingCardGame/assets/32613745/bc839f8e-6d92-403f-aeb6-8b6161980232)
 
+## Day 4: 10.06.2023
+**Time Track:** 5H
+
+**Work done:**
+- Dựng card item, spawn card và destroy card
+- Hệ thống animation có thời gian cơ bản: 
+  -  Animation rolling dice
+  -  Animation destroy palelt
+  -  Animation Pulling pallet
+  -  Animation Conflict pallet
+-  Thêm ảnh icon effect
+
+Viewing the log track video at [D4.2023-06-10](https://drive.google.com/drive/folders/1kEiFyYvTiatmA-t5n3pk2L3kSWNORuYo?usp=sharing)
 
