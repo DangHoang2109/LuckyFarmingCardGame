@@ -13,7 +13,25 @@ public class CardGameController : MonoBehaviour
     public System.Action<List<InGame_CardDataModel>> _onRuleMakeUserPullCard;
     #endregion Callback
 
+
+    #region Prop on Editor
+    [SerializeField]
+    protected InGameAnimationTimeController _animationConfig;
+    public InGameAnimationTimeController AnimationTimeConfig => _animationConfig;
+    [Space(5f)]
+
+    [SerializeField] protected BaseCardItem _cardPrefab;
+    [SerializeField] protected Transform _tfPalletPanel, _tfActEffectPanel;
+    [SerializeField] protected GameObject _gLightningAnimator;
+
+    [SerializeField] protected InGameDiceRollingAnimator _diceAnimator;
+    public InGameDiceRollingAnimator DiceAnimator => _diceAnimator;
+
+    #endregion Prop on Editor
+
     #region Data Prop
+
+
     public List<InGame_CardDataModel> _cardsOnPallet;
 
     protected InGameDeckConfig _deckConfig;
@@ -22,6 +40,9 @@ public class CardGameController : MonoBehaviour
     public int DeckCardAmount => _currentDeck?.Count ?? 0;
 
     #endregion Data Prop
+
+
+
     public void InitGame()
     {
         _cardsOnPallet = new List<InGame_CardDataModel>();
@@ -99,6 +120,15 @@ public class CardGameController : MonoBehaviour
     {
         return new InGame_CardDataModel().SetCardID(id);
     }
+    private BaseCardItem CreateCardItem(ref InGame_CardDataModel card)
+    {
+        BaseCardItem newCardItem = Instantiate(_cardPrefab, this._tfActEffectPanel);
+        newCardItem.gameObject.SetActive(true);
+        newCardItem.ParseInfo(card._id);
+
+        card.SetCardItemContainer(newCardItem);
+        return newCardItem;
+    }
     private InGame_CardDataModel GetDeckTopCard(bool isWillPopThatCardOut)
     {
         CheckDeck();
@@ -123,13 +153,34 @@ public class CardGameController : MonoBehaviour
     {
         _cardsOnPallet ??= new List<InGame_CardDataModel>();
 
+        BaseCardItem newCardItem = CreateCardItem(ref card);
+
+        StartCoroutine(ieDrawAndAddCardToPallet(card, newCardItem));
+    }
+
+
+
+    protected IEnumerator ieDrawAndAddCardToPallet(InGame_CardDataModel card, BaseCardItem cardItem)
+    {
+        yield return new WaitForSeconds(this.AnimationTimeConfig._timeACardStayOnActiveEffectPanel);
+
         //if in pallet already has this card
         int indexOfSameIDCardIfExistOnPallet = _cardsOnPallet.FindIndex(x => x._id == card._id);
         if (indexOfSameIDCardIfExistOnPallet >= 0 && indexOfSameIDCardIfExistOnPallet < _cardsOnPallet.Count)
         {
             Debug.Log($"RULE: EXISTED CARD {card._id} at index {indexOfSameIDCardIfExistOnPallet}");
+            _gLightningAnimator.gameObject.SetActive(true);
+            yield return new WaitForSeconds(this.AnimationTimeConfig._timeConflictAnimationShowing);
+            _gLightningAnimator.gameObject.SetActive(false);
+
+            //destroying the conflict card
+            cardItem.OnDestroyingEffect();
+
+            yield return new WaitForSeconds(this.AnimationTimeConfig._timeWaitOnBeforeDestroyPallet);
+
             _onPalletConflict?.Invoke();
             OnPalletConflict();
+
         }
         //else: let it in
         else
@@ -139,6 +190,9 @@ public class CardGameController : MonoBehaviour
 
             //activate that card effect
             card?.OnPlacedToPallet();
+
+            //Let it move to pallet
+            cardItem.transform.SetParent(this._tfPalletPanel);
         }
     }
 
@@ -160,15 +214,22 @@ public class CardGameController : MonoBehaviour
         int diceResult = this.RollADice();
         Debug.Log($"RULE: Rolling dice {diceResult} compare to pallet {this._cardsOnPallet.Count}");
         //if dice result > pallet amount card => the pallet will be destroyed
-        if (diceResult > _cardsOnPallet.Count)
+
+        this.DiceAnimator?.RollingDice(diceResult, callback: OnDiceShowResultComplte, this.AnimationTimeConfig._timeWaitDiceRolling, this.AnimationTimeConfig._timeWaitShowDiceResult);
+
+        void OnDiceShowResultComplte()
         {
-            this.DestroyPallet();
-        }
-        else
-        {
-            this.RuleForce_PullCardFromPalletToUser();
+            if (diceResult > _cardsOnPallet.Count)
+            {
+                this.DestroyPallet();
+            }
+            else
+            {
+                this.RuleForce_PullCardFromPalletToUser();
+            }
         }
     }
+
     public void DestroyPallet()
     {
         //play the destroying card animation
@@ -184,21 +245,24 @@ public class CardGameController : MonoBehaviour
         Debug.Log("CONTROLER: DESTROY PALLET");
         _onPalletDestroyed?.Invoke();
 
-
         ClearPallet();
     }
     public void RuleForce_PullCardFromPalletToUser()
     {
         Debug.Log("CONTROLER: RULE PULL PALLET");
 
-        List<InGame_CardDataModel> receiveCards = PullCardFromPalletToUser();
-        _onRuleMakeUserPullCard?.Invoke(receiveCards);
+        PullCardFromPalletToUser(OnPullingComplete);
+
+        void OnPullingComplete(List<InGame_CardDataModel> receiveCards)
+        {
+            _onRuleMakeUserPullCard?.Invoke(receiveCards);
+        }
     }
-    public List<InGame_CardDataModel> PullCardFromPalletToUser()
+    public void PullCardFromPalletToUser(System.Action<List<InGame_CardDataModel>> onAnimationComplete)
     {
         Debug.Log("CONTROLER: PULL PALLET");
 
-        List<InGame_CardDataModel> cacheCardsInPallet = new List<InGame_CardDataModel>(this._cardsOnPallet);
+        List<InGame_CardDataModel> cardFromPallet = new List<InGame_CardDataModel>(this._cardsOnPallet);
 
         //active effect of card
         foreach (InGame_CardDataModel cardDataModel in _cardsOnPallet)
@@ -206,10 +270,17 @@ public class CardGameController : MonoBehaviour
             cardDataModel.OnPulledToBag();
         }
 
-        ClearPallet();
+        StartCoroutine(iePullingCardFromPalletToBag());
 
-        return cacheCardsInPallet;
+        IEnumerator iePullingCardFromPalletToBag()
+        {
+            yield return new WaitForSeconds(this.AnimationTimeConfig._timeWaitPullingOnBeforeClearingPallet);
+            ClearPallet();
+            onAnimationComplete?.Invoke(cardFromPallet);
+        }
     }
+
+
     private void ClearPallet()
     {
         this._cardsOnPallet ??= new List<InGame_CardDataModel>();
@@ -239,4 +310,17 @@ public class CardGameController : MonoBehaviour
         }
     }
     #endregion Interacting with player bag
+}
+
+[System.Serializable]
+public class InGameAnimationTimeController
+{
+    public float _timeConflictAnimationShowing;
+
+    public float _timeACardStayOnActiveEffectPanel;
+    public float _timeWaitOnBeforeDestroyPallet;
+    public float _timeWaitPullingOnBeforeClearingPallet;
+
+    public float _timeWaitDiceRolling;
+    public float _timeWaitShowDiceResult;
 }

@@ -98,10 +98,13 @@ public class InGameManager : MonoSingleton<InGameManager>
     public void OnUserEndTurn()
     {
         //pull the card by user choice;
-        List<InGame_CardDataModel> cardsReceive = GameController?.PullCardFromPalletToUser();
-        OnUserPullCardFromPalletToBag(cardsReceive);
+        GameController?.PullCardFromPalletToUser(OnPullingAnimationComplete);
 
-        OnLogicEndTurn();
+        void OnPullingAnimationComplete(List<InGame_CardDataModel> cardsReceive)
+        {
+            OnUserPullCardFromPalletToBag(cardsReceive);
+            OnLogicEndTurn();
+        }
     }
     private void OnUserPullCardFromPalletToBag(List<InGame_CardDataModel> cardsReceive)
     {
