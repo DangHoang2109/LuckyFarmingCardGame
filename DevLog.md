@@ -71,3 +71,21 @@
 
 Viewing the log track video at [D4.2023-06-10](https://drive.google.com/drive/folders/1kEiFyYvTiatmA-t5n3pk2L3kSWNORuYo?usp=sharing)
 
+
+## Day 5: 11.06.2023
+**Time Track:** 4H
+
+**Work done:**
+- layout user panel
+- import avatar, avatar frame, basic sound
+- cập nhật giá trị từ user bag vào UI
+- Thêm UI biểu thị đang trong lượt
+- animation effect reveal card
+- Chỉnh size card trong pallet nhỏ lại còn 0.5f
+- thêm toggle cho user bag UI để hỗ trợ cho effect có chọn card
+- destroying and pulling card effect
+- control deck ko cho draw thêm khi effect đang chạy
+- update draw card effect thành chỉ còn draw 1 card thay vì 2
+
+Viewing the log track video at [D4.2023-06-11](https://drive.google.com/drive/folders/1kEiFyYvTiatmA-t5n3pk2L3kSWNORuYo?usp=sharing)
+
