@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UI;
 public class CardGameController : MonoBehaviour
 {
     #region Callback 
@@ -21,12 +21,15 @@ public class CardGameController : MonoBehaviour
     [Space(5f)]
 
     [SerializeField] protected BaseCardItem _cardPrefab;
-    [SerializeField] protected Transform _tfPalletPanel, _tfActEffectPanel;
+    [SerializeField] protected Transform _tfPalletPanel, _tfActEffectPanel, _tfDeckPanel;
+    [Space(5f)]
     [SerializeField] protected GameObject _gLightningAnimator;
-
+    [Space(5f)]
     [SerializeField] protected InGameDiceRollingAnimator _diceAnimator;
     public InGameDiceRollingAnimator DiceAnimator => _diceAnimator;
 
+    [Space(5f)]
+    public Button _btnDeckDraw;
     #endregion Prop on Editor
 
     #region Data Prop
@@ -50,6 +53,8 @@ public class CardGameController : MonoBehaviour
         //get deck contain
         _deckConfig = InGameDeckConfigs.Instance.GetStandardDeck();
         RecreateTheDeck();
+
+        this.EnableDrawingCardFromDeck(true);
     }
 
     #region Action with Deck
@@ -74,6 +79,11 @@ public class CardGameController : MonoBehaviour
         if (DeckCardAmount <= 0)
             RecreateTheDeck();
     }
+    public void EnableDrawingCardFromDeck(bool isAllow)
+    {
+        if(_btnDeckDraw != null)
+            this._btnDeckDraw.interactable = isAllow;
+    }
     #endregion Action with Deck
 
     public void AddCallback_PalletConflict(System.Action cb)
@@ -92,20 +102,50 @@ public class CardGameController : MonoBehaviour
         _onRuleMakeUserPullCard += cb;
     }
 
+    #region Turn Action
+    public void BeginTurn()
+    {
+        this.EnableDrawingCardFromDeck(true);
+    }
+    public void ContinueTurn()
+    {
+        this.EnableDrawingCardFromDeck(true);
+    }
+    #endregion Turn Action
 
     #region Draw and Interacting with Pallet
     public void OnRevealTopDeck(int amount)
     {
         List<InGame_CardDataModel> topCards = GetDeckTopCards(amount,isWillPopThatCardOut: false);
+
+        List<BaseCardItem> cardRevealWhichWIllBeDestroy = new List<BaseCardItem>();
         string topContent = "";
         foreach (InGame_CardDataModel item in topCards)
         {
             topContent += $"{item._id} ";
+
+            BaseCardItem newCardItem = CreateCardItem(item._id, _tfDeckPanel);
+            cardRevealWhichWIllBeDestroy.Add(newCardItem);
+        }
+
+        StartCoroutine(ieOnRevealComplete());
+
+        IEnumerator ieOnRevealComplete()
+        {
+            yield return new WaitForSeconds(this.AnimationTimeConfig._timeWaitRevealTopDeck);
+            for (int i = cardRevealWhichWIllBeDestroy.Count - 1; i >=0 ; i--)
+            {
+                Destroy(cardRevealWhichWIllBeDestroy[i].gameObject);
+            }
+
+            ContinueTurn();
         }
         Debug.Log($"CONTROLLER: Reveal {amount} top card {topContent}");
     }
     public void OnDrawACard()
     {
+        this.EnableDrawingCardFromDeck(false);
+
         //Get a card from deck
         InGame_CardDataModel topDeckCard = GetDeckTopCard(isWillPopThatCardOut: true);
 
@@ -119,6 +159,14 @@ public class CardGameController : MonoBehaviour
     private InGame_CardDataModel CreateCardDataModel(int id)
     {
         return new InGame_CardDataModel().SetCardID(id);
+    }
+    private BaseCardItem CreateCardItem(int cardID, Transform whereToSpawn)
+    {
+        BaseCardItem newCardItem = Instantiate(_cardPrefab, whereToSpawn);
+        newCardItem.transform.localPosition = Vector3.zero;
+        newCardItem.gameObject.SetActive(true);
+        newCardItem.ParseInfo(cardID);
+        return newCardItem;
     }
     private BaseCardItem CreateCardItem(ref InGame_CardDataModel card)
     {
@@ -193,6 +241,7 @@ public class CardGameController : MonoBehaviour
 
             //Let it move to pallet
             cardItem.transform.SetParent(this._tfPalletPanel);
+
         }
     }
 
@@ -213,13 +262,13 @@ public class CardGameController : MonoBehaviour
 
         int diceResult = this.RollADice();
         Debug.Log($"RULE: Rolling dice {diceResult} compare to pallet {this._cardsOnPallet.Count}");
-        //if dice result > pallet amount card => the pallet will be destroyed
+        //if dice result < pallet amount card => the pallet will be destroyed
 
         this.DiceAnimator?.RollingDice(diceResult, callback: OnDiceShowResultComplte, this.AnimationTimeConfig._timeWaitDiceRolling, this.AnimationTimeConfig._timeWaitShowDiceResult);
 
         void OnDiceShowResultComplte()
         {
-            if (diceResult > _cardsOnPallet.Count)
+            if (diceResult < _cardsOnPallet.Count)
             {
                 this.DestroyPallet();
             }
@@ -293,20 +342,29 @@ public class CardGameController : MonoBehaviour
     #endregion Draw and Interacting with Pallet
 
     #region Interacting with player bag
-    public void DestroyPlayerCard(BaseInGamePlayer player, int cardIDToDestroy)
+    public void DestroyPlayerCard(InGameBasePlayerItem player, int cardIDToDestroy)
     {
-        if(player != null)
+        StartCoroutine(ieAnimation());
+
+        IEnumerator ieAnimation()
         {
-            player.DestroyMyCardByOther(cardIDToDestroy);
+            yield return new WaitForSeconds(this.AnimationTimeConfig?._timeWaitAnimationDestroyingCard ?? 0);
+            if (player != null)
+            {
+                player.DestroyMyCardByOther(cardIDToDestroy);
+            }
+
+            ContinueTurn();
         }
     }
-    public void PullPlayerCardToHisPallet(BaseInGamePlayer player, int cardIDToPull)
+    public void PullPlayerCardToHisPallet(InGameBasePlayerItem player, int cardIDToPull)
     {
         if (player != null)
         {
             InGame_CardDataModelWithAmount cardPulled = player.PullMyCardToThePallet(cardIDToPull);
             PutACardToPallet(CreateCardDataModel(cardPulled._cardID));
 
+            ContinueTurn();
         }
     }
     #endregion Interacting with player bag
@@ -323,4 +381,11 @@ public class InGameAnimationTimeController
 
     public float _timeWaitDiceRolling;
     public float _timeWaitShowDiceResult;
+
+    public float _timeWaitBeforeEnableDeckDrawable;
+
+    public float _timeWaitRevealTopDeck;
+    public float _timeWaitAnimationDestroyingCard;
+    public float _timeWaitAnimationPullingCard;
+
 }

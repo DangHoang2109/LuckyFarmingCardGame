@@ -49,6 +49,8 @@ public class InGameCardEffectActivator_NoneEffect : InGameBaseCardEffectActivato
     public override void ActiveEffectWhenPlaceToPallet()
     {
         base.ActiveEffectWhenPlaceToPallet();
+        InGameManager.Instance.OnTellControllerContinueTurn();
+
     }
     public override void ActiveEffectWhenDestroyed()
     {
@@ -92,7 +94,7 @@ public class InGameCardEffectActivator_DrawCard : InGameBaseCardEffectActivator
     public override void ActiveEffectWhenPlaceToPallet()
     {
         base.ActiveEffectWhenPlaceToPallet();
-        InGameManager.Instance.OnTellControllerToDrawCards(2);
+        InGameManager.Instance.OnTellControllerToDrawCards(1);
 
     }
     public override void ActiveEffectWhenDestroyed()
