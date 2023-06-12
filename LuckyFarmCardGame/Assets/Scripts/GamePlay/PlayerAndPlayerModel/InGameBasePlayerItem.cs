@@ -207,6 +207,9 @@ public class InGameBasePlayerItem : MonoBehaviour
         if (this.PlayerModel != null)
         {
              PlayerModel.PullMyCardToThePallet(cardIdToPull, out InGame_CardDataModelWithAmount splitCard);
+
+            this.BagVisual?.RefreshPlayerBag(this.PlayerModel._bag);
+
             return splitCard;
         }
         return null;

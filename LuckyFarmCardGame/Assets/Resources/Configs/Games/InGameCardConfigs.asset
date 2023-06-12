@@ -53,19 +53,20 @@ MonoBehaviour:
     _configs:
     - _skillID: 0
       _sprCardEffect: {fileID: 0}
-      _cardEffectDescription: 
+      _cardEffectDescription: This card have no effect
     - _skillID: 1
       _sprCardEffect: {fileID: 21300000, guid: 308297499bc6e41489d2803285f51c75, type: 3}
-      _cardEffectDescription: 
+      _cardEffectDescription: A dice will be rolling
     - _skillID: 2
       _sprCardEffect: {fileID: 21300000, guid: d213c945883b4e748b45f2bc2feff96e, type: 3}
-      _cardEffectDescription: 
+      _cardEffectDescription: One more card will be drawn
     - _skillID: 3
       _sprCardEffect: {fileID: 21300000, guid: 217f81629bcb67c4e93f2ff1b4f9b2c4, type: 3}
-      _cardEffectDescription: 
+      _cardEffectDescription: A card will be reveal
     - _skillID: 4
       _sprCardEffect: {fileID: 21300000, guid: 9c0c1a1432611b24a8e77c55491a3bc6, type: 3}
-      _cardEffectDescription: 
+      _cardEffectDescription: Pick one of other player card to destroy it
     - _skillID: 5
       _sprCardEffect: {fileID: 21300000, guid: bff872c0895d7104db35ce446b6a6f27, type: 3}
-      _cardEffectDescription: 
+      _cardEffectDescription: Pick one of your card to place it on pallet, it effect
+        will be active

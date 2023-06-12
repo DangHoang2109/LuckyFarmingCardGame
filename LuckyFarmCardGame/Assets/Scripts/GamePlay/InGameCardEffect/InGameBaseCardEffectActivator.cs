@@ -6,6 +6,17 @@ public class InGameBaseCardEffectActivator
 {
     public virtual InGameBaseCardEffectID ID => InGameBaseCardEffectID.NONE_EFFECT;
 
+    protected InGameCardEffectConfig _effectConfig;
+    public InGameCardEffectConfig EffectConfig
+    {
+        get
+        {
+            if (_effectConfig == null)
+                _effectConfig = InGameCardEffectConfigs.Instance.GetSkillConfig(this.ID);
+            return _effectConfig;
+        }
+    }
+
     public virtual void ActiveEffectWhenDrawed()
     {
         Debug.Log($"CARD {(int)ID}: activate effect {ID} when drawed");
@@ -21,6 +32,10 @@ public class InGameBaseCardEffectActivator
     public virtual void ActiveEffectWhenPulledToBag()
     {
         Debug.Log($"CARD {(int)ID}: activate effect {ID} when pulled to bag");
+    }
+    public virtual void ShowingNotification()
+    {
+        InGameManager.Instance.ShowNotificationCardAction($"Card effect: {this.EffectConfig?._cardEffectDescription}");
     }
 }
 public enum InGameBaseCardEffectID
@@ -60,6 +75,9 @@ public class InGameCardEffectActivator_NoneEffect : InGameBaseCardEffectActivato
     {
         base.ActiveEffectWhenPulledToBag();
     }
+    public override void ShowingNotification()
+    {
+    }
 }
 public class InGameCardEffectActivator_RollingDice : InGameBaseCardEffectActivator
 {
@@ -81,6 +99,9 @@ public class InGameCardEffectActivator_RollingDice : InGameBaseCardEffectActivat
     public override void ActiveEffectWhenPulledToBag()
     {
         base.ActiveEffectWhenPulledToBag();
+    }
+    public override void ShowingNotification()
+    {
     }
 }
 public class InGameCardEffectActivator_DrawCard : InGameBaseCardEffectActivator
@@ -105,6 +126,9 @@ public class InGameCardEffectActivator_DrawCard : InGameBaseCardEffectActivator
     {
         base.ActiveEffectWhenPulledToBag();
     }
+    public override void ShowingNotification()
+    {
+    }
 }
 public class InGameCardEffectActivator_RevealTop : InGameBaseCardEffectActivator
 {
@@ -117,8 +141,8 @@ public class InGameCardEffectActivator_RevealTop : InGameBaseCardEffectActivator
     public override void ActiveEffectWhenPlaceToPallet()
     {
         base.ActiveEffectWhenPlaceToPallet();
+        ShowingNotification();
         InGameManager.Instance.OnTellControllerToRevealTopCard(1);
-
     }
     public override void ActiveEffectWhenDestroyed()
     {
@@ -127,6 +151,10 @@ public class InGameCardEffectActivator_RevealTop : InGameBaseCardEffectActivator
     public override void ActiveEffectWhenPulledToBag()
     {
         base.ActiveEffectWhenPulledToBag();
+    }
+    public override void ShowingNotification()
+    {
+        base.ShowingNotification();
     }
 }
 public class InGameCardEffectActivator_DestroyOthersCard : InGameBaseCardEffectActivator
@@ -140,8 +168,9 @@ public class InGameCardEffectActivator_DestroyOthersCard : InGameBaseCardEffectA
     public override void ActiveEffectWhenPlaceToPallet()
     {
         base.ActiveEffectWhenPlaceToPallet();
-        InGameManager.Instance.OnTellControllerToDestroyOtherCard();
-
+        bool actSuccess= InGameManager.Instance.OnTellControllerToDestroyOtherCard();
+        if (actSuccess)
+            ShowingNotification();
     }
     public override void ActiveEffectWhenDestroyed()
     {
@@ -163,8 +192,9 @@ public class InGameCardEffectActivator_PullCardFromBagToPallet : InGameBaseCardE
     public override void ActiveEffectWhenPlaceToPallet()
     {
         base.ActiveEffectWhenPlaceToPallet();
-        InGameManager.Instance.OnTellControllerToPullMyCard();
-
+        bool actSuccess = InGameManager.Instance.OnTellControllerToPullMyCard();
+        if (actSuccess)
+            ShowingNotification();
     }
     public override void ActiveEffectWhenDestroyed()
     {

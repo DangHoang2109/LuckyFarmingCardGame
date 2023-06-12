@@ -30,6 +30,9 @@ public class CardGameController : MonoBehaviour
 
     [Space(5f)]
     public Button _btnDeckDraw;
+
+    [Space(5f)]
+    [SerializeField] protected InGameTurnNotification _notificator;
     #endregion Prop on Editor
 
     #region Data Prop
@@ -70,8 +73,15 @@ public class CardGameController : MonoBehaviour
                     _currentDeck.Add(cardDataModelWithAmount._cardID);
                 }
             }
-
             _currentDeck.Shuffle();
+
+            //test deck top
+            Debug.LogError("THE DECK CONTENT IS NOT RANDOM");
+            _currentDeck.Insert(0, 2);
+            _currentDeck.Insert(1, 4);
+            _currentDeck.Insert(0, 0);
+
+            //end test deck top
         }
     }
     protected void CheckDeck()
@@ -137,6 +147,7 @@ public class CardGameController : MonoBehaviour
             {
                 Destroy(cardRevealWhichWIllBeDestroy[i].gameObject);
             }
+            InGameManager.Instance.Notificator?.DisableText();
 
             ContinueTurn();
         }
@@ -363,6 +374,7 @@ public class CardGameController : MonoBehaviour
         {
             InGame_CardDataModelWithAmount cardPulled = player.PullMyCardToThePallet(cardIDToPull);
             PutACardToPallet(CreateCardDataModel(cardPulled._cardID));
+
 
             ContinueTurn();
         }

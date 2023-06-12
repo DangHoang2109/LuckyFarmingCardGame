@@ -21,6 +21,10 @@ public class InGameManager : MonoSingleton<InGameManager>
     protected List<InGameBasePlayerItem> _players;
 
     protected List<BaseInGamePlayerDataModel> _playersModels;
+
+    [Space(5f)]
+    [SerializeField] protected InGameTurnNotification _notificator;
+    public InGameTurnNotification Notificator => _notificator;
     #endregion Property in Inspector
 
     #region Data
@@ -94,7 +98,10 @@ public class InGameManager : MonoSingleton<InGameManager>
         Debug.Log($"GAME MANGE: Player seat {this._turnIndex} begin turn");
         CurrentTurnPlayer.BeginTurn();
     }
-
+    public void ShowNotificationCardAction(string text)
+    {
+        this.Notificator?.ShowText(text, this.CurrentTurnPlayer.IsMainPlayer);
+    }
     public void OnDrawCard()
     {
         GameController?.OnDrawACard();
@@ -180,11 +187,16 @@ public class InGameManager : MonoSingleton<InGameManager>
     {
         this.GameController?.OnRevealTopDeck(cardToReveal);
     }
-    public void OnTellControllerToDestroyOtherCard()
+    /// <summary>
+    /// Return result active succes or not to card activator
+    /// </summary>
+    /// <returns></returns>
+    public bool OnTellControllerToDestroyOtherCard()
     {
         //Bật bag chose pallet của các player khác
         List<int> otherPlayerID = GenIdsOtherPlayer();
-        if(otherPlayerID != null && otherPlayerID.Count >= 1)
+        bool activeSuccess = otherPlayerID != null && otherPlayerID.Count >= 1;
+        if (activeSuccess)
         {
             foreach (int id in otherPlayerID)
             {
@@ -196,6 +208,7 @@ public class InGameManager : MonoSingleton<InGameManager>
             Debug.Log("GAME MANGE: No player has card in bag to destroy");
             OnTellControllerContinueTurn();
         }
+        return activeSuccess;
 
         List<int> GenIdsOtherPlayer()
         {
@@ -211,25 +224,30 @@ public class InGameManager : MonoSingleton<InGameManager>
         {
             //Only support cxard chose 1 destroying
             GameController?.DestroyPlayerCard(player: _players[playerBeingChoseID], cardsChosed[0]);
+            this.Notificator?.DisableText();
         }
     }
-
-    public void OnTellControllerToPullMyCard()
+    /// <summary>
+    /// Return result active succes or not to card activator
+    /// </summary>
+    /// <returns></returns>
+    public bool OnTellControllerToPullMyCard()
     {
         if (!CurrentTurnPlayer.IsHasCardIsBag)
         {
             OnTellControllerContinueTurn();
-            return;
-
+            return false;
         }
 
         CurrentTurnPlayer.ReadyInPullingCardEffectStage(1, OnCompleteChosing);
-
+        return true;
         void OnCompleteChosing(int turnPlayerID, List<int> cardsChosed)
         {
             //Only support cxard chose 1 destroying
             if(turnPlayerID == this.CurrentTurnPlayer.ID)
                 this.GameController?.PullPlayerCardToHisPallet(this.CurrentTurnPlayer, cardsChosed[0]);
+
+            this.Notificator?.DisableText();
         }
     }
     #endregion Card activator behavior
