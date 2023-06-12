@@ -87,5 +87,13 @@ Viewing the log track video at [D4.2023-06-10](https://drive.google.com/drive/fo
 - control deck ko cho draw thêm khi effect đang chạy
 - update draw card effect thành chỉ còn draw 1 card thay vì 2
 
+## Day 6: 12.06.2023
+**Time Track:** 1H
+
+**Work done:**
+- thêm notification UI hướng dẫn khi có 1 card cần user tương tác kích hoạt
+- thêm card effect description vào config
+
 Viewing the log track video at [D4.2023-06-11](https://drive.google.com/drive/folders/1kEiFyYvTiatmA-t5n3pk2L3kSWNORuYo?usp=sharing)
+
 
