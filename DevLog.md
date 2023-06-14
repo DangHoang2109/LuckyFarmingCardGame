@@ -94,6 +94,13 @@ Viewing the log track video at [D4.2023-06-10](https://drive.google.com/drive/fo
 - thêm notification UI hướng dẫn khi có 1 card cần user tương tác kích hoạt
 - thêm card effect description vào config
 
+## Day 7: 14.06.2023
+**Time Track:** 1H
+
+**Work done:**
+- set up dialog UI
+- thêm instruction card effect quickthrough dialog
+- set up show dialog code
+- import coin point trong card module vào gameplay
+
 Viewing the log track video at [D4.2023-06-11](https://drive.google.com/drive/folders/1kEiFyYvTiatmA-t5n3pk2L3kSWNORuYo?usp=sharing)
-
-
