@@ -41,7 +41,8 @@ public class InGameCardConfig
     public int _cardID;
     public string _cardName;
     public string _cardDescription;
-
+    [Space(5f)]
+    public int _gamePointOfCard;
     [Space(5f)]
     public InGameBaseCardEffectID _skillID;
     public InGameCardEffectConfig SkillConfig => InGameCardEffectConfigs.Instance.GetSkillConfig(this._skillID);

@@ -16,4 +16,8 @@ public class InGameUIManager : MonoSingleton<InGameUIManager>
         //pull the pallet card
         InGameManager.Instance.OnUserEndTurn();
     }
+    public void OnClickShowCardQuickthrough()
+    {
+        GameManager.Instance.OnShowDialog<Instruction_CardEffectQuickthroughDialog>("Dialogs/Instruction_CardEffectQuickthroughDialog");
+    }
 }

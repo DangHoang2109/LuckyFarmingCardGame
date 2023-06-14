@@ -81,6 +81,7 @@ public class BaseCardItem : MonoBehaviour
 public class InGame_CardDataModel : ICloneable
 {
     public int _id;
+    public int _coinPoint;
 
     protected InGameBaseCardEffectActivator _effectActivator;
     public InGameBaseCardEffectActivator EffectActivator => _effectActivator;
@@ -102,9 +103,12 @@ public class InGame_CardDataModel : ICloneable
         return new InGame_CardDataModel(this);
     }
 
-    public InGame_CardDataModel SetCardID(int id)
+    public InGame_CardDataModel SetCardID(int id, InGameCardConfig cardConfig)
     {
         this._id = id;
+
+        this._coinPoint = cardConfig?._gamePointOfCard ?? 0;
+
         CreateEffectActivator();
         ParseUIInfo();
         return this;

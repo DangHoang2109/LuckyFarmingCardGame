@@ -40,7 +40,7 @@ public class GameManager : MonoSingleton<GameManager>
     #region DIALOG
     public T OnShowDialog<T>(string path, object data = null, UnityAction callback = null) where T : BaseDialog
     {
-        FxHelper.Instance.PauseShowFxClick();
+        //FxHelper.Instance.PauseShowFxClick();
         if (!this.tempDialog.ContainsKey(path))
         {
             T target = TempDialogManager.Instance.GetDialog<T>(path);

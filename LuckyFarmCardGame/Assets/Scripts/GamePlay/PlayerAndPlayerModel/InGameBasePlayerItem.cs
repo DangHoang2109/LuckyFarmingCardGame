@@ -31,6 +31,8 @@ public class InGameBasePlayerItem : MonoBehaviour
     public virtual InGameBasePlayerItem SetAPlayerModel(BaseInGamePlayerDataModel model)
     {
         this._playerModel = model;
+        _tmpCoinValue.SetText($"{(PlayerModel.CurrentCoinPoint).ToString("D2")}");
+
         return this;
     }
     public InGameBasePlayerItem AddMissionGoal(InGameMissionGoalCardConfig goalCardConfig)
@@ -70,6 +72,8 @@ public class InGameBasePlayerItem : MonoBehaviour
             this.PlayerModel.AddCardsToPallet(cardReceive);
         }
         this.BagVisual?.RefreshPlayerBag(this.PlayerModel._bag);
+
+        _tmpCoinValue.SetText($"{(PlayerModel.CurrentCoinPoint).ToString("D2")}");
 
         Debug.Log($"PLAYER {this.ID} bag: {this.PlayerModel._dictionaryBags.DebugDicCardInGame()}");
 
@@ -234,6 +238,17 @@ public class BaseInGamePlayerDataModel
     public int AmountCardInBag => this._bag?.Count ?? 0;
     public bool IsHasCardIsBag => AmountCardInBag > 0;
 
+    protected int _currentCoinPoint = 0;
+    public int CurrentCoinPoint
+    {
+        get => _currentCoinPoint;
+        set
+        {
+            _currentCoinPoint = value;
+
+        }
+    }
+
     public BaseInGamePlayerDataModel()
     {
         this._bag = new List<InGame_CardDataModelWithAmount>();
@@ -283,6 +298,8 @@ public class BaseInGamePlayerDataModel
                     this._bag.Add(c);
                     this._dictionaryBags.Add(c._cardID, c);
                 }
+
+                this._currentCoinPoint += cardDataModel._coinPoint;
             }
         }
     }

@@ -33,6 +33,18 @@ public class CardGameController : MonoBehaviour
 
     [Space(5f)]
     [SerializeField] protected InGameTurnNotification _notificator;
+
+    [Space(5f)]
+    protected InGameCardConfigs _ingameCardConfigs;
+    public InGameCardConfigs IngameCardConfigs
+    {
+        get 
+        {
+            if (_ingameCardConfigs == null)
+                _ingameCardConfigs = InGameCardConfigs.Instance;
+            return _ingameCardConfigs;
+        }
+    }
     #endregion Prop on Editor
 
     #region Data Prop
@@ -75,11 +87,11 @@ public class CardGameController : MonoBehaviour
             }
             _currentDeck.Shuffle();
 
-            //test deck top
-            Debug.LogError("THE DECK CONTENT IS NOT RANDOM");
-            _currentDeck.Insert(0, 2);
-            _currentDeck.Insert(1, 4);
-            _currentDeck.Insert(0, 0);
+            ////test deck top
+            //Debug.LogError("THE DECK CONTENT IS NOT RANDOM");
+            //_currentDeck.Insert(0, 2);
+            //_currentDeck.Insert(1, 4);
+            //_currentDeck.Insert(0, 0);
 
             //end test deck top
         }
@@ -168,8 +180,10 @@ public class CardGameController : MonoBehaviour
     }
 
     private InGame_CardDataModel CreateCardDataModel(int id)
-    {
-        return new InGame_CardDataModel().SetCardID(id);
+    {        
+        InGameCardConfig cardConfig = IngameCardConfigs?.GetCardConfig(id);
+
+        return new InGame_CardDataModel().SetCardID(id, cardConfig);
     }
     private BaseCardItem CreateCardItem(int cardID, Transform whereToSpawn)
     {
@@ -327,6 +341,7 @@ public class CardGameController : MonoBehaviour
         //active effect of card
         foreach (InGame_CardDataModel cardDataModel in _cardsOnPallet)
         {
+            //behavior of card
             cardDataModel.OnPulledToBag();
         }
 

@@ -53,7 +53,7 @@ public class BaseDialog : MonoBehaviour
         {
             seq.Join(this.canvasGroup.DOFade(1, this.transitionTime));
         }
-        SoundManager.Instance.Play("snd_panel");
+        //SoundManager.Instance.Play("snd_panel");
     }
     protected virtual void OnCompleteShow()
     {
@@ -95,7 +95,7 @@ public class BaseDialog : MonoBehaviour
     public virtual void ClickCloseDialog()
     {
         this.OnCloseDialog();
-        SoundManager.Instance.PlayButtonClick();
+        //SoundManager.Instance.PlayButtonClick();
     }
 
 }

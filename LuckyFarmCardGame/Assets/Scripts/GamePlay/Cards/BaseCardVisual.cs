@@ -16,6 +16,9 @@ public class BaseCardVisual : MonoBehaviour
     [Header("Card Type Icon")]
     public Image _imgArtIcon;
     public GameObject _gTypeIcon;
+    [Header("Card Coin Point")]
+    public TextMeshProUGUI _tmpCoinPointValue;
+    public GameObject _gCoinPoint;
 
 
     public BaseCardVisual SetCardIDAndDisplayAllVisual(int cardID)
@@ -27,7 +30,8 @@ public class BaseCardVisual : MonoBehaviour
         {
             this.DisplayArtwork(cardConfig._sprCardArtwork)
                 .DisplayEffect(cardConfig.SkillConfig?._sprCardEffect)
-                .DisplayBackground(cardConfig._sprCardBackground);
+                .DisplayBackground(cardConfig._sprCardBackground)
+                .DisplayCoinPOint(cardConfig._gamePointOfCard);
         }
         return this;
     }
@@ -54,5 +58,13 @@ public class BaseCardVisual : MonoBehaviour
         }
         return this;
     }
-
+    public BaseCardVisual DisplayCoinPOint(int coin)
+    {
+        if (_gCoinPoint != null && this._tmpCoinPointValue != null)
+        {
+            _gCoinPoint.gameObject.SetActive(coin > 0);
+            this._tmpCoinPointValue.SetText($"0{coin}");
+        }
+        return this;
+    }
 }
