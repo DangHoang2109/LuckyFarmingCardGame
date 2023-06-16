@@ -110,3 +110,5 @@ Viewing the log track video at [D4.2023-06-11](https://drive.google.com/drive/fo
 
 **Work done:**
 - thêm module dùng game coin để tăng giá trị dice roll ra nhằm tăng tính chiến thuật và giảm độ rủi ro
+- Up lên Unity version 2022.3.2f1, là LTS mới nhất của unity 2022
+
