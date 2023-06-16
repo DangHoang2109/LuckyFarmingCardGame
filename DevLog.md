@@ -104,3 +104,9 @@ Viewing the log track video at [D4.2023-06-10](https://drive.google.com/drive/fo
 - import coin point trong card module vào gameplay
 
 Viewing the log track video at [D4.2023-06-11](https://drive.google.com/drive/folders/1kEiFyYvTiatmA-t5n3pk2L3kSWNORuYo?usp=sharing)
+
+## Day 8: 16.06.2023
+**Time Track:** 2H
+
+**Work done:**
+- thêm module dùng game coin để tăng giá trị dice roll ra nhằm tăng tính chiến thuật và giảm độ rủi ro
