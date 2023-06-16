@@ -74,7 +74,7 @@ public class CardGameController : MonoBehaviour
     #endregion Data Prop
 
     #region Config
-    protected int _coinForEachDicePoint = 2;
+    protected int _coinForEachDicePoint = 5;
     public int CoinForEachDicePoint => _coinForEachDicePoint;
 
     #endregion

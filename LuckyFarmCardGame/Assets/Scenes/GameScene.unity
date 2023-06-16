@@ -3753,6 +3753,7 @@ MonoBehaviour:
   - {fileID: 1027525571}
   - {fileID: 210568809}
   _notificator: {fileID: 2118289151}
+  _confirmUsingCoin: {fileID: 1623142670}
 --- !u!1 &1756077943
 GameObject:
   m_ObjectHideFlags: 0
