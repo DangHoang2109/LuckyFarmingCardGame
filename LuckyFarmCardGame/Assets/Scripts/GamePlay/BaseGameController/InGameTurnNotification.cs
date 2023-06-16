@@ -18,7 +18,7 @@ public class InGameTurnNotification : MonoBehaviour
     public void ShowText(string content, bool mainPlayerTurn, float timeStay = -1)
     {
         this._tmpText.SetText(content);
-        this.transform.localPosition = new Vector3(this.transform.localPosition.x, mainPlayerTurn ? _yPostionForPlayer : _yPostionForBot);
+        //this.transform.localPosition = new Vector3(this.transform.localPosition.x, mainPlayerTurn ? _yPostionForPlayer : _yPostionForBot);
         this._canvas.alpha = 0;
         Sequence seq = DOTween.Sequence();
         seq.SetId(this.GetInstanceID());

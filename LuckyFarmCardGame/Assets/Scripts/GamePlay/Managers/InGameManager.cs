@@ -25,6 +25,11 @@ public class InGameManager : MonoSingleton<InGameManager>
     [Space(5f)]
     [SerializeField] protected InGameTurnNotification _notificator;
     public InGameTurnNotification Notificator => _notificator;
+
+    [Space(5f)]
+    [SerializeField] protected ConfirmUsingInGameGameCoinToAddDiceResultPopup _confirmUsingCoin;
+    public ConfirmUsingInGameGameCoinToAddDiceResultPopup ConfirmUsingCoin => _confirmUsingCoin;
+
     #endregion Property in Inspector
 
     #region Data
@@ -33,9 +38,11 @@ public class InGameManager : MonoSingleton<InGameManager>
 
     #region Getter
     public InGameBasePlayerItem CurrentTurnPlayer => _players[this._turnIndex];
+    public BaseInGamePlayerDataModel CurrentTurnPlayerModel => _players[this._turnIndex]?.PlayerModel;
 
 
     #endregion Getter
+
 
     private void Start()
     {
@@ -48,6 +55,7 @@ public class InGameManager : MonoSingleton<InGameManager>
         GameController?.AddCallback_PalletConflict(this.OnPalletConflict);
         GameController?.AddCallback_PalletDestroyed(this.OnPalletDestroyed);
         GameController?.AddCallback_PalletPulledByRule(this.OnPalletPulledByRule);
+        GameController?.AddCallback_DiceResultShowed(this.DiceResultShowed);
 
         GameController?.InitGame();
 
@@ -61,6 +69,9 @@ public class InGameManager : MonoSingleton<InGameManager>
         Debug.Log($"INGAME MANGE: Init {amountPlayerJoin} players");
         //Init player seat
         InitPlayers(amountPlayerJoin);
+
+        //Init using coin confirmation
+        ConfirmUsingCoin?.Init(OnUserDecideToUseGameCoin);
 
         //Roll a turn index 
         this._turnIndex = Random.Range(0, amountPlayerJoin);
@@ -124,6 +135,21 @@ public class InGameManager : MonoSingleton<InGameManager>
             this.CurrentTurnPlayer.PullCardToBag(cardsReceive);
         }
     }
+
+
+    /// <summary>
+    /// User dùng coin để thay đổi kết quả dice, hoặc tùy theo game rule
+    /// </summary>
+    /// <param name="amountUsing"></param>
+    public void OnUserDecideToUseGameCoin(int amountUsing)
+    {
+        //trừ coin từ user đang dùng
+        if(this.CurrentTurnPlayerModel?.SubtractGameCoinIfCan(amountUsing) ?? false)
+        {
+            this.GameController?.OnUserDecideToUseGameCoin(amountUsing);
+        }
+    }
+
     private void OnLogicEndTurn()
     {
         //Check end game
@@ -145,6 +171,14 @@ public class InGameManager : MonoSingleton<InGameManager>
     #endregion Turn Actions
 
     #region Pallet behavior
+    public void DiceResultShowed(int diceResult, int pointNeeding, bool willBeDestroy)
+    {
+        int amountCointNeed = pointNeeding * (GameController?.CoinForEachDicePoint ?? 1);
+        if (willBeDestroy && this.CurrentTurnPlayerModel.IsCanUseGameCoin(amountCointNeed))
+        {
+            this.ConfirmUsingCoin?.ParseDataAndShow(amountCoinNeedToUse: amountCointNeed, amountDiceResWillBeAdd: pointNeeding);
+        }
+    }
     public void OnPalletConflict()
     {
 

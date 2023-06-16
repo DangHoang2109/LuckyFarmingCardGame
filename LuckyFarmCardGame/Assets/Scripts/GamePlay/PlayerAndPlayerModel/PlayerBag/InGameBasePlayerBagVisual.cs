@@ -50,13 +50,14 @@ public class InGameBasePlayerBagVisual : MonoBehaviour
             item.UpdateValue(0);
         }
     }
-    public InGameBasePlayerBagVisual RefreshPlayerBag(List<InGame_CardDataModelWithAmount> playerBag)
+    public InGameBasePlayerBagVisual RefreshPlayerBag(Dictionary<int, InGame_CardDataModelWithAmount> playerBag)
     {
-        for (int i = 0; i < playerBag.Count; i++)
+        foreach (KeyValuePair< int,InGameBagCardTypeUIItem> item in _dicItems)
         {
-            _dicItems[playerBag[i]._cardID].UpdateValue(playerBag[i]._amountCard);
+            int id = item.Value.CardID;
+            int amount = playerBag.TryGetValue(id, out InGame_CardDataModelWithAmount c) ? c._amountCard : 0 ;
+            _dicItems[id].UpdateValue(amount);
         }
-
         return this;
     }
 

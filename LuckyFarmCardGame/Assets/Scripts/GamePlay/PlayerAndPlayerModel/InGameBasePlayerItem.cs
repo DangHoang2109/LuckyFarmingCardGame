@@ -71,7 +71,7 @@ public class InGameBasePlayerItem : MonoBehaviour
         {
             this.PlayerModel.AddCardsToPallet(cardReceive);
         }
-        this.BagVisual?.RefreshPlayerBag(this.PlayerModel._bag);
+        this.BagVisual?.RefreshPlayerBag(this.PlayerModel._dictionaryBags);
 
         _tmpCoinValue.SetText($"{(PlayerModel.CurrentCoinPoint).ToString("D2")}");
 
@@ -157,7 +157,7 @@ public class InGameBasePlayerItem : MonoBehaviour
             PlayerModel.DestroyMyCardByOther(cardIDToDestroy, amountToDestroy);
         }
 
-        this.BagVisual?.RefreshPlayerBag(this.PlayerModel._bag);
+        this.BagVisual?.RefreshPlayerBag(this.PlayerModel._dictionaryBags);
     }
     /// <summary>
     /// Called by InGame Manager
@@ -212,7 +212,7 @@ public class InGameBasePlayerItem : MonoBehaviour
         {
              PlayerModel.PullMyCardToThePallet(cardIdToPull, out InGame_CardDataModelWithAmount splitCard);
 
-            this.BagVisual?.RefreshPlayerBag(this.PlayerModel._bag);
+            this.BagVisual?.RefreshPlayerBag(this.PlayerModel._dictionaryBags);
 
             return splitCard;
         }
@@ -312,6 +312,8 @@ public class BaseInGamePlayerDataModel
         {
             card.SubtractCard(amountToDestroy);
             //refresh card bag 
+            if(card._amountCard <= 0)
+                RemoveACard(card);
 
             Debug.Log($"PLAYER {this._id}: Destroy card complete {InGameUtils.DebugDicCardInGame(this._dictionaryBags)}");
         }
@@ -365,6 +367,20 @@ public class BaseInGamePlayerDataModel
                 else
                     return false;
             }
+            return true;
+        }
+        return false;
+    }
+
+    public bool IsCanUseGameCoin(int amount)
+    {
+        return this.CurrentCoinPoint >= amount;
+    }
+    public bool SubtractGameCoinIfCan(int amount)
+    {
+        if (IsCanUseGameCoin(amount))
+        {
+            this.CurrentCoinPoint -= amount;
             return true;
         }
         return false;

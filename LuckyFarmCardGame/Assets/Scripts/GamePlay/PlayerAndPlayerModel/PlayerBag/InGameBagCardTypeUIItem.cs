@@ -18,7 +18,7 @@ public class InGameBagCardTypeUIItem : MonoBehaviour
     #endregion  Prop on Editor
 
     #region Data
-    protected int _cardID;
+    protected int _cardID; public int CardID => _cardID;
     protected InGameBasePlayerItem _hostPlayer;
     protected InGameBasePlayerBagVisual _hostBagVisual;
     public bool IsOwnedByMainUser => _hostPlayer?.IsMainPlayer ?? false;
