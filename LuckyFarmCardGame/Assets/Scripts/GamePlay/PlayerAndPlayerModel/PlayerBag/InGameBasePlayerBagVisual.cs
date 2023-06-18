@@ -71,6 +71,11 @@ public class InGameBasePlayerBagVisual : MonoBehaviour
         }
         return this;
     }
+
+    public bool TryFindUIItem(int cardID, out InGameBagCardTypeUIItem item)
+    {
+        return this._dicItems.TryGetValue(cardID, out item);
+    }
     /// <summary>
     /// Called by toggle event 
     /// </summary>

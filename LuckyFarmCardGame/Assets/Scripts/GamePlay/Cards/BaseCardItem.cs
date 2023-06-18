@@ -121,12 +121,9 @@ public class InGame_CardDataModel : ICloneable
     #region These function should in cardItem
     protected void CreateEffectActivator()
     {
-        this._effectActivator = System.Activator.CreateInstance(EnumUtility.GetStringType(GetActivatorEffectID(this._id))) as InGameBaseCardEffectActivator;
+        this._effectActivator = System.Activator.CreateInstance(EnumUtility.GetStringType(InGameUtils.GetActivatorEffectID(this._id))) as InGameBaseCardEffectActivator;
 
-        InGameBaseCardEffectID GetActivatorEffectID(int cardID)
-        {
-            return (InGameBaseCardEffectID)cardID;
-        }
+
     }
     public void OnDrawedFromDeck()
     {

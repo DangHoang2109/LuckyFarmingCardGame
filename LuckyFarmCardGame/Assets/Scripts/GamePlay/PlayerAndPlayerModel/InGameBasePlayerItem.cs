@@ -24,6 +24,8 @@ public class InGameBasePlayerItem : MonoBehaviour
     public int AmountCardInBag => this.PlayerModel?.AmountCardInBag ?? 0;
     public bool IsHasCardIsBag => this.PlayerModel?.IsHasCardIsBag ?? false;
     #endregion Data
+
+    #region Init Action
     /// <summary>
     /// Calling by InGameManager when set up init game
     /// </summary>
@@ -41,12 +43,17 @@ public class InGameBasePlayerItem : MonoBehaviour
         ParseVisualBagUI(goalCardConfig);
         return this;
     }
+    public virtual InGameBasePlayerItem InitPlayerItSelf()
+    {
+        return this;
+    }
     public virtual void ParseVisualBagUI(InGameMissionGoalCardConfig goalCardConfig)
     {
         this.BagVisual?
             .SetHostPlayer(this)
             .ParseGoalCard(goalCardConfig);
     }
+    #endregion Init Action
 
     public bool TryGetCardInBag(int id, out InGame_CardDataModelWithAmount card)
     {
@@ -54,6 +61,7 @@ public class InGameBasePlayerItem : MonoBehaviour
         return PlayerModel?.TryGetCardInBag(id, out card) ?? false;
     }
 
+    #region Turn Action
     public virtual void BeginTurn()
     {
         _imgTimer.gameObject.SetActive(true);
@@ -218,9 +226,15 @@ public class InGameBasePlayerItem : MonoBehaviour
         }
         return null;
     }
+    #endregion Turn Action
+
     public virtual bool IsWin()
     {
         return this.PlayerModel?.IsWin() ?? false;
+    }
+
+    public virtual void CustomUpdate()
+    {
     }
 }
 
@@ -384,6 +398,12 @@ public class BaseInGamePlayerDataModel
             return true;
         }
         return false;
+    }
+
+    public bool IsCardListedInGoal(int cardID)
+    {
+        InGame_CardDataModelWithAmount c = this.GoalCardConfig._requirement.Find(x => x._cardID == cardID);
+        return c != null;
     }
 }
 

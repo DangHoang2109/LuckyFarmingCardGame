@@ -34,6 +34,11 @@ public class InGameManager : MonoSingleton<InGameManager>
 
     #region Data
     protected int _turnIndex;
+
+    protected GameState _gameState;
+    public bool IsPlaying => this._gameState == GameState.PLAYING;
+
+    public int _currentTurnCoinNeedUsing = 0;
     #endregion Data
 
     #region Getter
@@ -46,6 +51,8 @@ public class InGameManager : MonoSingleton<InGameManager>
 
     private void Start()
     {
+        this._gameState = GameState.WAITING;
+
         //Init Game
         InitGame();
         //Assign Game Rule Component
@@ -60,7 +67,7 @@ public class InGameManager : MonoSingleton<InGameManager>
         GameController?.InitGame();
 
         //Start the game
-        OnBeginTurn();
+        StartGame();
     }
 
     protected void InitGame()
@@ -100,6 +107,12 @@ public class InGameManager : MonoSingleton<InGameManager>
                 this._playersModels.Add(playerModel);
             }
         }
+    }
+    public void StartGame()
+    {
+        this._gameState = GameState.PLAYING;
+
+        OnBeginTurn();
     }
 
     #region Turn Action
@@ -149,6 +162,19 @@ public class InGameManager : MonoSingleton<InGameManager>
             this.GameController?.OnUserDecideToUseGameCoin(amountUsing);
         }
     }
+    /// <summary>
+    /// User dùng coin để thay đổi kết quả dice, hoặc tùy theo game rule
+    /// </summary>
+    /// <param name="amountUsing"></param>
+    public void OnUserDecideToUseGameCoin()
+    {
+        //trừ coin từ user đang dùng
+        if(this._currentTurnCoinNeedUsing > 0)
+            if (this.CurrentTurnPlayerModel?.SubtractGameCoinIfCan(_currentTurnCoinNeedUsing) ?? false)
+            {
+                this.GameController?.OnUserDecideToUseGameCoin(_currentTurnCoinNeedUsing);
+            }
+    }
 
     private void OnLogicEndTurn()
     {
@@ -168,6 +194,28 @@ public class InGameManager : MonoSingleton<InGameManager>
         //begin next user turn
         OnBeginTurn();
     }
+
+    public void OnBotClickChoseToggleBagUIItem(int playerID, int cardID)
+    {
+        InGameBasePlayerItem player = this._players.Find(x => x.ID == playerID);
+        if(player != null)
+        {
+            if(player.BagVisual.TryFindUIItem(cardID, out InGameBagCardTypeUIItem uiCardItem))
+            {
+                uiCardItem.ClickToggleFromMManager();
+            }
+        }
+    }
+
+    private void Update()
+    {
+        if(IsPlaying)
+            CustomUpdate();
+    }
+    protected virtual void CustomUpdate()
+    {
+        this.CurrentTurnPlayer?.CustomUpdate();
+    }
     #endregion Turn Actions
 
     #region Pallet behavior
@@ -176,6 +224,7 @@ public class InGameManager : MonoSingleton<InGameManager>
         int amountCointNeed = pointNeeding * (GameController?.CoinForEachDicePoint ?? 1);
         if (willBeDestroy && this.CurrentTurnPlayerModel.IsCanUseGameCoin(amountCointNeed))
         {
+            _currentTurnCoinNeedUsing = amountCointNeed;
             this.ConfirmUsingCoin?.ParseDataAndShow(amountCoinNeedToUse: amountCointNeed, amountDiceResWillBeAdd: pointNeeding);
         }
     }
@@ -198,6 +247,8 @@ public class InGameManager : MonoSingleton<InGameManager>
     public void OnEndGame()
     {
         Debug.Log($"INGAME MANGE: End Game");
+        this._gameState = GameState.ENDING;
+
     }
     #endregion End game behavior
 
@@ -285,4 +336,14 @@ public class InGameManager : MonoSingleton<InGameManager>
         }
     }
     #endregion Card activator behavior
+
+
+}
+
+public enum GameState
+{
+    WAITING = 0,
+    PLAYING = 1,
+    PAUSING = 2,
+    ENDING = 3,
 }

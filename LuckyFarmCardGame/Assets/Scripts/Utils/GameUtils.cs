@@ -35,6 +35,7 @@ public static class GameUtils
         return _gc.GetWeekOfYear(time, System.Globalization.CalendarWeekRule.FirstDay, firstDayOfWeek);
     }
 
+    public static float Random => UnityEngine.Random.Range(0f, 1f);
     public static T Last<T>(this List<T> list)
     {
         return list[list.Count - 1];
@@ -650,5 +651,9 @@ public static class InGameUtils
             }
         }
         return debug;
+    }
+    public static InGameBaseCardEffectID GetActivatorEffectID(int cardID)
+    {
+        return (InGameBaseCardEffectID)cardID;
     }
 }

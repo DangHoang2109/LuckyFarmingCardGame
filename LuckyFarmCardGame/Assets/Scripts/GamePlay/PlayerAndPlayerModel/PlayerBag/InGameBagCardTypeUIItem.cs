@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -73,5 +73,13 @@ public class InGameBagCardTypeUIItem : MonoBehaviour
     public void ToggleEvent_OnChangeChosingValue(bool isOn)
     {
         _hostBagVisual?.ToggleEvent_OnChangeChosingValue(this._cardID,isOn);
+    }
+
+    /// <summary>
+    /// Bot click chọn toggle item này
+    /// </summary>
+    public void ClickToggleFromMManager()
+    {
+        this._tglChosingInEffect.isOn = !this._tglChosingInEffect.isOn;
     }
 }
