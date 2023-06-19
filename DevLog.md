@@ -118,3 +118,16 @@ Viewing the log track video at [D4.2023-06-11](https://drive.google.com/drive/fo
 **Work done:**
 - Bắt đầu làm AI cho Bot part 1
 
+
+## Day 10: 18.06.2023
+**Time Track:** 2H
+
+**Work done:**
+- Bắt đầu làm AI cho Bot part 2
+  
+## Day 11: 19.06.2023
+**Time Track:** 2H
+
+**Work done:**
+- Hoàn thiện AI
+- Hoàn thiện control phía Main control: bật tắt button end game, bật tắt button draw theo bot hay main
