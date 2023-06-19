@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Linq;
 public class CardGameController : MonoBehaviour
 {
     #region Callback 
@@ -61,7 +62,8 @@ public class CardGameController : MonoBehaviour
     #endregion Prop on Editor
 
     #region Data Prop
-    public List<InGame_CardDataModel> _cardsOnPallet;
+    protected List<InGame_CardDataModel> _cardsOnPallet;
+    public List<InGame_CardDataModel> CardsOnPallet;
 
     protected InGameDeckConfig _deckConfig;
     protected List<int> _currentDeck;
@@ -472,6 +474,53 @@ public class CardGameController : MonoBehaviour
         }
     }
     #endregion Interacting with player bag
+
+    #region Bot Looker API Need
+    /// <summary>
+    /// Tỉ lệ conflict hiện tại 
+    /// </summary>
+    /// <returns></returns>
+    public float GetPalletConflictChance()
+    {
+        //đếm số card có cùng id với pallet hiện tại, lấy số lượng đó chia cho amount deck hiện tại
+        if (this._cardsOnPallet.Count == 0) 
+            return 0f;
+
+        this.CheckDeck();
+        int amountCardCauseConflict = this._currentDeck.Where(x => _cardsOnPallet.Find((c)=> c._id == x) != null).Count();
+        return amountCardCauseConflict / DeckCardAmount;
+    }
+    /// <summary>
+    /// Lấy lượng coin nhận được khi pull pallet này về
+    /// </summary>
+    /// <returns></returns>
+    public int GetPalletTotalCoin()
+    {
+        //đếm số card có cùng id với pallet hiện tại, lấy số lượng đó chia cho amount deck hiện tại
+        if (this._cardsOnPallet.Count == 0)
+            return 0;
+        return _cardsOnPallet.Sum(x => x._coinPoint);
+    }
+    public InGameBaseCardEffectID GetTopDeckEffect()
+    {
+        CheckDeck();
+        return this.GetDeckTopCard(isWillPopThatCardOut: false)._effect;
+    }
+    public int GetTopDeckID()
+    {
+        CheckDeck();
+        return this.GetDeckTopCard(isWillPopThatCardOut: false)._id;
+    }
+    public bool GetResultPalletConflictIfThisCardJoin(int cardID)
+    {
+        CheckDeck();
+
+        if (this._cardsOnPallet.Count == 0)
+            return false;
+
+        return this.CardsOnPallet.Find(x => x._id == cardID) != null;
+    }
+    #endregion Bot Looker API Need
 }
 
 [System.Serializable]

@@ -338,6 +338,30 @@ public class InGameManager : MonoSingleton<InGameManager>
     #endregion Card activator behavior
 
 
+    #region Bot Looker API Need
+    List<InGameAI.OtherPlayerLookingInfo> GetOtherPlayerLookingInfos()
+    {
+        List<InGameAI.OtherPlayerLookingInfo> res = new List<InGameAI.OtherPlayerLookingInfo>();
+        int currentTurnId = this.CurrentTurnPlayer.ID;
+        foreach (InGameBasePlayerItem playerItem in this._players)
+        {
+            if (playerItem.ID == currentTurnId)
+                continue;
+
+            BaseInGamePlayerDataModel model = playerItem.PlayerModel;
+            InGameAI.OtherPlayerLookingInfo info = new InGameAI.OtherPlayerLookingInfo()
+            {
+                _playerID = model._id,
+                _currentCoin = model.CurrentCoinPoint,
+                _totalCard = model.AmountCardInBag,
+                _bagList = model._bag,
+                _bagDic = model._dictionaryBags
+            };
+            res.Add(info);
+        }
+        return res;
+    }
+    #endregion Bot Looker API Need
 }
 
 public enum GameState

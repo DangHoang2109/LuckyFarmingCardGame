@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Linq;
 public class InGameBasePlayerItem : MonoBehaviour
 {
     #region Prop on editor
@@ -249,7 +250,7 @@ public class BaseInGamePlayerDataModel
     protected InGameMissionGoalCardConfig _goalCardConfig;
     public InGameMissionGoalCardConfig GoalCardConfig => _goalCardConfig;
 
-    public int AmountCardInBag => this._bag?.Count ?? 0;
+    public int AmountCardInBag => (_bag == null || _bag.Count == 0) ? 0 : this._bag.Sum(x=>x._amountCard);
     public bool IsHasCardIsBag => AmountCardInBag > 0;
 
     protected int _currentCoinPoint = 0;

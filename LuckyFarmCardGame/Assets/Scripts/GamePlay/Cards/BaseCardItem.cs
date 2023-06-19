@@ -81,6 +81,7 @@ public class BaseCardItem : MonoBehaviour
 public class InGame_CardDataModel : ICloneable
 {
     public int _id;
+    public InGameBaseCardEffectID _effect;
     public int _coinPoint;
 
     protected InGameBaseCardEffectActivator _effectActivator;
@@ -106,7 +107,7 @@ public class InGame_CardDataModel : ICloneable
     public InGame_CardDataModel SetCardID(int id, InGameCardConfig cardConfig)
     {
         this._id = id;
-
+        this._effect = InGameUtils.GetActivatorEffectID(this._id);
         this._coinPoint = cardConfig?._gamePointOfCard ?? 0;
 
         CreateEffectActivator();
@@ -121,7 +122,7 @@ public class InGame_CardDataModel : ICloneable
     #region These function should in cardItem
     protected void CreateEffectActivator()
     {
-        this._effectActivator = System.Activator.CreateInstance(EnumUtility.GetStringType(InGameUtils.GetActivatorEffectID(this._id))) as InGameBaseCardEffectActivator;
+        this._effectActivator = System.Activator.CreateInstance(EnumUtility.GetStringType(this._effect)) as InGameBaseCardEffectActivator;
 
 
     }
