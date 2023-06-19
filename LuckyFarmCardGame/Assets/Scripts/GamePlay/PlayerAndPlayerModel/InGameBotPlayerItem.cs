@@ -14,6 +14,7 @@ public class InGameBotPlayerItem : InGameBasePlayerItem
     protected InGameAI.AILooker _AIlooker;
     protected InGameAI.AIDecider _AIdecider;
 
+    protected Coroutine _ieThinkingPlan;
     #endregion Data
 
     #region Getter
@@ -72,20 +73,45 @@ public class InGameBotPlayerItem : InGameBasePlayerItem
     public override void BeginTurn()
     {
         base.BeginTurn();
+        StartPlaningTurn();
+    }
+    public override void ContinueTurn()
+    {
+        base.ContinueTurn();
+        StartPlaningTurn();
+    }
+    void StartPlaningTurn()
+    {
+        _ieThinkingPlan = StartCoroutine(OnThinkingInTurn());
+    }
+    IEnumerator OnThinkingInTurn()
+    {
+        yield return new WaitForSeconds(0.25f);
+        //BaseUIController.GlobalMask = true;
+        InGameAI.LookingMessage collect = Looker?.Look();
+        yield return new WaitForEndOfFrame();
+        InGameAI.DecidingMesssage decideMsg = Decider?.Decide(collect);
+        yield return new WaitForEndOfFrame();
+        Executor.SetDecision(decideMsg);
+        yield return new WaitForEndOfFrame();
+    }
+    public override void Action_ACardPutToPallet(int cardID)
+    {
+        base.Action_ACardPutToPallet(cardID);
 
-        StartCoroutine(OnWaitingTurn());
+        //tell my executor
+        this.Executor?.CheckActionInterractCardIfNeed();
+    }
+    public override void Action_DecideAndUseCoin(int amountCoinNeeding, int pointAdding)
+    {
+        base.Action_DecideAndUseCoin(amountCoinNeeding, pointAdding);
 
-        IEnumerator OnWaitingTurn()
-        {
-            yield return new WaitForSeconds(0.5f);
-            //BaseUIController.GlobalMask = true;
-            InGameAI.LookingMessage collect = _AIlooker?.Look();
-            yield return new WaitForEndOfFrame();
-            InGameAI.DecidingMesssage decideMsg = Decider?.Decide(collect);
-            yield return new WaitForEndOfFrame();
-            Executor.SetDecision(decideMsg);
-            yield return new WaitForEndOfFrame();
-        }
+        //tell my executor
+        this.Executor?.CheckActionSpentCoinIfNeed(amountCoinNeeding);
+    }
+    public override void EndTurn()
+    {
+        base.EndTurn();
     }
     #endregion Turn Action
 

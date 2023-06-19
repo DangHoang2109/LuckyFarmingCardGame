@@ -48,32 +48,31 @@ public class InGameAI
             LookingMessage msg = new LookingMessage();
 
             //lấy tỉ lệ conflict card tiếp theo
-            msg._conflictPalletPercent = 0.2f;
+            msg._conflictPalletPercent = InGameController.GetPalletConflictChance();
             //lấy pallet hiện tại của bản thân
-            msg._myPalletCurrentCards = new List<int>();
-            msg._totalCoinGainFromThisPallet = 0;
+            msg._myPalletCurrentCards = InGameController.GetCurrentPalletIDs();
+            msg._totalCoinGainFromThisPallet = InGameController.GetPalletTotalCoin();
 
-            //lấy bag hiện tại của các player khác
-            //public int _playerID;
-            //public Dictionary<int, InGame_CardDataModelWithAmount> _bagDic;
-            //public List<InGame_CardDataModelWithAmount> _bagList;
-            //public int _totalCard;
-            //public int _currentCoin;
-
-            msg._otherPlayerInfoList = new List<OtherPlayerLookingInfo>();
+            msg._otherPlayerInfoList = InGameManager.GetOtherPlayerLookingInfos();
             msg._otherPlayerInfoDic = new Dictionary<int, OtherPlayerLookingInfo>();
             foreach (OtherPlayerLookingInfo info in msg._otherPlayerInfoList)
             {
                 msg._otherPlayerInfoDic.Add(info._playerID, info);
             }
             //lấy card trên top deck
-            msg._topDeckCardEffectID = InGameBaseCardEffectID.NONE_EFFECT;
-            msg._topDeckCardID = -1;
+            msg._topDeckCardEffectID = InGameController.GetTopDeckEffect();
+            msg._topDeckCardID = InGameController.GetTopDeckID();
 
             //có conflict khum?
-            msg._willPalletConflictIfDraw = false;
+            msg._willPalletConflictIfDraw = InGameController.GetResultPalletConflictIfThisCardJoin(msg._topDeckCardID);
+            //this info will be get when that action come 
             msg._coinNeedToSpentIfPalletConflict = 0;
             return msg;
+        }
+
+        public void EndTurn()
+        {
+            
         }
     }
     /// <summary>
@@ -148,7 +147,7 @@ public class InGameAI
 
             //nếu lỡ bắt buộc draw, kết quả draw có gây conflict ko?
             dMsg._willPalletConflictIfDraw = !dMsg._endTurn && _msg._willPalletConflictIfDraw;
-            dMsg._willSpentTheCoin = DecideToUseCoinIfConflict();
+            dMsg._willSpentTheCoin = DecideToUseCoinIfWeAfford();
 
             //nếu không endturn => BẮT BUỘC draw card tiếp theo
             //nếu card tiếp theo có effect tương tác: pull card hoặc destroy card thì phải decide là tương tác với ai và card tương tác là card nào
@@ -240,6 +239,9 @@ public class InGameAI
             int DecidePlayerToInteractDestroy()
             {
                 List<OtherPlayerLookingInfo> infos = new List<OtherPlayerLookingInfo>(_msg._otherPlayerInfoList);
+                if(infos.Count == 1)
+                    return infos[0]._playerID;
+
                 //sort player có nhiều card amount nhất mà phang, nếu tie thì lấy thằng nhiều coin hơn, tie nữa thì random
                 infos.OrderByDescending(x=>x._totalCard);
 
@@ -277,7 +279,8 @@ public class InGameAI
                 return -1;
             }
 
-            bool DecideToUseCoinIfConflict()
+            ///Nếu đủ coin thì có chi ra cứu pallet ko
+            bool DecideToUseCoinIfWeAfford()
             {
                 //nếu conflict, có chi coin ko?
                 //nếu coin ko đủ cứu => ko chi
@@ -285,37 +288,28 @@ public class InGameAI
                 //1. Nếu trong pallet có card trên goal => cứu
                 //2. Nếu ko có card trong goal, nhưng coin thu về từ pallet lớn hơn coin chi ra => cứu
                 //3. Nếu cả 2 card ko => random 10-20% cứu
-                if (dMsg._willPalletConflictIfDraw)
+                //1.
+                foreach (int cardID in _msg._myPalletCurrentCards)
                 {
-                    int myCoin = this.PlayerInfo.CurrentCoinPoint;
-                    int coinNeedToSpent = _msg._coinNeedToSpentIfPalletConflict;
-                    if (PlayerInfo.IsCanUseGameCoin(coinNeedToSpent))
-                       return false;
-                    else
+                    if (this.PlayerInfo.IsCardListedInGoal(cardID))
                     {
-                        //1.
-                        foreach (int cardID in _msg._myPalletCurrentCards)
-                        {
-                            if (this.PlayerInfo.IsCardListedInGoal(cardID))
-                            {
-                                return true;
-                            }
-                        }
-                        //2.
-                        if (coinNeedToSpent < _msg._totalCoinGainFromThisPallet)
-                            return true;
-
-                        //3.
-                        float chanceToUseCoin = 0.1f;
-                        if (GameUtils.Random <= chanceToUseCoin)
-                            return true;
+                        return true;
                     }
                 }
+
+                //2.
+                float chanceToUseCoin = 0.1f;
+                if (GameUtils.Random <= chanceToUseCoin)
+                    return true;
 
                 return false;
             }
         }
 
+        public void EndTurn()
+        {
+            this._msg = null;
+        }
     }
     /// <summary>
     /// Class message AI Decider return ra gửi cho Executor giúp nó thực thi theo ý nó từ những thông tin này
@@ -345,6 +339,8 @@ public class InGameAI
     public class AIExecutor
     {
         protected InGameBasePlayerItem _player;
+        public BaseInGamePlayerDataModel PlayerInfo => _player?.PlayerModel;
+
         protected DecidingMesssage _msg;
 
         Queue<ExecutionAction> _actions;
@@ -374,21 +370,6 @@ public class InGameAI
                 {
                     //Chờ vài giây
                     _actions.Enqueue(new ExecuteDrawCard(this._msg, _player));
-
-                    //Chờ vài giây
-                    //logic ở đây đang sai, khi card flip xong, callback gọi thì mới execute cái này
-                    if (_msg._interactWithOther)
-                    {
-                        _actions.Enqueue(new ExecuteThink(this._msg, _player, _thinkTime: 3f));
-                        _actions.Enqueue(new ExecuteChoseCard(this._msg, _player));
-                    }
-
-                    //logic ở đây đang sai, khi dice roll xong, callback gọi thì mới execute cái này
-                    if (_msg._willSpentTheCoin)
-                    {
-                        _actions.Enqueue(new ExecuteThink(this._msg, _player, _thinkTime:3f));
-                        _actions.Enqueue(new ExecuteUseCoin(this._msg, _player));
-                    }
                 }
             }
             catch (System.Exception e)
@@ -412,6 +393,32 @@ public class InGameAI
             return this._actions.Count > 0;
         }
 
+
+        public void CheckActionInterractCardIfNeed()
+        {
+            //Chờ vài giây
+            //logic ở đây đang sai, khi card flip xong, callback gọi thì mới execute cái này
+            if (_msg._interactWithOther)
+            {
+                _actions.Enqueue(new ExecuteThink(this._msg, _player, _thinkTime: 3f));
+                _actions.Enqueue(new ExecuteChoseCard(this._msg, _player));
+            }
+        }
+        public void CheckActionSpentCoinIfNeed(int coinNeedSpending)
+        {
+            //logic ở đây đang sai, khi dice roll xong, callback gọi thì mới execute cái này
+            if (_msg._willSpentTheCoin && PlayerInfo.IsCanUseGameCoin(coinNeedSpending))
+            {
+                _actions.Enqueue(new ExecuteThink(this._msg, _player, _thinkTime: 3f));
+                _actions.Enqueue(new ExecuteUseCoin(this._msg, _player));
+            }
+        }
+        public void EndTurn()
+        {
+            _msg = null;
+            this._actions.Clear();
+            deQueue = false;
+        }
     }
 
     #region Execution Action

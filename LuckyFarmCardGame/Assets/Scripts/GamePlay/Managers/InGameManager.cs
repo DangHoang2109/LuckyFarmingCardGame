@@ -58,7 +58,8 @@ public class InGameManager : MonoSingleton<InGameManager>
         //Assign Game Rule Component
 
         //Init Game Controller
-
+        GameController?.AddCallback_CardOnGoingDrawed(this.OnACardGoingBeDrawed);
+        GameController?.AddCallback_CardPutToPallet(this.OnLetUserActionWhenCardActiveEffectWhenPutToPallet);
         GameController?.AddCallback_PalletConflict(this.OnPalletConflict);
         GameController?.AddCallback_PalletDestroyed(this.OnPalletDestroyed);
         GameController?.AddCallback_PalletPulledByRule(this.OnPalletPulledByRule);
@@ -118,7 +119,7 @@ public class InGameManager : MonoSingleton<InGameManager>
     #region Turn Action
     public void OnBeginTurn()
     {
-        this.GameController?.BeginTurn();
+        this.GameController?.BeginTurn(CurrentTurnPlayer.IsMainPlayer);
         Debug.Log($"GAME MANGE: Player seat {this._turnIndex} begin turn");
         CurrentTurnPlayer.BeginTurn();
     }
@@ -126,9 +127,17 @@ public class InGameManager : MonoSingleton<InGameManager>
     {
         this.Notificator?.ShowText(text, this.CurrentTurnPlayer.IsMainPlayer);
     }
+
     public void OnDrawCard()
     {
         GameController?.OnDrawACard();
+    }
+    /// <summary>
+    /// called by ingame controller when a card is drawing
+    /// </summary>
+    private void OnACardGoingBeDrawed()
+    {
+        this.CurrentTurnPlayer?.OnACardGoingBeDrawed();
     }
     public void OnUserEndTurn()
     {
@@ -174,6 +183,22 @@ public class InGameManager : MonoSingleton<InGameManager>
             {
                 this.GameController?.OnUserDecideToUseGameCoin(_currentTurnCoinNeedUsing);
             }
+    }
+    /// <summary>
+    /// Một card có effect đã được đưa vào trong pallet
+    /// inform cho user biết để xử lý
+    /// </summary>
+    public void OnLetUserActionWhenCardActiveEffectWhenPutToPallet(int cardID)
+    {
+        this.CurrentTurnPlayer?.Action_ACardPutToPallet(cardID);
+    }
+    /// <summary>
+    /// Một card có effect đã được đưa vào trong pallet
+    /// inform cho user biết để xử lý
+    /// </summary>
+    public void OnLetUserActionWhenPalletConflictAndNeedUseCoin(int amountCoinNeeding, int pointAdding)
+    {
+        this.CurrentTurnPlayer?.Action_DecideAndUseCoin(amountCoinNeeding, pointAdding);
     }
 
     private void OnLogicEndTurn()
@@ -225,8 +250,15 @@ public class InGameManager : MonoSingleton<InGameManager>
         if (willBeDestroy && this.CurrentTurnPlayerModel.IsCanUseGameCoin(amountCointNeed))
         {
             _currentTurnCoinNeedUsing = amountCointNeed;
-            this.ConfirmUsingCoin?.ParseDataAndShow(amountCoinNeedToUse: amountCointNeed, amountDiceResWillBeAdd: pointNeeding);
+            OnLetUserActionWhenPalletConflictAndNeedUseCoin(amountCointNeed, pointNeeding);
         }
+    }
+    /// <summary>
+    /// Normally only Main Player will call this
+    /// </summary>
+    public void ShowConfirmUsingCoin(int amountCoinNeeding, int pointAdding)
+    {
+        this.ConfirmUsingCoin?.ParseDataAndShow(amountCoinNeedToUse: amountCoinNeeding, amountDiceResWillBeAdd: pointAdding);
     }
     public void OnPalletConflict()
     {
@@ -256,6 +288,7 @@ public class InGameManager : MonoSingleton<InGameManager>
     public void OnTellControllerContinueTurn()
     {
         this.GameController?.ContinueTurn();
+        CurrentTurnPlayer?.ContinueTurn();
     }
     public void OnTellControllerToRollDice()
     {
@@ -339,13 +372,13 @@ public class InGameManager : MonoSingleton<InGameManager>
 
 
     #region Bot Looker API Need
-    List<InGameAI.OtherPlayerLookingInfo> GetOtherPlayerLookingInfos()
+    public List<InGameAI.OtherPlayerLookingInfo> GetOtherPlayerLookingInfos()
     {
         List<InGameAI.OtherPlayerLookingInfo> res = new List<InGameAI.OtherPlayerLookingInfo>();
         int currentTurnId = this.CurrentTurnPlayer.ID;
         foreach (InGameBasePlayerItem playerItem in this._players)
         {
-            if (playerItem.ID == currentTurnId)
+            if (!playerItem.IsPlaying || playerItem.ID == currentTurnId)
                 continue;
 
             BaseInGamePlayerDataModel model = playerItem.PlayerModel;

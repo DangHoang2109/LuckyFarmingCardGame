@@ -16,6 +16,7 @@ public class InGameBasePlayerItem : MonoBehaviour
     #endregion Prop on editor
 
     #region Data
+    public bool IsPlaying => this._playerModel != null;
     protected BaseInGamePlayerDataModel _playerModel;
     public BaseInGamePlayerDataModel PlayerModel => _playerModel;
 
@@ -24,6 +25,10 @@ public class InGameBasePlayerItem : MonoBehaviour
 
     public int AmountCardInBag => this.PlayerModel?.AmountCardInBag ?? 0;
     public bool IsHasCardIsBag => this.PlayerModel?.IsHasCardIsBag ?? false;
+
+    //in effect card
+    protected List<int> CardBeingChose; protected int _amountCardToBeChoseInEffect; protected System.Action<int, List<int>> _onCompleteBeingChoseInEffect;
+
     #endregion Data
 
     #region Init Action
@@ -71,6 +76,17 @@ public class InGameBasePlayerItem : MonoBehaviour
     {
         _imgTimer.gameObject.SetActive(false);
     }
+    public virtual void ContinueTurn()
+    {
+
+    }
+    /// <summary>
+    /// called by ingame controller when a card is drawing
+    /// </summary>
+    public virtual void OnACardGoingBeDrawed()
+    {
+
+    }
     /// <summary>
     /// Called by IngameManager when this user endturn or force endturn success by rolling dice
     /// </summary>
@@ -89,42 +105,6 @@ public class InGameBasePlayerItem : MonoBehaviour
     }
 
     /// <summary>
-    /// Called by InGameManager, to let this user item make decision destroy other card
-    /// </summary>
-    public void OnDeciseToDestroyOtherCard()
-    {
-        //Debug.Log("GAME MANGE: Pick a player to destroy");
-        //int idPlayerDestroy = Test_RandAPlayerToDestroy();
-
-        //if (idPlayerDestroy >= 0 && idPlayerDestroy < this._playersModels.Count)
-        //{
-        //    int cardTODesrtoy = Test_RandACardIDToDestroy(_playersModels[idPlayerDestroy]);
-        //    GameController?.DestroyPlayerCard(player: this._players[idPlayerDestroy], cardTODesrtoy);
-        //}
-        //else
-        //{
-        //    Debug.Log("GAME MANGE: No player has card in bag to destroy");
-        //}
-
-        //int Test_RandAPlayerToDestroy()
-        //{
-        //    List<int> idNotMe = new List<int>();
-        //    foreach (BaseInGamePlayerDataModel item in this._playersModels)
-        //    {
-        //        if (item._id != this.CurrentTurnPlayer.ID && item._bag.Count > 0)
-        //            idNotMe.Add(item._id);
-        //    }
-        //    if (idNotMe.Count == 0)
-        //        return -1;
-
-        //    return idNotMe[Random.Range(0, idNotMe.Count)];
-        //}
-        //int Test_RandACardIDToDestroy(BaseInGamePlayerDataModel player)
-        //{
-        //    return player._bag.GetRandom()._cardID;
-        //}
-    }
-    /// <summary>
     /// Called by InGame Manager
     /// To let this user ready to be chose by the user who has destroying card
     /// </summary>
@@ -139,7 +119,7 @@ public class InGameBasePlayerItem : MonoBehaviour
         this.BagVisual?.EnableToggleForEffectStage(true, OnACardItemInBagBeingChose_DestroyingPhase);
 
     }
-    protected List<int> CardBeingChose; protected int _amountCardToBeChoseInEffect; protected System.Action<int, List<int>> _onCompleteBeingChoseInEffect;
+
     protected void OnACardItemInBagBeingChose_DestroyingPhase(int cardID, bool isChosed)
     {
         CardBeingChose ??= new List<int>();
@@ -168,6 +148,7 @@ public class InGameBasePlayerItem : MonoBehaviour
 
         this.BagVisual?.RefreshPlayerBag(this.PlayerModel._dictionaryBags);
     }
+
     /// <summary>
     /// Called by InGame Manager
     /// To let this user ready to be chose by the user who has destroying card
@@ -202,19 +183,7 @@ public class InGameBasePlayerItem : MonoBehaviour
             this.BagVisual?.EnableToggleForEffectStage(false, null);
         }
     }
-    /// <summary>
-    /// Called by InGame Manager, to decide which card I should chose for pulling effect
-    /// This usually a bot
-    /// </summary>
-    /// <param name="player"></param>
-    /// <returns></returns>
-    protected int Test_RandACardIDToPull(BaseInGamePlayerDataModel player)
-    {
-        if (player._bag.Count > 0)
-            return player._bag.GetRandom()._cardID;
-        else
-            return -1;
-    }
+
     public InGame_CardDataModelWithAmount PullMyCardToThePallet(int cardIdToPull)
     {
         if (this.PlayerModel != null)
@@ -226,6 +195,15 @@ public class InGameBasePlayerItem : MonoBehaviour
             return splitCard;
         }
         return null;
+    }
+
+    public virtual void Action_ACardPutToPallet(int cardID)
+    {
+
+    }
+    public virtual void Action_DecideAndUseCoin(int amountCoinNeeding, int pointAdding)
+    {
+
     }
     #endregion Turn Action
 

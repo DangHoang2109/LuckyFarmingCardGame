@@ -6,6 +6,10 @@ using System.Linq;
 public class CardGameController : MonoBehaviour
 {
     #region Callback 
+    // Một card sắp được draw ra
+    public System.Action _onGoingDrawingCard;
+    // Một card được đưa vào pallet
+    public System.Action<int> _onCardPutToPallet;
     //Khi user draw ra 1 card đã có trên pallet
     public System.Action _onPalletConflict;
     //Khi dice đã roll và có thể bị destroy hay ko, invoke dice result và có bị destroy pallet ko
@@ -73,6 +77,8 @@ public class CardGameController : MonoBehaviour
     protected int _currentTurnDiceResult;
     public int CurrentTurnDiceResult => _currentTurnDiceResult;
     protected Coroutine _coroutineWaitDecidingUseGameCoin;
+
+    protected bool _isMainUserTurn = false;
     #endregion Data Prop
 
     #region Config
@@ -88,8 +94,6 @@ public class CardGameController : MonoBehaviour
         //get deck contain
         _deckConfig = InGameDeckConfigs.Instance.GetStandardDeck();
         RecreateTheDeck();
-
-        this.EnableDrawingCardFromDeck(true);
     }
 
     #region Action with Deck
@@ -128,6 +132,17 @@ public class CardGameController : MonoBehaviour
     }
     #endregion Action with Deck
 
+    #region Callback Adding
+    public void AddCallback_CardOnGoingDrawed(System.Action cb)
+    {
+        _onGoingDrawingCard -= cb;
+        _onGoingDrawingCard += cb;
+    }
+    public void AddCallback_CardPutToPallet(System.Action<int> cb)
+    {
+        _onCardPutToPallet -= cb;
+        _onCardPutToPallet += cb;
+    }
     public void AddCallback_PalletConflict(System.Action cb)
     {
         _onPalletConflict -= cb;
@@ -148,14 +163,19 @@ public class CardGameController : MonoBehaviour
         _onDiceShowedResult -= cb;
         _onDiceShowedResult += cb;
     }
+
+    #endregion Callback Adding
+
+
     #region Turn Action
-    public void BeginTurn()
+    public void BeginTurn(bool isMainUserTurn)
     {
-        this.EnableDrawingCardFromDeck(true);
+        _isMainUserTurn = isMainUserTurn;
+        this.EnableDrawingCardFromDeck(_isMainUserTurn);
     }
     public void ContinueTurn()
     {
-        this.EnableDrawingCardFromDeck(true);
+        this.EnableDrawingCardFromDeck(_isMainUserTurn);
     }
 
     /// <summary>
@@ -316,6 +336,7 @@ public class CardGameController : MonoBehaviour
             //Let it move to pallet
             cardItem.transform.SetParent(this._tfPalletPanel);
 
+            _onCardPutToPallet?.Invoke(card._id);
         }
     }
 
@@ -489,6 +510,15 @@ public class CardGameController : MonoBehaviour
         this.CheckDeck();
         int amountCardCauseConflict = this._currentDeck.Where(x => _cardsOnPallet.Find((c)=> c._id == x) != null).Count();
         return amountCardCauseConflict / DeckCardAmount;
+    }
+    public List<int> GetCurrentPalletIDs()
+    {
+        List<int> pallet = new List<int>();
+        foreach (InGame_CardDataModel item in this.CardsOnPallet)
+        {
+            pallet.Add(item._id);
+        }
+        return pallet;
     }
     /// <summary>
     /// Lấy lượng coin nhận được khi pull pallet này về

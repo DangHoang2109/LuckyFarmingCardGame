@@ -164,7 +164,7 @@ GameObject:
   - component: {fileID: 7589315237290703242}
   - component: {fileID: 729983314714823029}
   - component: {fileID: 8924042018289112389}
-  - component: {fileID: 6389051694422632150}
+  - component: {fileID: 169849610940868777}
   m_Layer: 5
   m_Name: Bot1
   m_TagString: Untagged
@@ -232,7 +232,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &6389051694422632150
+--- !u!114 &169849610940868777
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -241,7 +241,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1751299879956319715}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8b0d4f9acc29d3f43ba020df9faeeb13, type: 3}
+  m_Script: {fileID: 11500000, guid: 02ef46afa0617fa4590000fdd07f4fd0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _bagVisual: {fileID: 1362328110977541365}
