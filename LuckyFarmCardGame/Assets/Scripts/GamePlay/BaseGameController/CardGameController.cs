@@ -177,7 +177,16 @@ public class CardGameController : MonoBehaviour
     {
         this.EnableDrawingCardFromDeck(_isMainUserTurn);
     }
-
+    /// <summary>
+    /// This flow is shit
+    /// Gamemanager cần phải biết lúc nào gamecontroller có khả năng tiếp tục turn : Các animtion đã xong
+    /// Cái flow nhùng này là vì hiện tại gamecontroller đang đảm nhiệm animation bằng coroutine luôn
+    /// Nếu sau này implement 1 hệ thống animation riêng thì sẽ ko bị nữa
+    /// </summary>
+    public void TellGameManagerICanContinueTurn()
+    {
+        InGameManager.OnTellControllerContinueTurn();
+    }
     /// <summary>
     /// User dùng coin để thay đổi kết quả dice, hoặc tùy theo game rule
     /// </summary>
@@ -230,7 +239,7 @@ public class CardGameController : MonoBehaviour
             }
             InGameManager.Instance.Notificator?.DisableText();
 
-            ContinueTurn();
+            TellGameManagerICanContinueTurn();
         }
         Debug.Log($"CONTROLLER: Reveal {amount} top card {topContent}");
     }
@@ -479,7 +488,7 @@ public class CardGameController : MonoBehaviour
                 player.DestroyMyCardByOther(cardIDToDestroy);
             }
 
-            ContinueTurn();
+            TellGameManagerICanContinueTurn();
         }
     }
     public void PullPlayerCardToHisPallet(InGameBasePlayerItem player, int cardIDToPull)
@@ -490,7 +499,7 @@ public class CardGameController : MonoBehaviour
             PutACardToPallet(CreateCardDataModel(cardPulled._cardID));
 
 
-            ContinueTurn();
+            TellGameManagerICanContinueTurn();
         }
     }
     #endregion Interacting with player bag
