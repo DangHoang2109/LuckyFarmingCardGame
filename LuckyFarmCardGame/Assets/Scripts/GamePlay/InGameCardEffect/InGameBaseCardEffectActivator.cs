@@ -24,6 +24,7 @@ public class InGameBaseCardEffectActivator
     public virtual void ActiveEffectWhenPlaceToPallet()
     {
         Debug.Log($"CARD {(int)ID}: activate effect {ID} when place to pallet");
+        Debug.Log("ActiveEffectWhenPlaceToPallet");
     }
     public virtual void ActiveEffectWhenDestroyed()
     {
@@ -65,7 +66,6 @@ public class InGameCardEffectActivator_NoneEffect : InGameBaseCardEffectActivato
     {
         base.ActiveEffectWhenPlaceToPallet();
         InGameManager.Instance.OnTellControllerContinueTurn();
-
     }
     public override void ActiveEffectWhenDestroyed()
     {

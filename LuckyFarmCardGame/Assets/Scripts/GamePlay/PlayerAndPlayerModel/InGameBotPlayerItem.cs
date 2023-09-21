@@ -72,11 +72,13 @@ public class InGameBotPlayerItem : InGameBasePlayerItem
     #region Turn Action
     public override void BeginTurn()
     {
+        Debug.Log("AI: BeginTurn");
         base.BeginTurn();
         StartPlaningTurn();
     }
     public override void ContinueTurn()
     {
+        Debug.Log("AI: ContinueTurn");
         base.ContinueTurn();
         StartPlaningTurn();
     }

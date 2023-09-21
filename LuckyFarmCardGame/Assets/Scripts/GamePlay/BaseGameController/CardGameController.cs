@@ -301,7 +301,6 @@ public class CardGameController : MonoBehaviour
     }
 
 
-
     protected IEnumerator ieDrawAndAddCardToPallet(InGame_CardDataModel card, BaseCardItem cardItem)
     {
         yield return new WaitForSeconds(this.AnimationTimeConfig._timeACardStayOnActiveEffectPanel);

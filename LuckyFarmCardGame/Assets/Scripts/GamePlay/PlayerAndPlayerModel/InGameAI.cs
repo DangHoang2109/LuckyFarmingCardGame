@@ -285,17 +285,8 @@ public class InGameAI
                 //nếu conflict, có chi coin ko?
                 //nếu coin ko đủ cứu => ko chi
                 //nếu coin đủ => 
-                //1. Nếu trong pallet có card trên goal => cứu
                 //2. Nếu ko có card trong goal, nhưng coin thu về từ pallet lớn hơn coin chi ra => cứu
                 //3. Nếu cả 2 card ko => random 10-20% cứu
-                //1.
-                foreach (int cardID in _msg._myPalletCurrentCards)
-                {
-                    if (this.PlayerInfo.IsCardListedInGoal(cardID))
-                    {
-                        return true;
-                    }
-                }
 
                 //2.
                 float chanceToUseCoin = 0.1f;
