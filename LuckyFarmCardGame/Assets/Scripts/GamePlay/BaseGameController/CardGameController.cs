@@ -125,7 +125,7 @@ public class CardGameController : MonoBehaviour
         if (DeckCardAmount <= 0)
             RecreateTheDeck();
     }
-    public void EnableDrawingCardFromDeck(bool isAllow)
+    public void EnableDrawingCardFromDeckAI(bool isAllow)
     {
         if(_btnDeckDraw != null)
             this._btnDeckDraw.interactable = isAllow;
@@ -171,11 +171,11 @@ public class CardGameController : MonoBehaviour
     public void BeginTurn(bool isMainUserTurn)
     {
         _isMainUserTurn = isMainUserTurn;
-        this.EnableDrawingCardFromDeck(_isMainUserTurn);
+        this.EnableDrawingCardFromDeckAI(!_isMainUserTurn);
     }
     public void ContinueTurn()
     {
-        this.EnableDrawingCardFromDeck(_isMainUserTurn);
+        this.EnableDrawingCardFromDeckAI(!_isMainUserTurn);
     }
     /// <summary>
     /// This flow is shit
@@ -245,7 +245,7 @@ public class CardGameController : MonoBehaviour
     }
     public void OnDrawACard()
     {
-        this.EnableDrawingCardFromDeck(false);
+        this.EnableDrawingCardFromDeckAI(false);
 
         //Get a card from deck
         InGame_CardDataModel topDeckCard = GetDeckTopCard(isWillPopThatCardOut: true);
@@ -323,13 +323,13 @@ public class CardGameController : MonoBehaviour
             yield return new WaitForSeconds(this.AnimationTimeConfig._timeConflictAnimationShowing);
             _gLightningAnimator.gameObject.SetActive(false);
 
-            //destroying the conflict card
-            cardItem.OnDestroyingEffect();
+            //Origin Idea: destroying the conflict card
+            //cardItem.OnDestroyingEffect();
 
             yield return new WaitForSeconds(this.AnimationTimeConfig._timeWaitOnBeforeDestroyPallet);
 
             _onPalletConflict?.Invoke();
-            OnPalletConflict();
+            OnPalletConflict(cardItem);
 
         }
         //else: let it in
@@ -347,15 +347,22 @@ public class CardGameController : MonoBehaviour
             _onCardPutToPallet?.Invoke(card._id);
         }
     }
-
-    private void OnPalletConflict()
+    /// <summary>
+    /// Calling when a pallet is conflict
+    /// </summary>
+    /// <param name="cardItem">the card causing the pallet conflict. NOTE: cardItem is only not null in axie version, in origin, it has been destroy first, then dice rolling </param>
+    private void OnPalletConflict(BaseCardItem cardItem)
     {
         //ask the rule to see what to do?
         ThisFuncShouldOnRule_TellControllerToRollingDice();
 
         void ThisFuncShouldOnRule_TellControllerToRollingDice()
         {
-            RollADiceAndCheckPalletCondition();
+            //axie hackthon => destroy the pallet for reducing the difficulty of game
+            cardItem.OnDestroyingEffect();
+            this.DestroyPallet();
+            //origin game design -> roll a dice
+            //RollADiceAndCheckPalletCondition();
         }
     }
     public void RollADiceAndCheckPalletCondition()

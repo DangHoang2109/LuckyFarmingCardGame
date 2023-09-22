@@ -120,9 +120,9 @@ public class InGameManager : MonoSingleton<InGameManager>
         Debug.Log($"GAME MANGE: Player seat {this._turnIndex} begin turn");
         CurrentTurnPlayer.BeginTurn();
     }
-    public void ShowNotificationCardAction(string text)
+    public void ShowNotificationCardAction(string text, float timeStay)
     {
-        this.Notificator?.ShowText(text, this.CurrentTurnPlayer.IsMainPlayer);
+        this.Notificator?.ShowText(text, this.CurrentTurnPlayer.IsMainPlayer, timeStay);
     }
 
     public void OnDrawCard()

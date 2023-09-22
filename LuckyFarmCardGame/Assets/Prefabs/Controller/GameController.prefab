@@ -1,0 +1,66 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1439617050266540726
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 187408563391967480}
+  - component: {fileID: 8459212361415600067}
+  m_Layer: 0
+  m_Name: GameController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &187408563391967480
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1439617050266540726}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8459212361415600067
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1439617050266540726}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f74e631ba457404da9a75f0feeb06c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _animationConfig:
+    _timeConflictAnimationShowing: 0.5
+    _timeACardStayOnActiveEffectPanel: 1
+    _timeWaitOnBeforeDestroyPallet: 0.5
+    _timeWaitPullingOnBeforeClearingPallet: 1
+    _timeWaitDiceRolling: 1
+    _timeWaitShowDiceResult: 1
+    _timeWaitBeforeEnableDeckDrawable: 0.25
+    _timeWaitRevealTopDeck: 2
+    _timeWaitAnimationDestroyingCard: 0.25
+    _timeWaitAnimationPullingCard: 0.25
+  _cardPrefab: {fileID: 0}
+  _tfPalletPanel: {fileID: 0}
+  _tfActEffectPanel: {fileID: 0}
+  _tfDeckPanel: {fileID: 0}
+  _gLightningAnimator: {fileID: 0}
+  _diceAnimator: {fileID: 0}
+  _btnDeckDraw: {fileID: 0}
+  _notificator: {fileID: 0}
+  CardsOnPallet: []

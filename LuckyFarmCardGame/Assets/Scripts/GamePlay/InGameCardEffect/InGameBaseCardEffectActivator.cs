@@ -36,7 +36,7 @@ public class InGameBaseCardEffectActivator
     }
     public virtual void ShowingNotification()
     {
-        InGameManager.Instance.ShowNotificationCardAction($"Card effect: {this.EffectConfig?._cardEffectDescription}");
+        InGameManager.Instance.ShowNotificationCardAction($"Card effect: {this.EffectConfig?._cardEffectDescription}", timeStay: 1f);
     }
 }
 public enum InGameBaseCardEffectID
@@ -75,9 +75,6 @@ public class InGameCardEffectActivator_NoneEffect : InGameBaseCardEffectActivato
     {
         base.ActiveEffectWhenPulledToBag();
     }
-    public override void ShowingNotification()
-    {
-    }
 }
 public class InGameCardEffectActivator_RollingDice : InGameBaseCardEffectActivator
 {
@@ -89,7 +86,8 @@ public class InGameCardEffectActivator_RollingDice : InGameBaseCardEffectActivat
     }
     public override void ActiveEffectWhenPlaceToPallet()
     {
-        base.ActiveEffectWhenPlaceToPallet();
+        base.ActiveEffectWhenPlaceToPallet(); 
+        ShowingNotification();
         InGameManager.Instance.OnTellControllerToRollDice();
     }
     public override void ActiveEffectWhenDestroyed()
@@ -99,9 +97,6 @@ public class InGameCardEffectActivator_RollingDice : InGameBaseCardEffectActivat
     public override void ActiveEffectWhenPulledToBag()
     {
         base.ActiveEffectWhenPulledToBag();
-    }
-    public override void ShowingNotification()
-    {
     }
 }
 public class InGameCardEffectActivator_DrawCard : InGameBaseCardEffectActivator
@@ -115,6 +110,7 @@ public class InGameCardEffectActivator_DrawCard : InGameBaseCardEffectActivator
     public override void ActiveEffectWhenPlaceToPallet()
     {
         base.ActiveEffectWhenPlaceToPallet();
+        ShowingNotification();
         InGameManager.Instance.OnTellControllerToDrawCards(1);
 
     }
@@ -125,9 +121,6 @@ public class InGameCardEffectActivator_DrawCard : InGameBaseCardEffectActivator
     public override void ActiveEffectWhenPulledToBag()
     {
         base.ActiveEffectWhenPulledToBag();
-    }
-    public override void ShowingNotification()
-    {
     }
 }
 public class InGameCardEffectActivator_RevealTop : InGameBaseCardEffectActivator
@@ -152,10 +145,6 @@ public class InGameCardEffectActivator_RevealTop : InGameBaseCardEffectActivator
     {
         base.ActiveEffectWhenPulledToBag();
     }
-    public override void ShowingNotification()
-    {
-        base.ShowingNotification();
-    }
 }
 public class InGameCardEffectActivator_DestroyOthersCard : InGameBaseCardEffectActivator
 {
@@ -171,6 +160,9 @@ public class InGameCardEffectActivator_DestroyOthersCard : InGameBaseCardEffectA
         bool actSuccess= InGameManager.Instance.OnTellControllerToDestroyOtherCard();
         if (actSuccess)
             ShowingNotification();
+        else
+            ShowNotificationFail();
+
     }
     public override void ActiveEffectWhenDestroyed()
     {
@@ -179,6 +171,10 @@ public class InGameCardEffectActivator_DestroyOthersCard : InGameBaseCardEffectA
     public override void ActiveEffectWhenPulledToBag()
     {
         base.ActiveEffectWhenPulledToBag();
+    }
+    public void ShowNotificationFail()
+    {
+        InGameManager.Instance.ShowNotificationCardAction($"No card to destroy", timeStay: 1f);
     }
 }
 public class InGameCardEffectActivator_PullCardFromBagToPallet : InGameBaseCardEffectActivator
@@ -195,6 +191,8 @@ public class InGameCardEffectActivator_PullCardFromBagToPallet : InGameBaseCardE
         bool actSuccess = InGameManager.Instance.OnTellControllerToPullMyCard();
         if (actSuccess)
             ShowingNotification();
+        else
+            ShowNotificationFail();
     }
     public override void ActiveEffectWhenDestroyed()
     {
@@ -203,6 +201,10 @@ public class InGameCardEffectActivator_PullCardFromBagToPallet : InGameBaseCardE
     public override void ActiveEffectWhenPulledToBag()
     {
         base.ActiveEffectWhenPulledToBag();
+    }
+    public void ShowNotificationFail()
+    {
+        InGameManager.Instance.ShowNotificationCardAction($"No card to pull", timeStay: 1f);
     }
 }
 
