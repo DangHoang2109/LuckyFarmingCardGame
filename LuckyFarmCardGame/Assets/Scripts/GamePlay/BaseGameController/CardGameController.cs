@@ -125,7 +125,7 @@ public class CardGameController : MonoBehaviour
         if (DeckCardAmount <= 0)
             RecreateTheDeck();
     }
-    public void EnableDrawingCardFromDeck(bool isAllow)
+    public void EnableDrawingCardFromDeckAI(bool isAllow)
     {
         if(_btnDeckDraw != null)
             this._btnDeckDraw.interactable = isAllow;
@@ -171,13 +171,22 @@ public class CardGameController : MonoBehaviour
     public void BeginTurn(bool isMainUserTurn)
     {
         _isMainUserTurn = isMainUserTurn;
-        this.EnableDrawingCardFromDeck(_isMainUserTurn);
+        this.EnableDrawingCardFromDeckAI(!_isMainUserTurn);
     }
     public void ContinueTurn()
     {
-        this.EnableDrawingCardFromDeck(_isMainUserTurn);
+        this.EnableDrawingCardFromDeckAI(!_isMainUserTurn);
     }
-
+    /// <summary>
+    /// This flow is shit
+    /// Gamemanager cần phải biết lúc nào gamecontroller có khả năng tiếp tục turn : Các animtion đã xong
+    /// Cái flow nhùng này là vì hiện tại gamecontroller đang đảm nhiệm animation bằng coroutine luôn
+    /// Nếu sau này implement 1 hệ thống animation riêng thì sẽ ko bị nữa
+    /// </summary>
+    public void TellGameManagerICanContinueTurn()
+    {
+        InGameManager.OnTellControllerContinueTurn();
+    }
     /// <summary>
     /// User dùng coin để thay đổi kết quả dice, hoặc tùy theo game rule
     /// </summary>
@@ -230,13 +239,13 @@ public class CardGameController : MonoBehaviour
             }
             InGameManager.Instance.Notificator?.DisableText();
 
-            ContinueTurn();
+            TellGameManagerICanContinueTurn();
         }
         Debug.Log($"CONTROLLER: Reveal {amount} top card {topContent}");
     }
     public void OnDrawACard()
     {
-        this.EnableDrawingCardFromDeck(false);
+        this.EnableDrawingCardFromDeckAI(false);
 
         //Get a card from deck
         InGame_CardDataModel topDeckCard = GetDeckTopCard(isWillPopThatCardOut: true);
@@ -301,7 +310,6 @@ public class CardGameController : MonoBehaviour
     }
 
 
-
     protected IEnumerator ieDrawAndAddCardToPallet(InGame_CardDataModel card, BaseCardItem cardItem)
     {
         yield return new WaitForSeconds(this.AnimationTimeConfig._timeACardStayOnActiveEffectPanel);
@@ -315,13 +323,13 @@ public class CardGameController : MonoBehaviour
             yield return new WaitForSeconds(this.AnimationTimeConfig._timeConflictAnimationShowing);
             _gLightningAnimator.gameObject.SetActive(false);
 
-            //destroying the conflict card
-            cardItem.OnDestroyingEffect();
+            //Origin Idea: destroying the conflict card
+            //cardItem.OnDestroyingEffect();
 
             yield return new WaitForSeconds(this.AnimationTimeConfig._timeWaitOnBeforeDestroyPallet);
 
             _onPalletConflict?.Invoke();
-            OnPalletConflict();
+            OnPalletConflict(cardItem);
 
         }
         //else: let it in
@@ -339,15 +347,22 @@ public class CardGameController : MonoBehaviour
             _onCardPutToPallet?.Invoke(card._id);
         }
     }
-
-    private void OnPalletConflict()
+    /// <summary>
+    /// Calling when a pallet is conflict
+    /// </summary>
+    /// <param name="cardItem">the card causing the pallet conflict. NOTE: cardItem is only not null in axie version, in origin, it has been destroy first, then dice rolling </param>
+    private void OnPalletConflict(BaseCardItem cardItem)
     {
         //ask the rule to see what to do?
         ThisFuncShouldOnRule_TellControllerToRollingDice();
 
         void ThisFuncShouldOnRule_TellControllerToRollingDice()
         {
-            RollADiceAndCheckPalletCondition();
+            //axie hackthon => destroy the pallet for reducing the difficulty of game
+            cardItem.OnDestroyingEffect();
+            this.DestroyPallet();
+            //origin game design -> roll a dice
+            //RollADiceAndCheckPalletCondition();
         }
     }
     public void RollADiceAndCheckPalletCondition()
@@ -480,7 +495,7 @@ public class CardGameController : MonoBehaviour
                 player.DestroyMyCardByOther(cardIDToDestroy);
             }
 
-            ContinueTurn();
+            TellGameManagerICanContinueTurn();
         }
     }
     public void PullPlayerCardToHisPallet(InGameBasePlayerItem player, int cardIDToPull)
@@ -491,7 +506,7 @@ public class CardGameController : MonoBehaviour
             PutACardToPallet(CreateCardDataModel(cardPulled._cardID));
 
 
-            ContinueTurn();
+            TellGameManagerICanContinueTurn();
         }
     }
     #endregion Interacting with player bag

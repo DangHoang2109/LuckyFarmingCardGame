@@ -21,37 +21,19 @@ public class InGameBasePlayerBagVisual : MonoBehaviour
     public InGameBasePlayerBagVisual SetHostPlayer(InGameBasePlayerItem p)
     {
         this._hostPlayer = p;
+        this._dicItems ??= new Dictionary<int, InGameBagCardTypeUIItem>();
+        if(_dicItems.Count == 0)
+        {
+            foreach (InGameBagCardTypeUIItem item in _uiItems)
+            {
+                _dicItems.Add(item.CardID, item);
+            }
+        }
         return this;
-    }
-    /// <summary>
-    /// Parse goal card
-    /// </summary>
-    public void ParseGoalCard(InGameMissionGoalCardConfig goalCardConfig)
-    {
-        _dicItems ??= new Dictionary<int, InGameBagCardTypeUIItem>();
-        for (int i = 0; i < _uiItems.Count; i++)
-        {
-            _dicItems.Add(i, _uiItems[i]);
-
-            _uiItems[i]
-                .SetHostPlayer(this._hostPlayer)
-                .SetCardType(i)
-                .EnableToggleForEffectStage(false);
-        }
-
-        foreach (InGame_CardDataModelWithAmount inGame_CardDataModelWithAmount in goalCardConfig._requirement)
-        {
-            _dicItems[inGame_CardDataModelWithAmount._cardID]
-                .SetMaxValue(inGame_CardDataModelWithAmount._amountCard);
-        }
-
-        foreach (InGameBagCardTypeUIItem item in _uiItems)
-        {
-            item.UpdateValue(0);
-        }
     }
     public InGameBasePlayerBagVisual RefreshPlayerBag(Dictionary<int, InGame_CardDataModelWithAmount> playerBag)
     {
+        this._dicItems ??= new Dictionary<int, InGameBagCardTypeUIItem>();
         foreach (KeyValuePair< int,InGameBagCardTypeUIItem> item in _dicItems)
         {
             int id = item.Value.CardID;
@@ -63,6 +45,7 @@ public class InGameBasePlayerBagVisual : MonoBehaviour
 
     public InGameBasePlayerBagVisual EnableToggleForEffectStage(bool isOn, System.Action<int, bool> onItemChosedWhileEffect)
     {
+        this._dicItems ??= new Dictionary<int, InGameBagCardTypeUIItem>();
         this._onItemChosedWhileEffect = onItemChosedWhileEffect;
         for (int i = 0; i < _uiItems.Count; i++)
         {
@@ -74,6 +57,7 @@ public class InGameBasePlayerBagVisual : MonoBehaviour
 
     public bool TryFindUIItem(int cardID, out InGameBagCardTypeUIItem item)
     {
+        this._dicItems ??= new Dictionary<int, InGameBagCardTypeUIItem>();
         return this._dicItems.TryGetValue(cardID, out item);
     }
     /// <summary>

@@ -36,9 +36,11 @@ public class InGameBagCardTypeUIItem : MonoBehaviour
     }
     public InGameBagCardTypeUIItem UpdateValue(int currentValue)
     {
-        this._tmpValueWithMax.SetText($"{currentValue}/{(IsOwnedByMainUser ? _maxValue : "??")}");
-        if(this.IsOwnedByMainUser)
-            _tmpValueWithMax.color = _maxValue > 0 ? (currentValue >= _maxValue ? this._colorHexEnoughRequire: this._colorHexNotEnoughRequire) : Color.white;
+        this._tmpValueWithMax.SetText($"{currentValue}"); //axie
+        //$"{currentValue}/{(IsOwnedByMainUser ? _maxValue : "??")}"
+        if (this.IsOwnedByMainUser)
+            _tmpValueWithMax.color = Color.white; //axie
+                //_maxValue > 0 ? (currentValue >= _maxValue ? this._colorHexEnoughRequire: this._colorHexNotEnoughRequire) : Color.white;
         return this;
     }
     public InGameBagCardTypeUIItem SetMaxValue(int maxValue)

@@ -7,6 +7,8 @@ public class InGameMainPlayerItem : InGameBasePlayerItem
 {
     #region Prop on editor
     public Button _btnEndTurn;
+    [Space(5f)]
+    public Button _btnDeckDraw;
     #endregion Prop on editor
 
     #region Data
@@ -16,6 +18,8 @@ public class InGameMainPlayerItem : InGameBasePlayerItem
     #region Init Action
     public override InGameBasePlayerItem InitPlayerItSelf()
     {
+        _btnEndTurn.interactable = false;
+        _btnDeckDraw.interactable = false;
         return base.InitPlayerItSelf();
     }
 
@@ -26,16 +30,19 @@ public class InGameMainPlayerItem : InGameBasePlayerItem
     {
         base.BeginTurn();
         _btnEndTurn.interactable = true;
+        _btnDeckDraw.interactable = true;
     }
     public override void ContinueTurn()
     {
         base.ContinueTurn();
         _btnEndTurn.interactable = true;
+        _btnDeckDraw.interactable = true;
     }
     public override void OnACardGoingBeDrawed()
     {
         base.OnACardGoingBeDrawed();
         _btnEndTurn.interactable = false;
+        _btnDeckDraw.interactable = false;
     }
     public override void Action_ACardPutToPallet(int cardID)
     {
@@ -52,6 +59,7 @@ public class InGameMainPlayerItem : InGameBasePlayerItem
     {
         base.EndTurn();
         _btnEndTurn.interactable = false;
+        _btnDeckDraw.interactable = false;
     }
     #endregion Turn Action
 

@@ -168,7 +168,11 @@ public class InGameAI
                 case InGameBaseCardEffectID.DESTROY_OTHERS_CARD:
                     dMsg._interactWithOther = true;
                     dMsg._playerIDInteractWith = DecidePlayerToInteractDestroy();
-                    dMsg._cardIDInteractWith = DecideCardToInteractDestroy(dMsg._playerIDInteractWith);
+
+                    if(dMsg._playerIDInteractWith >= 0)
+                        dMsg._cardIDInteractWith = DecideCardToInteractDestroy(dMsg._playerIDInteractWith);
+                    else
+                        dMsg._interactWithOther = false;
                     break;
                 case InGameBaseCardEffectID.PULL_CARD_FR_BAG_TO_PALLET:
                     dMsg._interactWithOther = true;
@@ -238,8 +242,10 @@ public class InGameAI
 
             int DecidePlayerToInteractDestroy()
             {
-                List<OtherPlayerLookingInfo> infos = new List<OtherPlayerLookingInfo>(_msg._otherPlayerInfoList);
-                if(infos.Count == 1)
+                List<OtherPlayerLookingInfo> infos = new List<OtherPlayerLookingInfo>(_msg._otherPlayerInfoList.Where(x => x._totalCard > 0));
+                if (infos.Count == 0)
+                    return -1;
+                if (infos.Count == 1)
                     return infos[0]._playerID;
 
                 //sort player có nhiều card amount nhất mà phang, nếu tie thì lấy thằng nhiều coin hơn, tie nữa thì random
@@ -285,17 +291,8 @@ public class InGameAI
                 //nếu conflict, có chi coin ko?
                 //nếu coin ko đủ cứu => ko chi
                 //nếu coin đủ => 
-                //1. Nếu trong pallet có card trên goal => cứu
                 //2. Nếu ko có card trong goal, nhưng coin thu về từ pallet lớn hơn coin chi ra => cứu
                 //3. Nếu cả 2 card ko => random 10-20% cứu
-                //1.
-                foreach (int cardID in _msg._myPalletCurrentCards)
-                {
-                    if (this.PlayerInfo.IsCardListedInGoal(cardID))
-                    {
-                        return true;
-                    }
-                }
 
                 //2.
                 float chanceToUseCoin = 0.1f;

@@ -90,8 +90,7 @@ public class InGameManager : MonoSingleton<InGameManager>
         _playersModels ??= new List<BaseInGamePlayerDataModel>();
         if (this._players != null && this._players.Count > 0)
         {
-            //Pull a random goal Config to this player;
-            List<InGameMissionGoalCardConfig> goalConfigs = InGameMissionGoalCardConfigs.Instance.GetRandomConfigs(amountPlayerJoin);
+
             for (int i = 0; i < this._players.Count; i++)
             {
                 _players[i].gameObject.SetActive(i < amountPlayerJoin);
@@ -102,9 +101,7 @@ public class InGameManager : MonoSingleton<InGameManager>
                 BaseInGamePlayerDataModel playerModel = new BaseInGamePlayerDataModel()
                                                                 .SetSeatID(id: i, isMain: i == 0);
 
-                _players[i]
-                    .SetAPlayerModel(playerModel)
-                    .AddMissionGoal(goalConfigs[i]);
+                _players[i].SetAPlayerModel(playerModel);
                 this._playersModels.Add(playerModel);
             }
         }
@@ -123,9 +120,9 @@ public class InGameManager : MonoSingleton<InGameManager>
         Debug.Log($"GAME MANGE: Player seat {this._turnIndex} begin turn");
         CurrentTurnPlayer.BeginTurn();
     }
-    public void ShowNotificationCardAction(string text)
+    public void ShowNotificationCardAction(string text, float timeStay)
     {
-        this.Notificator?.ShowText(text, this.CurrentTurnPlayer.IsMainPlayer);
+        this.Notificator?.ShowText(text, this.CurrentTurnPlayer.IsMainPlayer, timeStay);
     }
 
     public void OnDrawCard()
@@ -287,6 +284,7 @@ public class InGameManager : MonoSingleton<InGameManager>
     #region Card activator behavior
     public void OnTellControllerContinueTurn()
     {
+        Debug.Log("OnTellControllerContinueTurn");
         this.GameController?.ContinueTurn();
         CurrentTurnPlayer?.ContinueTurn();
     }

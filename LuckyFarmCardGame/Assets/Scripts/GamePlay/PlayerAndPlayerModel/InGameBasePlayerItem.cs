@@ -43,21 +43,9 @@ public class InGameBasePlayerItem : MonoBehaviour
 
         return this;
     }
-    public InGameBasePlayerItem AddMissionGoal(InGameMissionGoalCardConfig goalCardConfig)
-    {
-        PlayerModel?.AddMissionGoal(goalCardConfig);
-        ParseVisualBagUI(goalCardConfig);
-        return this;
-    }
     public virtual InGameBasePlayerItem InitPlayerItSelf()
     {
         return this;
-    }
-    public virtual void ParseVisualBagUI(InGameMissionGoalCardConfig goalCardConfig)
-    {
-        this.BagVisual?
-            .SetHostPlayer(this)
-            .ParseGoalCard(goalCardConfig);
     }
     #endregion Init Action
 
@@ -225,9 +213,6 @@ public class BaseInGamePlayerDataModel
     public List<InGame_CardDataModelWithAmount> _bag;
     public Dictionary<int,InGame_CardDataModelWithAmount> _dictionaryBags;
 
-    protected InGameMissionGoalCardConfig _goalCardConfig;
-    public InGameMissionGoalCardConfig GoalCardConfig => _goalCardConfig;
-
     public int AmountCardInBag => (_bag == null || _bag.Count == 0) ? 0 : this._bag.Sum(x=>x._amountCard);
     public bool IsHasCardIsBag => AmountCardInBag > 0;
 
@@ -253,15 +238,6 @@ public class BaseInGamePlayerDataModel
         this._isMainPlayer = isMain;
         return this;
     }
-    public BaseInGamePlayerDataModel AddMissionGoal(InGameMissionGoalCardConfig goalCardConfig)
-    {
-        this._goalCardConfig = goalCardConfig;
-
-        Debug.Log($"PLAYER {_id} goal: {goalCardConfig._requirement.DebugListCardInGame()}");
-
-        return this;
-    }
-
     public bool TryGetCardInBag(int id, out InGame_CardDataModelWithAmount card)
     {
         _dictionaryBags ??= new Dictionary<int, InGame_CardDataModelWithAmount>();
@@ -347,21 +323,7 @@ public class BaseInGamePlayerDataModel
     }
     public bool IsWin()
     {
-        if(this.GoalCardConfig != null)
-        {
-            foreach (InGame_CardDataModelWithAmount require in GoalCardConfig._requirement)
-            {
-                //Not have requirement card or have but amount is not enough => return false
-                if (TryGetCardInBag(require._cardID, out InGame_CardDataModelWithAmount cardInBag))
-                {
-                    if (!cardInBag.CompareEnoughOrHigher(require))
-                        return false;
-                }
-                else
-                    return false;
-            }
-            return true;
-        }
+        Debug.Log("Implement ISWIN");
         return false;
     }
 
@@ -377,12 +339,6 @@ public class BaseInGamePlayerDataModel
             return true;
         }
         return false;
-    }
-
-    public bool IsCardListedInGoal(int cardID)
-    {
-        InGame_CardDataModelWithAmount c = this.GoalCardConfig._requirement.Find(x => x._cardID == cardID);
-        return c != null;
     }
 }
 
