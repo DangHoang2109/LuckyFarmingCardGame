@@ -478,7 +478,7 @@ public class InGameAI
         }
         public override void Do() 
         {
-            InGameManager.Instance.OnDrawCard();
+            InGameManager.Instance.OnDrawCard();            
         }
         public override bool Preparing()
         {

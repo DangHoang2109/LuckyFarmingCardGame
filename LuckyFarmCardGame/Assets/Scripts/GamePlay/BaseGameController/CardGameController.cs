@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
+using TMPro;
+
 public class CardGameController : MonoBehaviour
 {
     #region Callback 
@@ -63,6 +65,8 @@ public class CardGameController : MonoBehaviour
             return _ingameManager;
         }
     }
+    [Header("Text UI")]
+    public TextMeshProUGUI tmpNumbCardLeft;
     #endregion Prop on Editor
 
     #region Data Prop
@@ -94,6 +98,7 @@ public class CardGameController : MonoBehaviour
         //get deck contain
         _deckConfig = InGameDeckConfigs.Instance.GetStandardDeck();
         RecreateTheDeck();
+        tmpNumbCardLeft?.SetText(DeckCardAmount.ToString());
     }
 
     #region Action with Deck
@@ -124,6 +129,7 @@ public class CardGameController : MonoBehaviour
     {
         if (DeckCardAmount <= 0)
             RecreateTheDeck();
+        tmpNumbCardLeft?.SetText(DeckCardAmount.ToString());
     }
     public void EnableDrawingCardFromDeckAI(bool isAllow)
     {
@@ -171,11 +177,11 @@ public class CardGameController : MonoBehaviour
     public void BeginTurn(bool isMainUserTurn)
     {
         _isMainUserTurn = isMainUserTurn;
-        this.EnableDrawingCardFromDeckAI(!_isMainUserTurn);
+        this.EnableDrawingCardFromDeckAI(_isMainUserTurn);
     }
     public void ContinueTurn()
     {
-        this.EnableDrawingCardFromDeckAI(!_isMainUserTurn);
+        this.EnableDrawingCardFromDeckAI(_isMainUserTurn);
     }
     /// <summary>
     /// This flow is shit
@@ -281,13 +287,13 @@ public class CardGameController : MonoBehaviour
         return newCardItem;
     }
     private InGame_CardDataModel GetDeckTopCard(bool isWillPopThatCardOut)
-    {
-        CheckDeck();
-
+    {      
         int topCardId = this._currentDeck?[0] ?? 0;
 
         if (isWillPopThatCardOut)
             _currentDeck.RemoveAt(0);
+
+        CheckDeck();
 
         return CreateCardDataModel(topCardId);
     }
