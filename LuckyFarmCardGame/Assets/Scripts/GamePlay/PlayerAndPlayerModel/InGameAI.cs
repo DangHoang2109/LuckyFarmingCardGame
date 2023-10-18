@@ -156,24 +156,11 @@ public class InGameAI
                 case InGameBaseCardEffectID.NONE_EFFECT:
                     dMsg._interactWithOther = false;
                     break;
-                case InGameBaseCardEffectID.ROLL_DICE:
-                    dMsg._interactWithOther = false;
-                    break;
                 case InGameBaseCardEffectID.DRAW_CARD:
                     dMsg._interactWithOther = false;
                     break;
                 case InGameBaseCardEffectID.REVEAL_TOP_DECK:
                     dMsg._interactWithOther = false;
-                    break;
-                case InGameBaseCardEffectID.DESTROY_OTHERS_CARD:
-                    dMsg._interactWithOther = true;
-                    dMsg._playerIDInteractWith = DecidePlayerToInteractDestroy();
-                    dMsg._cardIDInteractWith = DecideCardToInteractDestroy(dMsg._playerIDInteractWith);
-                    break;
-                case InGameBaseCardEffectID.PULL_CARD_FR_BAG_TO_PALLET:
-                    dMsg._interactWithOther = true;
-                    dMsg._playerIDInteractWith = this._player.ID;
-                    dMsg._cardIDInteractWith = DecideCardToInteractPulling();
                     break;
                 default:
                     break;
@@ -194,7 +181,7 @@ public class InGameAI
 
                 if(myBagDic != null)
                 {
-                    List<InGameBaseCardEffectID> idealCardEffect = new List<InGameBaseCardEffectID>() { InGameBaseCardEffectID.NONE_EFFECT, InGameBaseCardEffectID.REVEAL_TOP_DECK, InGameBaseCardEffectID.DESTROY_OTHERS_CARD };
+                    List<InGameBaseCardEffectID> idealCardEffect = new List<InGameBaseCardEffectID>() { InGameBaseCardEffectID.NONE_EFFECT, InGameBaseCardEffectID.REVEAL_TOP_DECK };
                     idealCardEffect.Shuffle();
 
                     //list các card kéo lên sẽ ko gây conflict
@@ -258,44 +245,15 @@ public class InGameAI
                     return infos[0]._playerID;
             }
 
-            int DecideCardToInteractDestroy(int idPlayerDestroy)
-            {
-                //ưu tiên destroy card có effect xịn tránh trường hợp opp pull lên
-                //nếu không có thì destroy card bất kì
-                List<InGameBaseCardEffectID> idealCardEffect = new List<InGameBaseCardEffectID>() { InGameBaseCardEffectID.NONE_EFFECT, InGameBaseCardEffectID.REVEAL_TOP_DECK, InGameBaseCardEffectID.DESTROY_OTHERS_CARD };
-                idealCardEffect.Shuffle();
-
-                OtherPlayerLookingInfo playerDestroy = _msg._otherPlayerInfoDic[idPlayerDestroy];
-                if(playerDestroy != null)
-                {
-                    foreach (InGameBaseCardEffectID card in idealCardEffect)
-                    {
-                        InGame_CardDataModelWithAmount c = playerDestroy._bagList.Find(x => InGameUtils.GetActivatorEffectID(x._cardID) == card);
-                        if (c != null)
-                            return c._cardID;
-                    }
-                    return playerDestroy._bagList.GetRandom()._cardID;
-                }
-                return -1;
-            }
-
             ///Nếu đủ coin thì có chi ra cứu pallet ko
             bool DecideToUseCoinIfWeAfford()
             {
                 //nếu conflict, có chi coin ko?
                 //nếu coin ko đủ cứu => ko chi
                 //nếu coin đủ => 
-                //1. Nếu trong pallet có card trên goal => cứu
                 //2. Nếu ko có card trong goal, nhưng coin thu về từ pallet lớn hơn coin chi ra => cứu
                 //3. Nếu cả 2 card ko => random 10-20% cứu
                 //1.
-                foreach (int cardID in _msg._myPalletCurrentCards)
-                {
-                    if (this.PlayerInfo.IsCardListedInGoal(cardID))
-                    {
-                        return true;
-                    }
-                }
 
                 //2.
                 float chanceToUseCoin = 0.1f;

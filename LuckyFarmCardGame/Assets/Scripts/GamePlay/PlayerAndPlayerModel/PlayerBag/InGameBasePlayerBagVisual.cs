@@ -23,33 +23,6 @@ public class InGameBasePlayerBagVisual : MonoBehaviour
         this._hostPlayer = p;
         return this;
     }
-    /// <summary>
-    /// Parse goal card
-    /// </summary>
-    public void ParseGoalCard(InGameMissionGoalCardConfig goalCardConfig)
-    {
-        _dicItems ??= new Dictionary<int, InGameBagCardTypeUIItem>();
-        for (int i = 0; i < _uiItems.Count; i++)
-        {
-            _dicItems.Add(i, _uiItems[i]);
-
-            _uiItems[i]
-                .SetHostPlayer(this._hostPlayer)
-                .SetCardType(i)
-                .EnableToggleForEffectStage(false);
-        }
-
-        foreach (InGame_CardDataModelWithAmount inGame_CardDataModelWithAmount in goalCardConfig._requirement)
-        {
-            _dicItems[inGame_CardDataModelWithAmount._cardID]
-                .SetMaxValue(inGame_CardDataModelWithAmount._amountCard);
-        }
-
-        foreach (InGameBagCardTypeUIItem item in _uiItems)
-        {
-            item.UpdateValue(0);
-        }
-    }
     public InGameBasePlayerBagVisual RefreshPlayerBag(Dictionary<int, InGame_CardDataModelWithAmount> playerBag)
     {
         foreach (KeyValuePair< int,InGameBagCardTypeUIItem> item in _dicItems)

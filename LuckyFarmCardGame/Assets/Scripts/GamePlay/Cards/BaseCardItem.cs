@@ -106,6 +106,7 @@ public class InGame_CardDataModel : ICloneable
 
     public InGame_CardDataModel SetCardID(int id, InGameCardConfig cardConfig)
     {
+        Debug.Log(_effect);
         this._id = id;
         this._effect = InGameUtils.GetActivatorEffectID(this._id);
         this._coinPoint = cardConfig?._gamePointOfCard ?? 0;

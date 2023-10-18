@@ -42,16 +42,10 @@ public enum InGameBaseCardEffectID
 {
     [Type(typeof(InGameCardEffectActivator_NoneEffect))]
     NONE_EFFECT = 0,
-    [Type(typeof(InGameCardEffectActivator_RollingDice))]
-    ROLL_DICE = 1,
     [Type(typeof(InGameCardEffectActivator_DrawCard))]
-    DRAW_CARD = 2,
+    DRAW_CARD = 1,
     [Type(typeof(InGameCardEffectActivator_RevealTop))]
-    REVEAL_TOP_DECK = 3,
-    [Type(typeof(InGameCardEffectActivator_DestroyOthersCard))]
-    DESTROY_OTHERS_CARD = 4,
-    [Type(typeof(InGameCardEffectActivator_PullCardFromBagToPallet))]
-    PULL_CARD_FR_BAG_TO_PALLET = 5,
+    REVEAL_TOP_DECK = 2,
 }
 public class InGameCardEffectActivator_NoneEffect : InGameBaseCardEffectActivator
 {
@@ -66,31 +60,6 @@ public class InGameCardEffectActivator_NoneEffect : InGameBaseCardEffectActivato
         base.ActiveEffectWhenPlaceToPallet();
         InGameManager.Instance.OnTellControllerContinueTurn();
 
-    }
-    public override void ActiveEffectWhenDestroyed()
-    {
-        base.ActiveEffectWhenDestroyed();
-    }
-    public override void ActiveEffectWhenPulledToBag()
-    {
-        base.ActiveEffectWhenPulledToBag();
-    }
-    public override void ShowingNotification()
-    {
-    }
-}
-public class InGameCardEffectActivator_RollingDice : InGameBaseCardEffectActivator
-{
-    public override InGameBaseCardEffectID ID => InGameBaseCardEffectID.ROLL_DICE;
-
-    public override void ActiveEffectWhenDrawed()
-    {
-        base.ActiveEffectWhenDrawed();
-    }
-    public override void ActiveEffectWhenPlaceToPallet()
-    {
-        base.ActiveEffectWhenPlaceToPallet();
-        InGameManager.Instance.OnTellControllerToRollDice();
     }
     public override void ActiveEffectWhenDestroyed()
     {
@@ -157,53 +126,6 @@ public class InGameCardEffectActivator_RevealTop : InGameBaseCardEffectActivator
         base.ShowingNotification();
     }
 }
-public class InGameCardEffectActivator_DestroyOthersCard : InGameBaseCardEffectActivator
-{
-    public override InGameBaseCardEffectID ID => InGameBaseCardEffectID.DESTROY_OTHERS_CARD;
 
-    public override void ActiveEffectWhenDrawed()
-    {
-        base.ActiveEffectWhenDrawed();
-    }
-    public override void ActiveEffectWhenPlaceToPallet()
-    {
-        base.ActiveEffectWhenPlaceToPallet();
-        bool actSuccess= InGameManager.Instance.OnTellControllerToDestroyOtherCard();
-        if (actSuccess)
-            ShowingNotification();
-    }
-    public override void ActiveEffectWhenDestroyed()
-    {
-        base.ActiveEffectWhenDestroyed();
-    }
-    public override void ActiveEffectWhenPulledToBag()
-    {
-        base.ActiveEffectWhenPulledToBag();
-    }
-}
-public class InGameCardEffectActivator_PullCardFromBagToPallet : InGameBaseCardEffectActivator
-{
-    public override InGameBaseCardEffectID ID => InGameBaseCardEffectID.PULL_CARD_FR_BAG_TO_PALLET;
-
-    public override void ActiveEffectWhenDrawed()
-    {
-        base.ActiveEffectWhenDrawed();
-    }
-    public override void ActiveEffectWhenPlaceToPallet()
-    {
-        base.ActiveEffectWhenPlaceToPallet();
-        bool actSuccess = InGameManager.Instance.OnTellControllerToPullMyCard();
-        if (actSuccess)
-            ShowingNotification();
-    }
-    public override void ActiveEffectWhenDestroyed()
-    {
-        base.ActiveEffectWhenDestroyed();
-    }
-    public override void ActiveEffectWhenPulledToBag()
-    {
-        base.ActiveEffectWhenPulledToBag();
-    }
-}
 
 
