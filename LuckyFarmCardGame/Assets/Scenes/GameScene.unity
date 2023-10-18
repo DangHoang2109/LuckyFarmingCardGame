@@ -843,6 +843,11 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 3151953311388998390, guid: eddd6ef907617d94d9e36fef417da079, type: 3}
   m_PrefabInstance: {fileID: 7479615540446806590}
   m_PrefabAsset: {fileID: 0}
+--- !u!224 &943041869 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 8003234341361250490, guid: 5e0eaff6bfcd8dd49a8714d97b87f1c1, type: 3}
+  m_PrefabInstance: {fileID: 2488919706541568987}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1027525569
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1855,6 +1860,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5556301860650430258, guid: 5e0eaff6bfcd8dd49a8714d97b87f1c1, type: 3}
+      propertyPath: m_Name
+      value: MainDeck (1)
+      objectReference: {fileID: 0}
     - target: {fileID: 6005566426164602082, guid: 5e0eaff6bfcd8dd49a8714d97b87f1c1, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -2111,6 +2120,10 @@ PrefabInstance:
       propertyPath: _tfPalletPanel
       value: 
       objectReference: {fileID: 421631987}
+    - target: {fileID: 8459212361415600067, guid: 4120637e646c9504da834021663d1363, type: 3}
+      propertyPath: _tfMainDeckPanel
+      value: 
+      objectReference: {fileID: 943041869}
     - target: {fileID: 8459212361415600067, guid: 4120637e646c9504da834021663d1363, type: 3}
       propertyPath: _tfActEffectPanel
       value: 

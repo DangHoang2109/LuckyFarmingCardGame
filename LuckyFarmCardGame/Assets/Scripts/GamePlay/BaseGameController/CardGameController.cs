@@ -27,7 +27,7 @@ public class CardGameController : MonoBehaviour
     [Space(5f)]
 
     [SerializeField] protected BaseCardItem _cardPrefab;
-    [SerializeField] protected Transform _tfPalletPanel, _tfActEffectPanel, _tfDeckPanel;
+    [SerializeField] protected Transform _tfPalletPanel, _tfActEffectPanel, _tfDeckPanel, _tfMainDeckPanel;
     [Space(5f)]
     [SerializeField] protected GameObject _gLightningAnimator;
     [Space(5f)]
@@ -224,7 +224,9 @@ public class CardGameController : MonoBehaviour
         {
             topContent += $"{item._id} ";
 
-            BaseCardItem newCardItem = CreateCardItem(item._id, _tfDeckPanel);
+            BaseCardItem newCardItem = CreateCardItem(
+                item._id, 
+                whereToSpawn: _isMainUserTurn ? _tfMainDeckPanel : _tfDeckPanel);
             cardRevealWhichWIllBeDestroy.Add(newCardItem);
         }
 
