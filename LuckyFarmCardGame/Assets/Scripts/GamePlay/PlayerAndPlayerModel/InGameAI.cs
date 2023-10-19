@@ -156,28 +156,11 @@ public class InGameAI
                 case InGameBaseCardEffectID.NONE_EFFECT:
                     dMsg._interactWithOther = false;
                     break;
-                case InGameBaseCardEffectID.ROLL_DICE:
-                    dMsg._interactWithOther = false;
-                    break;
                 case InGameBaseCardEffectID.DRAW_CARD:
                     dMsg._interactWithOther = false;
                     break;
                 case InGameBaseCardEffectID.REVEAL_TOP_DECK:
                     dMsg._interactWithOther = false;
-                    break;
-                case InGameBaseCardEffectID.DESTROY_OTHERS_CARD:
-                    dMsg._interactWithOther = true;
-                    dMsg._playerIDInteractWith = DecidePlayerToInteractDestroy();
-
-                    if(dMsg._playerIDInteractWith >= 0)
-                        dMsg._cardIDInteractWith = DecideCardToInteractDestroy(dMsg._playerIDInteractWith);
-                    else
-                        dMsg._interactWithOther = false;
-                    break;
-                case InGameBaseCardEffectID.PULL_CARD_FR_BAG_TO_PALLET:
-                    dMsg._interactWithOther = true;
-                    dMsg._playerIDInteractWith = this._player.ID;
-                    dMsg._cardIDInteractWith = DecideCardToInteractPulling();
                     break;
                 default:
                     break;
@@ -198,7 +181,7 @@ public class InGameAI
 
                 if(myBagDic != null)
                 {
-                    List<InGameBaseCardEffectID> idealCardEffect = new List<InGameBaseCardEffectID>() { InGameBaseCardEffectID.NONE_EFFECT, InGameBaseCardEffectID.REVEAL_TOP_DECK, InGameBaseCardEffectID.DESTROY_OTHERS_CARD };
+                    List<InGameBaseCardEffectID> idealCardEffect = new List<InGameBaseCardEffectID>() { InGameBaseCardEffectID.NONE_EFFECT, InGameBaseCardEffectID.REVEAL_TOP_DECK };
                     idealCardEffect.Shuffle();
 
                     //list các card kéo lên sẽ ko gây conflict
@@ -242,10 +225,8 @@ public class InGameAI
 
             int DecidePlayerToInteractDestroy()
             {
-                List<OtherPlayerLookingInfo> infos = new List<OtherPlayerLookingInfo>(_msg._otherPlayerInfoList.Where(x => x._totalCard > 0));
-                if (infos.Count == 0)
-                    return -1;
-                if (infos.Count == 1)
+                List<OtherPlayerLookingInfo> infos = new List<OtherPlayerLookingInfo>(_msg._otherPlayerInfoList);
+                if(infos.Count == 1)
                     return infos[0]._playerID;
 
                 //sort player có nhiều card amount nhất mà phang, nếu tie thì lấy thằng nhiều coin hơn, tie nữa thì random
@@ -264,27 +245,6 @@ public class InGameAI
                     return infos[0]._playerID;
             }
 
-            int DecideCardToInteractDestroy(int idPlayerDestroy)
-            {
-                //ưu tiên destroy card có effect xịn tránh trường hợp opp pull lên
-                //nếu không có thì destroy card bất kì
-                List<InGameBaseCardEffectID> idealCardEffect = new List<InGameBaseCardEffectID>() { InGameBaseCardEffectID.NONE_EFFECT, InGameBaseCardEffectID.REVEAL_TOP_DECK, InGameBaseCardEffectID.DESTROY_OTHERS_CARD };
-                idealCardEffect.Shuffle();
-
-                OtherPlayerLookingInfo playerDestroy = _msg._otherPlayerInfoDic[idPlayerDestroy];
-                if(playerDestroy != null)
-                {
-                    foreach (InGameBaseCardEffectID card in idealCardEffect)
-                    {
-                        InGame_CardDataModelWithAmount c = playerDestroy._bagList.Find(x => InGameUtils.GetActivatorEffectID(x._cardID) == card);
-                        if (c != null)
-                            return c._cardID;
-                    }
-                    return playerDestroy._bagList.GetRandom()._cardID;
-                }
-                return -1;
-            }
-
             ///Nếu đủ coin thì có chi ra cứu pallet ko
             bool DecideToUseCoinIfWeAfford()
             {
@@ -293,6 +253,7 @@ public class InGameAI
                 //nếu coin đủ => 
                 //2. Nếu ko có card trong goal, nhưng coin thu về từ pallet lớn hơn coin chi ra => cứu
                 //3. Nếu cả 2 card ko => random 10-20% cứu
+                //1.
 
                 //2.
                 float chanceToUseCoin = 0.1f;
@@ -478,7 +439,7 @@ public class InGameAI
         }
         public override void Do() 
         {
-            InGameManager.Instance.OnDrawCard();            
+            InGameManager.Instance.OnDrawCard();
         }
         public override bool Preparing()
         {

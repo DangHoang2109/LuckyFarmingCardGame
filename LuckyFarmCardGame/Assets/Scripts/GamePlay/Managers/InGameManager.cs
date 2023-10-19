@@ -25,11 +25,6 @@ public class InGameManager : MonoSingleton<InGameManager>
     [Space(5f)]
     [SerializeField] protected InGameTurnNotification _notificator;
     public InGameTurnNotification Notificator => _notificator;
-
-    [Space(5f)]
-    [SerializeField] protected ConfirmUsingInGameGameCoinToAddDiceResultPopup _confirmUsingCoin;
-    public ConfirmUsingInGameGameCoinToAddDiceResultPopup ConfirmUsingCoin => _confirmUsingCoin;
-
     #endregion Property in Inspector
 
     #region Data
@@ -38,7 +33,6 @@ public class InGameManager : MonoSingleton<InGameManager>
     protected GameState _gameState;
     public bool IsPlaying => this._gameState == GameState.PLAYING;
 
-    public int _currentTurnCoinNeedUsing = 0;
     #endregion Data
 
     #region Getter
@@ -73,16 +67,13 @@ public class InGameManager : MonoSingleton<InGameManager>
 
     protected void InitGame()
     {
-        int amountPlayerJoin = 2;//Random.Range(2, this._players.Count); //pulling this info fromn JoinGameData outside
+        int amountPlayerJoin = 1;//Random.Range(2, this._players.Count); //pulling this info fromn JoinGameData outside
         Debug.Log($"INGAME MANGE: Init {amountPlayerJoin} players");
         //Init player seat
         InitPlayers(amountPlayerJoin);
 
-        //Init using coin confirmation
-        ConfirmUsingCoin?.Init(OnUserDecideToUseGameCoin);
-
         //Roll a turn index 
-        this._turnIndex = Random.Range(0, amountPlayerJoin);
+        this._turnIndex = 0;//Random.Range(0, amountPlayerJoin);
     }
 
     protected void InitPlayers(int amountPlayerJoin)
@@ -90,7 +81,7 @@ public class InGameManager : MonoSingleton<InGameManager>
         _playersModels ??= new List<BaseInGamePlayerDataModel>();
         if (this._players != null && this._players.Count > 0)
         {
-
+            //Pull a random goal Config to this player;
             for (int i = 0; i < this._players.Count; i++)
             {
                 _players[i].gameObject.SetActive(i < amountPlayerJoin);
@@ -101,7 +92,30 @@ public class InGameManager : MonoSingleton<InGameManager>
                 BaseInGamePlayerDataModel playerModel = new BaseInGamePlayerDataModel()
                                                                 .SetSeatID(id: i, isMain: i == 0);
 
-                _players[i].SetAPlayerModel(playerModel);
+                _players[i]
+                    .SetAPlayerModel(playerModel);
+                this._playersModels.Add(playerModel);
+            }
+        }
+    }
+    protected void InitCreep(int amountCreepJoin)
+    {
+        _playersModels ??= new List<BaseInGamePlayerDataModel>();
+        if (this._players != null && this._players.Count > 0)
+        {
+            int creepIndexMax = amountCreepJoin + 1;
+            for (int i = 1; i < this._players.Count; i++)
+            {
+                _players[i].gameObject.SetActive(i < creepIndexMax);
+                if (i >= creepIndexMax)
+                    continue;
+
+                //change to parse from player item
+                BaseInGamePlayerDataModel playerModel = new BaseInGamePlayerDataModel()
+                                                                .SetSeatID(id: i, isMain: false);
+
+                _players[i]
+                    .SetAPlayerModel(playerModel);
                 this._playersModels.Add(playerModel);
             }
         }
@@ -120,9 +134,9 @@ public class InGameManager : MonoSingleton<InGameManager>
         Debug.Log($"GAME MANGE: Player seat {this._turnIndex} begin turn");
         CurrentTurnPlayer.BeginTurn();
     }
-    public void ShowNotificationCardAction(string text, float timeStay)
+    public void ShowNotificationCardAction(string text)
     {
-        this.Notificator?.ShowText(text, this.CurrentTurnPlayer.IsMainPlayer, timeStay);
+        this.Notificator?.ShowText(text, this.CurrentTurnPlayer.IsMainPlayer);
     }
 
     public void OnDrawCard()
@@ -174,12 +188,6 @@ public class InGameManager : MonoSingleton<InGameManager>
     /// <param name="amountUsing"></param>
     public void OnUserDecideToUseGameCoin()
     {
-        //trừ coin từ user đang dùng
-        if(this._currentTurnCoinNeedUsing > 0)
-            if (this.CurrentTurnPlayerModel?.SubtractGameCoinIfCan(_currentTurnCoinNeedUsing) ?? false)
-            {
-                this.GameController?.OnUserDecideToUseGameCoin(_currentTurnCoinNeedUsing);
-            }
     }
     /// <summary>
     /// Một card có effect đã được đưa vào trong pallet
@@ -243,19 +251,12 @@ public class InGameManager : MonoSingleton<InGameManager>
     #region Pallet behavior
     public void DiceResultShowed(int diceResult, int pointNeeding, bool willBeDestroy)
     {
-        int amountCointNeed = pointNeeding * (GameController?.CoinForEachDicePoint ?? 1);
-        if (willBeDestroy && this.CurrentTurnPlayerModel.IsCanUseGameCoin(amountCointNeed))
-        {
-            _currentTurnCoinNeedUsing = amountCointNeed;
-            OnLetUserActionWhenPalletConflictAndNeedUseCoin(amountCointNeed, pointNeeding);
-        }
     }
     /// <summary>
     /// Normally only Main Player will call this
     /// </summary>
     public void ShowConfirmUsingCoin(int amountCoinNeeding, int pointAdding)
     {
-        this.ConfirmUsingCoin?.ParseDataAndShow(amountCoinNeedToUse: amountCoinNeeding, amountDiceResWillBeAdd: pointAdding);
     }
     public void OnPalletConflict()
     {
@@ -284,7 +285,6 @@ public class InGameManager : MonoSingleton<InGameManager>
     #region Card activator behavior
     public void OnTellControllerContinueTurn()
     {
-        Debug.Log("OnTellControllerContinueTurn");
         this.GameController?.ContinueTurn();
         CurrentTurnPlayer?.ContinueTurn();
     }

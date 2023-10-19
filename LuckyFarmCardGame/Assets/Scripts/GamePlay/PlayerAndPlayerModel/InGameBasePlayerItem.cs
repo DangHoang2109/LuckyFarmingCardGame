@@ -47,6 +47,10 @@ public class InGameBasePlayerItem : MonoBehaviour
     {
         return this;
     }
+    public virtual void ParseVisualBagUI()
+    {
+        this.BagVisual?.SetHostPlayer(this);
+    }
     #endregion Init Action
 
     public bool TryGetCardInBag(int id, out InGame_CardDataModelWithAmount card)
@@ -238,6 +242,7 @@ public class BaseInGamePlayerDataModel
         this._isMainPlayer = isMain;
         return this;
     }
+
     public bool TryGetCardInBag(int id, out InGame_CardDataModelWithAmount card)
     {
         _dictionaryBags ??= new Dictionary<int, InGame_CardDataModelWithAmount>();
@@ -323,7 +328,6 @@ public class BaseInGamePlayerDataModel
     }
     public bool IsWin()
     {
-        Debug.Log("Implement ISWIN");
         return false;
     }
 
