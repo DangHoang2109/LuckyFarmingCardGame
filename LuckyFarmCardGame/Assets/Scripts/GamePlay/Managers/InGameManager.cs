@@ -260,16 +260,21 @@ public class InGameManager : MonoSingleton<InGameManager>
             OnBeginTurn();
         }
     }
-
+    /// <summary>
+    /// Bật UI chọn card, simulate hành động click chọn của bot
+    /// </summary>
+    /// <param name="playerID"></param>
+    /// <param name="cardID"></param>
     public void OnBotClickChoseToggleBagUIItem(int playerID, int cardID)
     {
         InGameBasePlayerItem player = this._players.Find(x => x.ID == playerID);
         if(player != null)
         {
-            if(player.BagVisual.TryFindUIItem(cardID, out InGameBagCardTypeUIItem uiCardItem))
-            {
-                uiCardItem.ClickToggleFromMManager();
-            }
+            Debug.Log("COMMENTED THIS, CONSIDER MOVE THIS LOGIC TO MAIN PLAYER ONLY");
+            //if(player.BagVisual.TryFindUIItem(cardID, out InGameBagCardTypeUIItem uiCardItem))
+            //{
+            //    uiCardItem.ClickToggleFromMManager();
+            //}
         }
     }
 

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -18,6 +19,14 @@ public class InGameMainPlayerItem : InGameBasePlayerItem
 
     #region Prop on editor
     public Button _btnEndTurn;
+
+    [SerializeField]
+    protected InGameBasePlayerBagVisual _bagVisual;
+    public InGameBasePlayerBagVisual BagVisual => _bagVisual;
+
+    public Image _imgTimer;
+
+
     #endregion Prop on editor
 
     #region Data
@@ -38,6 +47,7 @@ public class InGameMainPlayerItem : InGameBasePlayerItem
     public override void BeginTurn()
     {
         base.BeginTurn();
+        _imgTimer.gameObject.SetActive(true);
         _btnEndTurn.interactable = true;
     }
     public override void ContinueTurn()
@@ -64,6 +74,7 @@ public class InGameMainPlayerItem : InGameBasePlayerItem
     public override void EndTurn()
     {
         base.EndTurn();
+        _imgTimer.gameObject.SetActive(false);
         _btnEndTurn.interactable = false;
     }
     public override void PullCardToBag(List<InGame_CardDataModel> cardReceive)
@@ -78,6 +89,37 @@ public class InGameMainPlayerItem : InGameBasePlayerItem
         _tmpCoinValue.SetText($"{(PlayerModel.CurrentCoinPoint).ToString("D2")}");
 
         Debug.Log($"PLAYER {this.ID} bag: {this.MainDataModel._dictionaryBags.DebugDicCardInGame()}");
+    }
+    public override void ParseVisualBagUI()
+    {
+        base.ParseVisualBagUI();
+        this.BagVisual?.SetHostPlayer(this);
+    }
+    public override void ReadyInDestroyCardEffectStage(int amountCardToBeChoseInEffect, Action<int, List<int>> onCompleteBeingChose)
+    {
+        base.ReadyInDestroyCardEffectStage(amountCardToBeChoseInEffect, onCompleteBeingChose);
+        this.BagVisual?.EnableToggleForEffectStage(true, OnACardItemInBagBeingChose_DestroyingPhase);
+    }
+    protected override void OnACardItemInBagBeingChose_DestroyingPhase(int cardID, bool isChosed)
+    {
+        base.OnACardItemInBagBeingChose_DestroyingPhase(cardID, isChosed);
+        if (CardBeingChose.Count == _amountCardToBeChoseInEffect)
+        {
+            this.BagVisual?.EnableToggleForEffectStage(false, null);
+        }
+    }
+    public override void ReadyInPullingCardEffectStage(int amountCardToBeChoseInEffect, Action<int, List<int>> onCompleteBeingChose)
+    {
+        base.ReadyInPullingCardEffectStage(amountCardToBeChoseInEffect, onCompleteBeingChose);
+        this.BagVisual?.EnableToggleForEffectStage(true, OnACardItemInBagBeingChose_PullingCardEffect);
+    }
+    protected override void OnACardItemInBagBeingChose_PullingCardEffect(int cardID, bool isChosed)
+    {
+        base.OnACardItemInBagBeingChose_PullingCardEffect(cardID, isChosed);
+        if (CardBeingChose.Count == _amountCardToBeChoseInEffect)
+        {
+            this.BagVisual?.EnableToggleForEffectStage(false, null);
+        }
     }
     #endregion Turn Action
 

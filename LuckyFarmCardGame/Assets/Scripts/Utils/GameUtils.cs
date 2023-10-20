@@ -654,6 +654,7 @@ public static class InGameUtils
     }
     public static InGameBaseCardEffectID GetActivatorEffectID(int cardID)
     {
+
         return (InGameBaseCardEffectID)cardID;
     }
 }

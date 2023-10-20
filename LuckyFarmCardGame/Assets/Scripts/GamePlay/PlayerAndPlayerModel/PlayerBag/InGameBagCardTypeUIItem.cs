@@ -31,7 +31,8 @@ public class InGameBagCardTypeUIItem : MonoBehaviour
     public InGameBagCardTypeUIItem SetHostPlayer(InGameBasePlayerItem p)
     {
         this._hostPlayer = p;
-        this._hostBagVisual = _hostPlayer?.BagVisual;
+        Debug.Log("HAS COMMENT THIS, CONSIDER MOVE LOGIC TO MAIN PLAYER ONLY");
+        //this._hostBagVisual = _hostPlayer?.BagVisual;
         return this;
     }
     public InGameBagCardTypeUIItem UpdateValue(int currentValue)

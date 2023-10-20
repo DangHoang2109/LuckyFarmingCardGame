@@ -6,13 +6,8 @@ using System.Linq;
 public class InGameBasePlayerItem : MonoBehaviour
 {
     #region Prop on editor
-    [SerializeField]
-    protected InGameBasePlayerBagVisual _bagVisual;
-    public InGameBasePlayerBagVisual BagVisual => _bagVisual;
-
-    public Image _imgTimer;
-
     public TMPro.TextMeshProUGUI _tmpCoinValue;
+
     #endregion Prop on editor
 
     #region Data
@@ -36,7 +31,7 @@ public class InGameBasePlayerItem : MonoBehaviour
     public virtual InGameBasePlayerItem SetAPlayerModel(BaseInGamePlayerDataModel model)
     {
         this._playerModel = model;
-        _tmpCoinValue.SetText($"{(PlayerModel.CurrentCoinPoint).ToString("D2")}");
+        _tmpCoinValue?.SetText($"{(PlayerModel.CurrentCoinPoint).ToString("D2")}");
 
         return this;
     }
@@ -46,18 +41,15 @@ public class InGameBasePlayerItem : MonoBehaviour
     }
     public virtual void ParseVisualBagUI()
     {
-        this.BagVisual?.SetHostPlayer(this);
     }
     #endregion Init Action
 
     #region Turn Action
     public virtual void BeginTurn()
     {
-        _imgTimer.gameObject.SetActive(true);
     }
     public virtual void EndTurn()
     {
-        _imgTimer.gameObject.SetActive(false);
     }
     public virtual void ContinueTurn()
     {
@@ -88,12 +80,9 @@ public class InGameBasePlayerItem : MonoBehaviour
 
         this._amountCardToBeChoseInEffect = amountCardToBeChoseInEffect;
         _onCompleteBeingChoseInEffect = onCompleteBeingChose;
-
-        this.BagVisual?.EnableToggleForEffectStage(true, OnACardItemInBagBeingChose_DestroyingPhase);
-
     }
 
-    protected void OnACardItemInBagBeingChose_DestroyingPhase(int cardID, bool isChosed)
+    protected virtual void OnACardItemInBagBeingChose_DestroyingPhase(int cardID, bool isChosed)
     {
         CardBeingChose ??= new List<int>();
         if (isChosed)
@@ -108,8 +97,6 @@ public class InGameBasePlayerItem : MonoBehaviour
             this.CardBeingChose.Clear();
             this._amountCardToBeChoseInEffect = 0;
             this._onCompleteBeingChoseInEffect = null;
-
-            this.BagVisual?.EnableToggleForEffectStage(false, null) ;
         }
     }
 
@@ -125,10 +112,8 @@ public class InGameBasePlayerItem : MonoBehaviour
         this._amountCardToBeChoseInEffect = amountCardToBeChoseInEffect;
         _onCompleteBeingChoseInEffect = onCompleteBeingChose;
 
-        this.BagVisual?.EnableToggleForEffectStage(true, OnACardItemInBagBeingChose_PullingCardEffect);
-
     }
-    protected void OnACardItemInBagBeingChose_PullingCardEffect(int cardID, bool isChosed)
+    protected virtual void OnACardItemInBagBeingChose_PullingCardEffect(int cardID, bool isChosed)
     {
         CardBeingChose ??= new List<int>();
         if (isChosed)
@@ -143,8 +128,6 @@ public class InGameBasePlayerItem : MonoBehaviour
             this.CardBeingChose.Clear();
             this._amountCardToBeChoseInEffect = 0;
             this._onCompleteBeingChoseInEffect = null;
-
-            this.BagVisual?.EnableToggleForEffectStage(false, null);
         }
     }
 

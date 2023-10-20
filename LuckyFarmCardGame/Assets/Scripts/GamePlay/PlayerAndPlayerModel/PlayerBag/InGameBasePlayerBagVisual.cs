@@ -25,6 +25,7 @@ public class InGameBasePlayerBagVisual : MonoBehaviour
     }
     public InGameBasePlayerBagVisual RefreshPlayerBag(Dictionary<int, InGame_CardDataModelWithAmount> playerBag)
     {
+        return this;
         foreach (KeyValuePair< int,InGameBagCardTypeUIItem> item in _dicItems)
         {
             int id = item.Value.CardID;

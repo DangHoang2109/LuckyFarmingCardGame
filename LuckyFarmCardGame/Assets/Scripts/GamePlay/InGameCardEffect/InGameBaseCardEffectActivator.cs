@@ -46,6 +46,13 @@ public enum InGameBaseCardEffectID
     DRAW_CARD = 1,
     [Type(typeof(InGameCardEffectActivator_RevealTop))]
     REVEAL_TOP_DECK = 2,
+    [Type(typeof(InGameCardEffectActivator_NoneEffect))]
+    NONE_EFFECT_1 = 3,
+    [Type(typeof(InGameCardEffectActivator_NoneEffect))]
+    NONE_EFFECT_2 = 4,
+    [Type(typeof(InGameCardEffectActivator_NoneEffect))]
+    NONE_EFFECT_3 = 5,
+
 }
 public class InGameCardEffectActivator_NoneEffect : InGameBaseCardEffectActivator
 {
