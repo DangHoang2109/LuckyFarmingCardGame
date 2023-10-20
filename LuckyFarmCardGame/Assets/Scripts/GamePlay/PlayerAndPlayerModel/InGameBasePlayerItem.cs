@@ -3,14 +3,32 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
+
 public class InGameBasePlayerItem : MonoBehaviour
 {
     #region Prop on editor
     public TMPro.TextMeshProUGUI _tmpCoinValue;
 
+    public HPBarUI _hpBar;
     #endregion Prop on editor
 
     #region Data
+    public virtual int CurrentHP
+    {
+        get
+        {
+            return this.PlayerModel?.CurrentHP ?? 0;
+        }
+        set
+        {
+            if (this.PlayerModel != null)
+            {
+                this.PlayerModel.CurrentHP = value;
+                this._hpBar.UpdateValue(this.PlayerModel.CurrentHP);
+            }
+        }
+    }
+
     public bool IsPlaying => this._playerModel != null;
     protected BaseInGamePlayerDataModel _playerModel;
     public BaseInGamePlayerDataModel PlayerModel => _playerModel;
@@ -32,7 +50,7 @@ public class InGameBasePlayerItem : MonoBehaviour
     {
         this._playerModel = model;
         _tmpCoinValue?.SetText($"{(PlayerModel.CurrentCoinPoint).ToString("D2")}");
-
+        this._hpBar.SetMaxValue(PlayerModel.MaxHP);
         return this;
     }
     public virtual InGameBasePlayerItem InitPlayerItSelf()
@@ -149,6 +167,8 @@ public class InGameBasePlayerItem : MonoBehaviour
     public virtual void CustomUpdate()
     {
     }
+    
+
 }
 
 public class BaseInGamePlayerDataModel
