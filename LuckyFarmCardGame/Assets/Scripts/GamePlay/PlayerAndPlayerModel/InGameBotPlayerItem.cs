@@ -87,11 +87,18 @@ public class InGameBotPlayerItem : InGameBasePlayerItem
     IEnumerator OnThinkingInTurn()
     {
         yield return new WaitForSeconds(0.25f);
-        //BaseUIController.GlobalMask = true;
-        InGameAI.LookingMessage collect = Looker?.Look();
+        Debug.Log("Bot player: MAKE ME ATTACKKKKKKK");
+
+        //InGameAI.LookingMessage collect = Looker?.Look();
+        //yield return new WaitForEndOfFrame();
+        InGameAI.DecidingMesssage decideMsg = new InGameAI.DecidingMesssage()
+        {
+            _endTurn = true
+        };
+        //Decider?.Decide(collect);
         yield return new WaitForEndOfFrame();
-        InGameAI.DecidingMesssage decideMsg = Decider?.Decide(collect);
-        yield return new WaitForEndOfFrame();
+
+
         Executor.SetDecision(decideMsg);
         yield return new WaitForEndOfFrame();
     }

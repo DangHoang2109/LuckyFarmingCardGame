@@ -23,9 +23,6 @@ public class InGameBasePlayerItem : MonoBehaviour
     public int ID => this.PlayerModel?._id ?? -1;
     public bool IsMainPlayer => ID == 0;
 
-    public int AmountCardInBag => this.PlayerModel?.AmountCardInBag ?? 0;
-    public bool IsHasCardIsBag => this.PlayerModel?.IsHasCardIsBag ?? false;
-
     //in effect card
     protected List<int> CardBeingChose; protected int _amountCardToBeChoseInEffect; protected System.Action<int, List<int>> _onCompleteBeingChoseInEffect;
 
@@ -53,12 +50,6 @@ public class InGameBasePlayerItem : MonoBehaviour
     }
     #endregion Init Action
 
-    public bool TryGetCardInBag(int id, out InGame_CardDataModelWithAmount card)
-    {
-        card = null;
-        return PlayerModel?.TryGetCardInBag(id, out card) ?? false;
-    }
-
     #region Turn Action
     public virtual void BeginTurn()
     {
@@ -84,16 +75,6 @@ public class InGameBasePlayerItem : MonoBehaviour
     /// </summary>
     public virtual void PullCardToBag(List<InGame_CardDataModel> cardReceive)
     {
-        if (cardReceive != null && cardReceive.Count > 0) 
-        {
-            this.PlayerModel.AddCardsToPallet(cardReceive);
-        }
-        this.BagVisual?.RefreshPlayerBag(this.PlayerModel._dictionaryBags);
-
-        _tmpCoinValue.SetText($"{(PlayerModel.CurrentCoinPoint).ToString("D2")}");
-
-        Debug.Log($"PLAYER {this.ID} bag: {this.PlayerModel._dictionaryBags.DebugDicCardInGame()}");
-
     }
 
     /// <summary>
@@ -131,15 +112,6 @@ public class InGameBasePlayerItem : MonoBehaviour
             this.BagVisual?.EnableToggleForEffectStage(false, null) ;
         }
     }
-    public void DestroyMyCardByOther(int cardIDToDestroy, int amountToDestroy = 1)
-    {
-        if(this.PlayerModel != null)
-        {
-            PlayerModel.DestroyMyCardByOther(cardIDToDestroy, amountToDestroy);
-        }
-
-        this.BagVisual?.RefreshPlayerBag(this.PlayerModel._dictionaryBags);
-    }
 
     /// <summary>
     /// Called by InGame Manager
@@ -176,19 +148,6 @@ public class InGameBasePlayerItem : MonoBehaviour
         }
     }
 
-    public InGame_CardDataModelWithAmount PullMyCardToThePallet(int cardIdToPull)
-    {
-        if (this.PlayerModel != null)
-        {
-             PlayerModel.PullMyCardToThePallet(cardIdToPull, out InGame_CardDataModelWithAmount splitCard);
-
-            this.BagVisual?.RefreshPlayerBag(this.PlayerModel._dictionaryBags);
-
-            return splitCard;
-        }
-        return null;
-    }
-
     public virtual void Action_ACardPutToPallet(int cardID)
     {
 
@@ -199,9 +158,9 @@ public class InGameBasePlayerItem : MonoBehaviour
     }
     #endregion Turn Action
 
-    public virtual bool IsWin()
+    public virtual bool isDead()
     {
-        return this.PlayerModel?.IsWin() ?? false;
+        return this.PlayerModel?.IsDead() ?? false;
     }
 
     public virtual void CustomUpdate()
@@ -213,13 +172,6 @@ public class BaseInGamePlayerDataModel
 {
     public int _id;
     public bool _isMainPlayer;
-
-    public List<InGame_CardDataModelWithAmount> _bag;
-    public Dictionary<int,InGame_CardDataModelWithAmount> _dictionaryBags;
-
-    public int AmountCardInBag => (_bag == null || _bag.Count == 0) ? 0 : this._bag.Sum(x=>x._amountCard);
-    public bool IsHasCardIsBag => AmountCardInBag > 0;
-
     protected int _currentCoinPoint = 0;
     public int CurrentCoinPoint
     {
@@ -231,10 +183,14 @@ public class BaseInGamePlayerDataModel
         }
     }
 
+    public virtual int CurrentHP { get => currentHP; set => currentHP = value; }
+    public virtual int MaxHP { get => maxHP; set => maxHP = value; }
+
+    protected int currentHP;
+    protected int maxHP;
+
     public BaseInGamePlayerDataModel()
     {
-        this._bag = new List<InGame_CardDataModelWithAmount>();
-        this._dictionaryBags = new Dictionary<int, InGame_CardDataModelWithAmount>();
     }
     public BaseInGamePlayerDataModel SetSeatID(int id, bool isMain)
     {
@@ -242,93 +198,15 @@ public class BaseInGamePlayerDataModel
         this._isMainPlayer = isMain;
         return this;
     }
-
-    public bool TryGetCardInBag(int id, out InGame_CardDataModelWithAmount card)
+    public BaseInGamePlayerDataModel SetHP(int maxHP)
     {
-        _dictionaryBags ??= new Dictionary<int, InGame_CardDataModelWithAmount>();
-        return _dictionaryBags.TryGetValue(id, out card);
+        this.CurrentHP = this.MaxHP = maxHP;
+        return this;
     }
 
-    /// <summary>
-    /// Add cards to player bags
-    /// These usually from pallet
-    /// </summary>
-    /// <param name="cards"></param>
-    public void AddCardsToPallet(List<InGame_CardDataModel> cards)
+    public bool IsDead()
     {
-        _bag ??= new List<InGame_CardDataModelWithAmount>();
-        this._dictionaryBags ??= new Dictionary<int, InGame_CardDataModelWithAmount>();
-        if (cards != null && cards.Count >0)
-        {
-            foreach (InGame_CardDataModel cardDataModel in cards)
-            {
-                if(_dictionaryBags.TryGetValue(cardDataModel._id, out InGame_CardDataModelWithAmount cardInBag))
-                {
-                    cardInBag.AddACard(cardDataModel);
-                }
-                else
-                {
-                    InGame_CardDataModelWithAmount c = new InGame_CardDataModelWithAmount(cardDataModel);
-                    this._bag.Add(c);
-                    this._dictionaryBags.Add(c._cardID, c);
-                }
-
-                this._currentCoinPoint += cardDataModel._coinPoint;
-            }
-        }
-    }
-    public void DestroyMyCardByOther(int cardIDToDestroy, int amountToDestroy = 1)
-    {
-        _bag ??= new List<InGame_CardDataModelWithAmount>();
-        this._dictionaryBags ??= new Dictionary<int, InGame_CardDataModelWithAmount>();
-
-        if (_bag.Count > 0 && TryGetCardInBag(cardIDToDestroy, out InGame_CardDataModelWithAmount card))
-        {
-            card.SubtractCard(amountToDestroy);
-            //refresh card bag 
-            if(card._amountCard <= 0)
-                RemoveACard(card);
-
-            Debug.Log($"PLAYER {this._id}: Destroy card complete {InGameUtils.DebugDicCardInGame(this._dictionaryBags)}");
-        }
-        else
-            Debug.LogError("PLAYER: ERROR NOT FOUND CARD TO DESTROY");
-    }
-    public bool PullMyCardToThePallet(int cardIdToPull, out InGame_CardDataModelWithAmount splitedCard)
-    {
-        _bag ??= new List<InGame_CardDataModelWithAmount>();
-        this._dictionaryBags ??= new Dictionary<int, InGame_CardDataModelWithAmount>();
-
-        if (_bag.Count > 0 && TryGetCardInBag(cardIdToPull, out InGame_CardDataModelWithAmount card))
-        {
-            card.PullSplitCard(out bool splitToTwoSuccess, out splitedCard);
-            if (!splitToTwoSuccess)
-            {
-                RemoveACard(card);
-            }
-            //refresh card bag 
-            Debug.Log($"PLAYER {this._id}: Pull card complete {InGameUtils.DebugDicCardInGame(this._dictionaryBags)}");
-            return true;
-        }
-        else
-            Debug.LogError("PLAYER: ERROR NOT FOUND CARD TO PULL");
-
-        splitedCard = null;
-        return false;
-    }
-    public void RemoveACard(InGame_CardDataModelWithAmount card)
-    {
-        _bag ??= new List<InGame_CardDataModelWithAmount>();
-        this._dictionaryBags ??= new Dictionary<int, InGame_CardDataModelWithAmount>();
-        if (this._dictionaryBags.ContainsKey(card._cardID))
-        {
-            _bag.Remove(card);
-            _dictionaryBags.Remove(card._cardID);
-        }
-    }
-    public bool IsWin()
-    {
-        return false;
+        return CurrentHP <= 0;
     }
 
     public bool IsCanUseGameCoin(int amount)
@@ -402,5 +280,71 @@ public class InGame_CardDataModelWithAmount
     {
         return this._cardID == other._cardID && this._amountCard >= other._amountCard;
     }
+
+}
+
+
+public class BaseInGameMainPlayerDataModel : BaseInGamePlayerDataModel
+{
+    public List<InGame_CardDataModelWithAmount> _bag;
+    public Dictionary<int, InGame_CardDataModelWithAmount> _dictionaryBags;
+
+    public int AmountCardInBag => (_bag == null || _bag.Count == 0) ? 0 : this._bag.Sum(x => x._amountCard);
+    public bool IsHasCardIsBag => AmountCardInBag > 0;
+
+
+
+    public BaseInGameMainPlayerDataModel() : base()
+    {
+        this._bag = new List<InGame_CardDataModelWithAmount>();
+        this._dictionaryBags = new Dictionary<int, InGame_CardDataModelWithAmount>();
+    }
+    public bool TryGetCardInBag(int id, out InGame_CardDataModelWithAmount card)
+    {
+        _dictionaryBags ??= new Dictionary<int, InGame_CardDataModelWithAmount>();
+        return _dictionaryBags.TryGetValue(id, out card);
+    }
+
+    /// <summary>
+    /// Add cards to player bags
+    /// These usually from pallet
+    /// </summary>
+    /// <param name="cards"></param>
+    public void AddCardsToPallet(List<InGame_CardDataModel> cards)
+    {
+        _bag ??= new List<InGame_CardDataModelWithAmount>();
+        this._dictionaryBags ??= new Dictionary<int, InGame_CardDataModelWithAmount>();
+        if (cards != null && cards.Count > 0)
+        {
+            foreach (InGame_CardDataModel cardDataModel in cards)
+            {
+                if (_dictionaryBags.TryGetValue(cardDataModel._id, out InGame_CardDataModelWithAmount cardInBag))
+                {
+                    cardInBag.AddACard(cardDataModel);
+                }
+                else
+                {
+                    InGame_CardDataModelWithAmount c = new InGame_CardDataModelWithAmount(cardDataModel);
+                    this._bag.Add(c);
+                    this._dictionaryBags.Add(c._cardID, c);
+                }
+
+                this._currentCoinPoint += cardDataModel._coinPoint;
+            }
+        }
+    }
+    public void RemoveACard(InGame_CardDataModelWithAmount card)
+    {
+        _bag ??= new List<InGame_CardDataModelWithAmount>();
+        this._dictionaryBags ??= new Dictionary<int, InGame_CardDataModelWithAmount>();
+        if (this._dictionaryBags.ContainsKey(card._cardID))
+        {
+            _bag.Remove(card);
+            _dictionaryBags.Remove(card._cardID);
+        }
+    }
+}
+public class BaseInGameEnemyDataModel : BaseInGamePlayerDataModel
+{
 
 }

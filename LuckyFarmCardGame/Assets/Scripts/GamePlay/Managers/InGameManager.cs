@@ -71,9 +71,6 @@ public class InGameManager : MonoSingleton<InGameManager>
         Debug.Log($"INGAME MANGE: Init {amountPlayerJoin} players");
         //Init player seat
         InitPlayers(amountPlayerJoin);
-
-        //Roll a turn index 
-        this._turnIndex = 0;//Random.Range(0, amountPlayerJoin);
     }
 
     protected void InitPlayers(int amountPlayerJoin)
@@ -88,13 +85,12 @@ public class InGameManager : MonoSingleton<InGameManager>
                 if (i >= amountPlayerJoin)
                     continue;
 
-                //change to parse from player item
-                BaseInGamePlayerDataModel playerModel = new BaseInGamePlayerDataModel()
-                                                                .SetSeatID(id: i, isMain: i == 0);
+                BaseInGameMainPlayerDataModel main = new BaseInGameMainPlayerDataModel();
+                main.SetHP(maxHP: 10);
+                main.SetSeatID(id: i, isMain: i == 0);
 
-                _players[i]
-                    .SetAPlayerModel(playerModel);
-                this._playersModels.Add(playerModel);
+                _players[i].SetAPlayerModel(main);
+                this._playersModels.Add(main);
             }
         }
     }
@@ -111,12 +107,12 @@ public class InGameManager : MonoSingleton<InGameManager>
                     continue;
 
                 //change to parse from player item
-                BaseInGamePlayerDataModel playerModel = new BaseInGamePlayerDataModel()
-                                                                .SetSeatID(id: i, isMain: false);
+                BaseInGameEnemyDataModel enemyModel = new BaseInGameEnemyDataModel();
+                enemyModel.SetSeatID(id: i, isMain: false);
+                enemyModel.SetHP(maxHP: 10);
 
-                _players[i]
-                    .SetAPlayerModel(playerModel);
-                this._playersModels.Add(playerModel);
+                _players[i].SetAPlayerModel(enemyModel);
+                this._playersModels.Add(enemyModel);
             }
         }
     }
@@ -124,8 +120,32 @@ public class InGameManager : MonoSingleton<InGameManager>
     {
         this._gameState = GameState.PLAYING;
 
-        OnBeginTurn();
+        OnBeginRound();
     }
+
+    #region Round Action
+    public void OnBeginRound()
+    {
+        if (this._playersModels.Count == 1)
+        {
+            //sinh thêm creep vì datamodel = 1 -> chỉ còn main player
+            //không nên, nên set boolean
+            //fill in the creep if it is dead
+            int amountCreepInThisTurn = 1; //add 1 creep thêm vào
+            InitCreep(amountCreepInThisTurn);
+        }
+
+        //bgein turn, luôn là từ player
+        //Roll a turn index 
+        this._turnIndex = 0;//Random.Range(0, amountPlayerJoin);
+        OnBeginTurn();
+
+    }
+    public void OnEndRound()
+    {
+        OnBeginRound();
+    }
+    #endregion Round Action
 
     #region Turn Action
     public void OnBeginTurn()
@@ -152,8 +172,12 @@ public class InGameManager : MonoSingleton<InGameManager>
     }
     public void OnUserEndTurn()
     {
-        //pull the card by user choice;
-        GameController?.PullCardFromPalletToUser(OnPullingAnimationComplete);
+        //pull the card by user choice if he is main player
+        //else if creep just end the turn
+        if(this.CurrentTurnPlayer.IsMainPlayer)
+            GameController?.PullCardFromPalletToUser(OnPullingAnimationComplete);
+        else
+            OnLogicEndTurn();
 
         void OnPullingAnimationComplete(List<InGame_CardDataModel> cardsReceive)
         {
@@ -208,21 +232,33 @@ public class InGameManager : MonoSingleton<InGameManager>
 
     private void OnLogicEndTurn()
     {
-        //Check end game
-        if (this.CurrentTurnPlayer.IsWin())
-        {
-            Debug.Log($"INGAME MANGE: Seat {CurrentTurnPlayer.ID} won the game");
-            OnEndGame();
-            return;
-        }
         CurrentTurnPlayer.EndTurn();
 
-        //roll to next index
-        this._turnIndex = InGameUtils.RollIndex(this._turnIndex, this._playersModels.Count);
+        //Check creep die or the main player is edead
+        Debug.Log($"INGAME MANGE: Check creep die or the main player is edead");
 
-        //if not endgame
-        //begin next user turn
-        OnBeginTurn();
+        //if (this.CurrentTurnPlayer.IsWin())
+        //{
+        //    Debug.Log($"INGAME MANGE: Seat {CurrentTurnPlayer.ID} won the game");
+        //    OnEndGame();
+        //    return;
+        //}
+        //return the function here if the main player is dead
+
+        //else: keep roll index, if end, go next round
+        if(_turnIndex == this._playersModels.Count-1)
+        {
+            this.OnEndRound();
+            return;
+        }
+        else
+        {
+            //roll to next index
+            this._turnIndex = InGameUtils.RollIndex(this._turnIndex, this._playersModels.Count);
+
+            //begin next user turn
+            OnBeginTurn();
+        }
     }
 
     public void OnBotClickChoseToggleBagUIItem(int playerID, int cardID)
@@ -303,69 +339,6 @@ public class InGameManager : MonoSingleton<InGameManager>
     {
         this.GameController?.OnRevealTopDeck(cardToReveal);
     }
-    /// <summary>
-    /// Return result active succes or not to card activator
-    /// </summary>
-    /// <returns></returns>
-    public bool OnTellControllerToDestroyOtherCard()
-    {
-        //Bật bag chose pallet của các player khác
-        List<int> otherPlayerID = GenIdsOtherPlayer();
-        bool activeSuccess = otherPlayerID != null && otherPlayerID.Count >= 1;
-        if (activeSuccess)
-        {
-            foreach (int id in otherPlayerID)
-            {
-                _players[id].ReadyInDestroyCardEffectStage(1, OnCompleteChosing);
-            }
-        }
-        else
-        {
-            Debug.Log("GAME MANGE: No player has card in bag to destroy");
-            OnTellControllerContinueTurn();
-        }
-        return activeSuccess;
-
-        List<int> GenIdsOtherPlayer()
-        {
-            List<int> idNotMe = new List<int>();
-            foreach (BaseInGamePlayerDataModel item in this._playersModels)
-            {
-                if (item._id != this.CurrentTurnPlayer.ID && item.IsHasCardIsBag)
-                    idNotMe.Add(item._id);
-            }
-            return idNotMe;
-        }
-        void OnCompleteChosing(int playerBeingChoseID, List<int> cardsChosed)
-        {
-            //Only support cxard chose 1 destroying
-            GameController?.DestroyPlayerCard(player: _players[playerBeingChoseID], cardsChosed[0]);
-            this.Notificator?.DisableText();
-        }
-    }
-    /// <summary>
-    /// Return result active succes or not to card activator
-    /// </summary>
-    /// <returns></returns>
-    public bool OnTellControllerToPullMyCard()
-    {
-        if (!CurrentTurnPlayer.IsHasCardIsBag)
-        {
-            OnTellControllerContinueTurn();
-            return false;
-        }
-
-        CurrentTurnPlayer.ReadyInPullingCardEffectStage(1, OnCompleteChosing);
-        return true;
-        void OnCompleteChosing(int turnPlayerID, List<int> cardsChosed)
-        {
-            //Only support cxard chose 1 destroying
-            if(turnPlayerID == this.CurrentTurnPlayer.ID)
-                this.GameController?.PullPlayerCardToHisPallet(this.CurrentTurnPlayer, cardsChosed[0]);
-
-            this.Notificator?.DisableText();
-        }
-    }
     #endregion Card activator behavior
 
 
@@ -374,23 +347,45 @@ public class InGameManager : MonoSingleton<InGameManager>
     {
         List<InGameAI.OtherPlayerLookingInfo> res = new List<InGameAI.OtherPlayerLookingInfo>();
         int currentTurnId = this.CurrentTurnPlayer.ID;
+
+        //get info of the main player only
         foreach (InGameBasePlayerItem playerItem in this._players)
         {
-            if (!playerItem.IsPlaying || playerItem.ID == currentTurnId)
-                continue;
-
-            BaseInGamePlayerDataModel model = playerItem.PlayerModel;
-            InGameAI.OtherPlayerLookingInfo info = new InGameAI.OtherPlayerLookingInfo()
+            if(playerItem is InGameMainPlayerItem main)
             {
-                _playerID = model._id,
-                _currentCoin = model.CurrentCoinPoint,
-                _totalCard = model.AmountCardInBag,
-                _bagList = model._bag,
-                _bagDic = model._dictionaryBags
-            };
-            res.Add(info);
+                if (!main.IsPlaying || main.ID == currentTurnId)
+                    continue;
+
+                BaseInGameMainPlayerDataModel model = main.MainDataModel;
+                InGameAI.OtherPlayerLookingInfo info = new InGameAI.OtherPlayerLookingInfo()
+                {
+                    _playerID = model._id,
+                    _currentCoin = model.CurrentCoinPoint,
+                    _totalCard = model.AmountCardInBag,
+                    _bagList = model._bag,
+                    _bagDic = model._dictionaryBags
+                };
+                res.Add(info);
+            }
         }
-        return res;
+
+        //foreach (InGameBasePlayerItem playerItem in this._players)
+        //{
+        //    if (!playerItem.IsPlaying || playerItem.ID == currentTurnId)
+        //        continue;
+
+        //    BaseInGamePlayerDataModel model = playerItem.PlayerModel;
+        //    InGameAI.OtherPlayerLookingInfo info = new InGameAI.OtherPlayerLookingInfo()
+        //    {
+        //        _playerID = model._id,
+        //        _currentCoin = model.CurrentCoinPoint,
+        //        _totalCard = model.AmountCardInBag,
+        //        _bagList = model._bag,
+        //        _bagDic = model._dictionaryBags
+        //    };
+        //    res.Add(info);
+        //}
+            return res;
     }
     #endregion Bot Looker API Need
 }

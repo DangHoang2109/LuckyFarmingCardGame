@@ -477,32 +477,7 @@ public class CardGameController : MonoBehaviour
     #endregion Draw and Interacting with Pallet
 
     #region Interacting with player bag
-    public void DestroyPlayerCard(InGameBasePlayerItem player, int cardIDToDestroy)
-    {
-        StartCoroutine(ieAnimation());
 
-        IEnumerator ieAnimation()
-        {
-            yield return new WaitForSeconds(this.AnimationTimeConfig?._timeWaitAnimationDestroyingCard ?? 0);
-            if (player != null)
-            {
-                player.DestroyMyCardByOther(cardIDToDestroy);
-            }
-
-            TellGameManagerICanContinueTurn();
-        }
-    }
-    public void PullPlayerCardToHisPallet(InGameBasePlayerItem player, int cardIDToPull)
-    {
-        if (player != null)
-        {
-            InGame_CardDataModelWithAmount cardPulled = player.PullMyCardToThePallet(cardIDToPull);
-            PutACardToPallet(CreateCardDataModel(cardPulled._cardID));
-
-
-            TellGameManagerICanContinueTurn();
-        }
-    }
     #endregion Interacting with player bag
 
     #region Bot Looker API Need
