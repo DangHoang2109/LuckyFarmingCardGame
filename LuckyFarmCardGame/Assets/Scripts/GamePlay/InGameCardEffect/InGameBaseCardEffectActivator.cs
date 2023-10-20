@@ -16,6 +16,7 @@ public class InGameBaseCardEffectActivator
             return _effectConfig;
         }
     }
+    public InGameBasePlayerItem _host;
 
     public virtual void ActiveEffectWhenDrawed()
     {
@@ -37,22 +38,27 @@ public class InGameBaseCardEffectActivator
     {
         InGameManager.Instance.ShowNotificationCardAction($"Card effect: {this.EffectConfig?._cardEffectDescription}");
     }
+    public virtual void SetHost(InGameBasePlayerItem host)
+    {
+        this._host = host;
+    }
 }
 public enum InGameBaseCardEffectID
 {
-    [Type(typeof(InGameCardEffectActivator_NoneEffect))]
-    NONE_EFFECT = 0,
+    [Type(typeof(InGameCardEffectActivator_Heal))]
+    HEAL = 0, //NONE_EFFECT
     [Type(typeof(InGameCardEffectActivator_DrawCard))]
     DRAW_CARD = 1,
     [Type(typeof(InGameCardEffectActivator_RevealTop))]
     REVEAL_TOP_DECK = 2,
+    [Type(typeof(InGameCardEffectActivator_AttackSingleUnit))]
+    ATTACK_SINGLE_UNIT = 3,
+    [Type(typeof(InGameCardEffectActivator_AttackAllUnit))]
+    ATTACK_ALL_UNIT = 4,
+    [Type(typeof(InGameCardEffectActivator_Defense))]
+    DEFENSE = 5,
     [Type(typeof(InGameCardEffectActivator_NoneEffect))]
-    NONE_EFFECT_1 = 3,
-    [Type(typeof(InGameCardEffectActivator_NoneEffect))]
-    NONE_EFFECT_2 = 4,
-    [Type(typeof(InGameCardEffectActivator_NoneEffect))]
-    NONE_EFFECT_3 = 5,
-
+    NONE_EFFECT = 6, //CURRENTLY NOT IMPLEMENT, OR WILL BE REPLACE WITH EFFECT NONE
 }
 public class InGameCardEffectActivator_NoneEffect : InGameBaseCardEffectActivator
 {
@@ -133,6 +139,112 @@ public class InGameCardEffectActivator_RevealTop : InGameBaseCardEffectActivator
         base.ShowingNotification();
     }
 }
+public class InGameCardEffectActivator_AttackSingleUnit : InGameBaseCardEffectActivator
+{
+    public override InGameBaseCardEffectID ID => InGameBaseCardEffectID.ATTACK_SINGLE_UNIT;
 
+    public override void ActiveEffectWhenDrawed()
+    {
+        base.ActiveEffectWhenDrawed();
+    }
+    public override void ActiveEffectWhenPlaceToPallet()
+    {
+        base.ActiveEffectWhenPlaceToPallet();
+        ShowingNotification();
+        this._host?.AttackSingleUnit();
+    }
+    public override void ActiveEffectWhenDestroyed()
+    {
+        base.ActiveEffectWhenDestroyed();
+    }
+    public override void ActiveEffectWhenPulledToBag()
+    {
+        base.ActiveEffectWhenPulledToBag();
+    }
+    public override void ShowingNotification()
+    {
+        base.ShowingNotification();
+    }
+}
 
+public class InGameCardEffectActivator_AttackAllUnit : InGameBaseCardEffectActivator
+{
+    public override InGameBaseCardEffectID ID => InGameBaseCardEffectID.ATTACK_ALL_UNIT;
 
+    public override void ActiveEffectWhenDrawed()
+    {
+        base.ActiveEffectWhenDrawed();
+    }
+    public override void ActiveEffectWhenPlaceToPallet()
+    {
+        base.ActiveEffectWhenPlaceToPallet();
+        ShowingNotification();
+        this._host?.AttackAllUnit();
+    }
+    public override void ActiveEffectWhenDestroyed()
+    {
+        base.ActiveEffectWhenDestroyed();
+    }
+    public override void ActiveEffectWhenPulledToBag()
+    {
+        base.ActiveEffectWhenPulledToBag();
+    }
+    public override void ShowingNotification()
+    {
+        base.ShowingNotification();
+    }
+}
+public class InGameCardEffectActivator_Defense : InGameBaseCardEffectActivator
+{
+    public override InGameBaseCardEffectID ID => InGameBaseCardEffectID.DEFENSE;
+
+    public override void ActiveEffectWhenDrawed()
+    {
+        base.ActiveEffectWhenDrawed();
+    }
+    public override void ActiveEffectWhenPlaceToPallet()
+    {
+        base.ActiveEffectWhenPlaceToPallet();
+        ShowingNotification();
+        this._host?.DefenseCreateShield();
+    }
+    public override void ActiveEffectWhenDestroyed()
+    {
+        base.ActiveEffectWhenDestroyed();
+    }
+    public override void ActiveEffectWhenPulledToBag()
+    {
+        base.ActiveEffectWhenPulledToBag();
+    }
+    public override void ShowingNotification()
+    {
+        base.ShowingNotification();
+    }
+}
+public class InGameCardEffectActivator_Heal : InGameBaseCardEffectActivator
+{
+    public override InGameBaseCardEffectID ID => InGameBaseCardEffectID.HEAL;
+
+    public override void ActiveEffectWhenDrawed()
+    {
+        base.ActiveEffectWhenDrawed();
+    }
+    public override void ActiveEffectWhenPlaceToPallet()
+    {
+        base.ActiveEffectWhenPlaceToPallet();
+        ShowingNotification();
+        this._host?.Heal();
+    }
+    public override void ActiveEffectWhenDestroyed()
+    {
+        base.ActiveEffectWhenDestroyed();
+    }
+    public override void ActiveEffectWhenPulledToBag()
+    {
+        base.ActiveEffectWhenPulledToBag();
+    }
+    public override void ShowingNotification()
+    {
+        base.ShowingNotification();
+    }
+}

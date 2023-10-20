@@ -137,54 +137,57 @@ public class InGameAI
         {
             _msg = _cMsg;
             DecidingMesssage dMsg = new DecidingMesssage();
-            float randResult = 0;
+
+            dMsg._attacking = true;
+
+            //float randResult = 0;
 
             //check nếu card tiếp theo gây ra conflict quá cao thì endturn
-            randResult = GameUtils.Random;
-            dMsg._endTurn = randResult <= _msg._conflictPalletPercent;
-            if (dMsg._endTurn)
-                return dMsg;
+            //randResult = GameUtils.Random;
+            //dMsg._endTurn = randResult <= _msg._conflictPalletPercent;
+            //if (dMsg._endTurn)
+            //    return dMsg;
 
             //nếu lỡ bắt buộc draw, kết quả draw có gây conflict ko?
-            dMsg._willPalletConflictIfDraw = !dMsg._endTurn && _msg._willPalletConflictIfDraw;
-            dMsg._willSpentTheCoin = DecideToUseCoinIfWeAfford();
+            //dMsg._willPalletConflictIfDraw = !dMsg._endTurn && _msg._willPalletConflictIfDraw;
+            //dMsg._willSpentTheCoin = DecideToUseCoinIfWeAfford();
 
             //nếu không endturn => BẮT BUỘC draw card tiếp theo
             //nếu card tiếp theo có effect tương tác: pull card hoặc destroy card thì phải decide là tương tác với ai và card tương tác là card nào
-            switch (_msg._topDeckCardEffectID)
-            {
-                case InGameBaseCardEffectID.NONE_EFFECT:
-                    dMsg._interactWithOther = false;
-                    break;
-                case InGameBaseCardEffectID.DRAW_CARD:
-                    dMsg._interactWithOther = false;
-                    break;
-                case InGameBaseCardEffectID.REVEAL_TOP_DECK:
-                    dMsg._interactWithOther = false;
-                    break;
-                default:
-                    break;
-            }
+            //switch (_msg._topDeckCardEffectID)
+            //{
+            //    case InGameBaseCardEffectID.NONE_EFFECT:
+            //        dMsg._interactWithOther = false;
+            //        break;
+            //    case InGameBaseCardEffectID.DRAW_CARD:
+            //        dMsg._interactWithOther = false;
+            //        break;
+            //    case InGameBaseCardEffectID.REVEAL_TOP_DECK:
+            //        dMsg._interactWithOther = false;
+            //        break;
+            //    default:
+            //        break;
+            //}
 
             return dMsg;
 
             ///Nếu đủ coin thì có chi ra cứu pallet ko
-            bool DecideToUseCoinIfWeAfford()
-            {
-                //nếu conflict, có chi coin ko?
-                //nếu coin ko đủ cứu => ko chi
-                //nếu coin đủ => 
-                //2. Nếu ko có card trong goal, nhưng coin thu về từ pallet lớn hơn coin chi ra => cứu
-                //3. Nếu cả 2 card ko => random 10-20% cứu
-                //1.
+            //bool DecideToUseCoinIfWeAfford()
+            //{
+            //    //nếu conflict, có chi coin ko?
+            //    //nếu coin ko đủ cứu => ko chi
+            //    //nếu coin đủ => 
+            //    //2. Nếu ko có card trong goal, nhưng coin thu về từ pallet lớn hơn coin chi ra => cứu
+            //    //3. Nếu cả 2 card ko => random 10-20% cứu
+            //    //1.
 
-                //2.
-                float chanceToUseCoin = 0.1f;
-                if (GameUtils.Random <= chanceToUseCoin)
-                    return true;
+            //    //2.
+            //    float chanceToUseCoin = 0.1f;
+            //    if (GameUtils.Random <= chanceToUseCoin)
+            //        return true;
 
-                return false;
-            }
+            //    return false;
+            //}
         }
 
         public void EndTurn()
@@ -200,21 +203,22 @@ public class InGameAI
         /// <summary>
         /// Không draw nữa mà end turn luôn
         /// </summary>
-        public bool _endTurn;
+        //public bool _endTurn;
 
-        /// <summary>
-        /// nếu card tiếp theo có effect tương tác: pull card hoặc destroy card 
-        /// phải decide là tương tác với ai và card tương tác là card nào
-        /// </summary>
-        public bool _interactWithOther;
-        public int _playerIDInteractWith;
-        public int _cardIDInteractWith;
+        public bool _attacking;
+        ///// <summary>
+        ///// nếu card tiếp theo có effect tương tác: pull card hoặc destroy card 
+        ///// phải decide là tương tác với ai và card tương tác là card nào
+        ///// </summary>
+        //public bool _interactWithOther;
+        //public int _playerIDInteractWith;
+        //public int _cardIDInteractWith;
 
-        /// <summary>
-        /// Pallet có conflict ko nếu draw top card?
-        /// </summary>
-        public bool _willPalletConflictIfDraw;
-        public bool _willSpentTheCoin;
+        ///// <summary>
+        ///// Pallet có conflict ko nếu draw top card?
+        ///// </summary>
+        //public bool _willPalletConflictIfDraw;
+        //public bool _willSpentTheCoin;
     }
 
     public class AIExecutor
@@ -243,15 +247,19 @@ public class InGameAI
                 //chờ vài giây
                 _actions.Enqueue(new ExecuteThink(this._msg, _player, Random.Range(0.8f, 1.2f)));
 
-                if (_msg._endTurn)
-                {
-                    _actions.Enqueue(new ExecuteEndTurn(this._msg, _player));
-                }
-                else
-                {
-                    //Chờ vài giây
-                    _actions.Enqueue(new ExecuteDrawCard(this._msg, _player));
-                }
+                _actions.Enqueue(new ExecuteAttackMainPlayer(this._msg, _player));
+
+                _actions.Enqueue(new ExecuteEndTurn(this._msg, _player));
+
+                //if (_msg._endTurn)
+                //{
+                //    //_actions.Enqueue(new ExecuteEndTurn(this._msg, _player));
+                //}
+                //else
+                //{
+                //    //Chờ vài giây
+                //    _actions.Enqueue(new ExecuteDrawCard(this._msg, _player));
+                //}
             }
             catch (System.Exception e)
             {
@@ -275,25 +283,25 @@ public class InGameAI
         }
 
 
-        public void CheckActionInterractCardIfNeed()
-        {
-            //Chờ vài giây
-            //logic ở đây đang sai, khi card flip xong, callback gọi thì mới execute cái này
-            if (_msg._interactWithOther)
-            {
-                _actions.Enqueue(new ExecuteThink(this._msg, _player, _thinkTime: 3f));
-                _actions.Enqueue(new ExecuteChoseCard(this._msg, _player));
-            }
-        }
-        public void CheckActionSpentCoinIfNeed(int coinNeedSpending)
-        {
-            //logic ở đây đang sai, khi dice roll xong, callback gọi thì mới execute cái này
-            if (_msg._willSpentTheCoin && PlayerInfo.IsCanUseGameCoin(coinNeedSpending))
-            {
-                _actions.Enqueue(new ExecuteThink(this._msg, _player, _thinkTime: 3f));
-                _actions.Enqueue(new ExecuteUseCoin(this._msg, _player));
-            }
-        }
+        //public void CheckActionInterractCardIfNeed()
+        //{
+        //    //Chờ vài giây
+        //    //logic ở đây đang sai, khi card flip xong, callback gọi thì mới execute cái này
+        //    if (_msg._interactWithOther)
+        //    {
+        //        _actions.Enqueue(new ExecuteThink(this._msg, _player, _thinkTime: 3f));
+        //        _actions.Enqueue(new ExecuteChoseCard(this._msg, _player));
+        //    }
+        //}
+        //public void CheckActionSpentCoinIfNeed(int coinNeedSpending)
+        //{
+        //    //logic ở đây đang sai, khi dice roll xong, callback gọi thì mới execute cái này
+        //    if (_msg._willSpentTheCoin && PlayerInfo.IsCanUseGameCoin(coinNeedSpending))
+        //    {
+        //        _actions.Enqueue(new ExecuteThink(this._msg, _player, _thinkTime: 3f));
+        //        _actions.Enqueue(new ExecuteUseCoin(this._msg, _player));
+        //    }
+        //}
         public void EndTurn()
         {
             _msg = null;
@@ -370,24 +378,24 @@ public class InGameAI
         }
     }
 
-    protected class ExecuteChoseCard : ExecutionAction
-    {
-        public ExecuteChoseCard(DecidingMesssage _msg, InGameBasePlayerItem _player) : base(_msg, _player)
-        {
-        }
+    //protected class ExecuteChoseCard : ExecutionAction
+    //{
+    //    public ExecuteChoseCard(DecidingMesssage _msg, InGameBasePlayerItem _player) : base(_msg, _player)
+    //    {
+    //    }
 
-        public ExecuteChoseCard(DecidingMesssage _msg, InGameBasePlayerItem _player, float _thinkTime) : base(_msg, _player)
-        {
-        }
-        public override void Do()
-        {
-            InGameManager.Instance.OnBotClickChoseToggleBagUIItem(_msg._playerIDInteractWith, _msg._cardIDInteractWith);
-        }
-        public override bool Preparing()
-        {
-            return true;
-        }
-    }
+    //    public ExecuteChoseCard(DecidingMesssage _msg, InGameBasePlayerItem _player, float _thinkTime) : base(_msg, _player)
+    //    {
+    //    }
+    //    public override void Do()
+    //    {
+    //        InGameManager.Instance.OnBotClickChoseToggleBagUIItem(_msg._playerIDInteractWith, _msg._cardIDInteractWith);
+    //    }
+    //    public override bool Preparing()
+    //    {
+    //        return true;
+    //    }
+    //}
 
     protected class ExecuteUseCoin : ExecutionAction
     {
@@ -426,7 +434,24 @@ public class InGameAI
             return true;
         }
     }
+    protected class ExecuteAttackMainPlayer : ExecutionAction
+    {
+        public ExecuteAttackMainPlayer(DecidingMesssage _msg, InGameBasePlayerItem _player) : base(_msg, _player)
+        {
+        }
 
+        public ExecuteAttackMainPlayer(DecidingMesssage _msg, InGameBasePlayerItem _player, float _thinkTime) : base(_msg, _player)
+        {
+        }
+        public override void Do()
+        {
+            this._player.AttackSingleUnit();
+        }
+        public override bool Preparing()
+        {
+            return true;
+        }
+    }
     #endregion Execution Action
 }
 

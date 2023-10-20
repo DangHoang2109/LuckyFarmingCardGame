@@ -157,6 +157,46 @@ public class InGameBasePlayerItem : MonoBehaviour
     {
 
     }
+    public virtual void SubtractHP(int dmg)
+    {
+        this.CurrentHP -= dmg;
+    }
+    public virtual void AddHP(int heal)
+    {
+        this.CurrentHP += heal;
+    }
+    public virtual void AttackSingleUnit(int dmg = -1)
+    {
+        if (dmg <= 0)
+            dmg = 1; //replace with this host info
+        Debug.Log("HOST: ATTACK ONE UNIT" + dmg);
+
+        InGameManager.Instance.OnTellControllerContinueTurn();
+    }
+    public virtual void AttackAllUnit(int dmg = -1)
+    {
+        if (dmg <= 0)
+            dmg = 1; //replace with this host info
+        Debug.Log("HOST: ATTACK ALL UNIT" + dmg);
+
+        InGameManager.Instance.OnTellControllerContinueTurn();
+    }
+    public virtual void Heal(int heal = -1)
+    {
+        if (heal <= 0)
+            heal = 1; //replace with this host info
+        Debug.Log("HOST: HEAL ME" + heal);
+
+        InGameManager.Instance.OnTellControllerContinueTurn();
+    }
+    public virtual void DefenseCreateShield(int shieldUnit = -1)
+    {
+        if (shieldUnit <= 0)
+            shieldUnit = 1; //replace with this host info
+        Debug.Log("HOST: DEFENSE" + shieldUnit);
+
+        InGameManager.Instance.OnTellControllerContinueTurn();
+    }
     #endregion Turn Action
 
     public virtual bool isDead()

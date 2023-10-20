@@ -91,34 +91,24 @@ public class InGameBotPlayerItem : InGameBasePlayerItem
 
         //InGameAI.LookingMessage collect = Looker?.Look();
         //yield return new WaitForEndOfFrame();
-        InGameAI.DecidingMesssage decideMsg = new InGameAI.DecidingMesssage()
-        {
-            _endTurn = true
-        };
-        //Decider?.Decide(collect);
+        InGameAI.DecidingMesssage decideMsg = Decider?.Decide(null);
         yield return new WaitForEndOfFrame();
 
 
         Executor.SetDecision(decideMsg);
         yield return new WaitForEndOfFrame();
     }
-    public override void Action_ACardPutToPallet(int cardID)
-    {
-        base.Action_ACardPutToPallet(cardID);
 
-        //tell my executor
-        this.Executor?.CheckActionInterractCardIfNeed();
-    }
-    public override void Action_DecideAndUseCoin(int amountCoinNeeding, int pointAdding)
-    {
-        base.Action_DecideAndUseCoin(amountCoinNeeding, pointAdding);
-
-        //tell my executor
-        this.Executor?.CheckActionSpentCoinIfNeed(amountCoinNeeding);
-    }
     public override void EndTurn()
     {
         base.EndTurn();
+    }
+    public override void AttackSingleUnit(int dmg = -1)
+    {
+        if (dmg <= 0)
+            dmg = 1; //replace with this host info
+        Debug.Log("ENEMY: FUCK THE MAIN" + dmg);
+        base.AttackSingleUnit(dmg);
     }
     #endregion Turn Action
 
