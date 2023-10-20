@@ -229,7 +229,15 @@ public class InGameManager : MonoSingleton<InGameManager>
     {
         this.CurrentTurnPlayer?.Action_DecideAndUseCoin(amountCoinNeeding, pointAdding);
     }
+    public void OnPlayerAttacking(int idWhoAttacked, int damage) //int idWhoAttacking: only the current turn user will be able to attack
+    {
+        if (TryGetSeatItem(idWhoAttacked, out InGameBasePlayerItem attacked))
+        {
+            attacked.SubtractHP(damage);
+        }
 
+        //create animation
+    }
     private void OnLogicEndTurn()
     {
         CurrentTurnPlayer.EndTurn();
@@ -267,8 +275,7 @@ public class InGameManager : MonoSingleton<InGameManager>
     /// <param name="cardID"></param>
     public void OnBotClickChoseToggleBagUIItem(int playerID, int cardID)
     {
-        InGameBasePlayerItem player = this._players.Find(x => x.ID == playerID);
-        if(player != null)
+        if(TryGetSeatItem(playerID, out InGameBasePlayerItem player))
         {
             Debug.Log("COMMENTED THIS, CONSIDER MOVE THIS LOGIC TO MAIN PLAYER ONLY");
             //if(player.BagVisual.TryFindUIItem(cardID, out InGameBagCardTypeUIItem uiCardItem))
@@ -277,6 +284,7 @@ public class InGameManager : MonoSingleton<InGameManager>
             //}
         }
     }
+
 
     private void Update()
     {
@@ -346,6 +354,11 @@ public class InGameManager : MonoSingleton<InGameManager>
     }
     #endregion Card activator behavior
 
+    public bool TryGetSeatItem(int id, out InGameBasePlayerItem item)
+    {
+        item = this._players.Find(x => x.ID == id);
+        return item != null;
+    }
 
     #region Bot Looker API Need
     public List<InGameAI.OtherPlayerLookingInfo> GetOtherPlayerLookingInfos()

@@ -261,21 +261,21 @@ public class CardGameController : MonoBehaviour
     {        
         InGameCardConfig cardConfig = IngameCardConfigs?.GetCardConfig(id);
 
-        return new InGame_CardDataModel().SetCardID(id, cardConfig);
+        return new InGame_CardDataModel().SetHost(InGameManager.CurrentTurnPlayer).SetCardID(id, cardConfig);
     }
     private BaseCardItem CreateCardItem(int cardID, Transform whereToSpawn)
     {
         BaseCardItem newCardItem = Instantiate(_cardPrefab, whereToSpawn);
         newCardItem.transform.localPosition = Vector3.zero;
         newCardItem.gameObject.SetActive(true);
-        newCardItem.ParseInfo(cardID);
+        newCardItem.ParseHost(InGameManager.CurrentTurnPlayer).ParseInfo(cardID);
         return newCardItem;
     }
     private BaseCardItem CreateCardItem(ref InGame_CardDataModel card)
     {
         BaseCardItem newCardItem = Instantiate(_cardPrefab, this._tfActEffectPanel);
         newCardItem.gameObject.SetActive(true);
-        newCardItem.ParseInfo(card._id);
+        newCardItem.ParseHost(InGameManager.CurrentTurnPlayer).ParseInfo(card._id);
 
         card.SetCardItemContainer(newCardItem);
         return newCardItem;

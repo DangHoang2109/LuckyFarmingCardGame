@@ -13,6 +13,8 @@ public class BaseCardItem : MonoBehaviour
     public UIDissolve _uIDissolveBackgroundEffect;
     public UIShiny _uIShinyAvatarEffect;
 
+    public InGameBasePlayerItem _host;
+
     #endregion Prop on Editor
 
     #region Data
@@ -20,7 +22,10 @@ public class BaseCardItem : MonoBehaviour
     public int CardID => _cardID;
     #endregion Data
 
-
+    private void OnDisable()
+    {
+        this._host = null;
+    }
 
     public BaseCardItem ParseInfo(int id)
     {
@@ -28,6 +33,11 @@ public class BaseCardItem : MonoBehaviour
 
         this.CardVisual?.SetCardIDAndDisplayAllVisual(id);
 
+        return this;
+    }
+    public BaseCardItem ParseHost(InGameBasePlayerItem host)
+    {
+        this._host = host;
         return this;
     }
     public BaseCardItem OnPullingToBagEffect()
@@ -90,6 +100,7 @@ public class InGame_CardDataModel : ICloneable
     protected BaseCardItem _cardContainer;
     public BaseCardItem CardContainer => _cardContainer;
 
+    public InGameBasePlayerItem _host;
 
     public InGame_CardDataModel()
     {
@@ -120,12 +131,18 @@ public class InGame_CardDataModel : ICloneable
         this._cardContainer = cardItem;
         return this;
     }
+    public InGame_CardDataModel SetHost(InGameBasePlayerItem h)
+    {
+        this._host = h;
+        return this;
+    }
     #region These function should in cardItem
     protected void CreateEffectActivator()
     {
         try
         {
             this._effectActivator = System.Activator.CreateInstance(EnumUtility.GetStringType(this._effect)) as InGameBaseCardEffectActivator;
+            this.EffectActivator?.SetHost(this._host);
         }
         catch (Exception e)
         {
