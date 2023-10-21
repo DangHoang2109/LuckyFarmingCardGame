@@ -10,6 +10,7 @@ public class InGameBasePlayerItem : MonoBehaviour
     public TMPro.TextMeshProUGUI _tmpCoinValue;
 
     public HPBarUI _hpBar;
+    public ShieldUI _shieldUI;
     #endregion Prop on editor
 
     #region Data
@@ -25,6 +26,21 @@ public class InGameBasePlayerItem : MonoBehaviour
             {
                 this.PlayerModel.CurrentHP = value;
                 this._hpBar.UpdateValue(this.PlayerModel.CurrentHP);
+            }
+        }
+    }
+    public virtual int CurrentShield
+    {
+        get
+        {
+            return this.PlayerModel?.Shield ?? 0;
+        }
+        set
+        {
+            if (this.PlayerModel != null)
+            {
+                this.PlayerModel.Shield = value;
+                this._shieldUI.UpdateValue(this.PlayerModel.Shield);
             }
         }
     }
@@ -157,14 +173,46 @@ public class InGameBasePlayerItem : MonoBehaviour
     {
 
     }
+    public virtual void Attacked(int dmg)
+    {
+        if(this.CurrentShield > 0)
+        {
+            int cacheShield = CurrentShield;
+            this.CurrentShield -= dmg;
+            dmg = Mathf.Clamp(dmg - cacheShield, 0 , int.MaxValue);
+        }
+        SubtractHP(dmg);
+    }
+    /// <summary>
+    /// Only use for subtract directly damage
+    /// If we subtract hp through attack, please use Attacked function as it will consider the shield
+    /// </summary>
+    /// <param name="dmg"></param>
     public virtual void SubtractHP(int dmg)
     {
         this.CurrentHP -= dmg;
+        if (isDead())
+        {
+            InGameManager.Instance.OnAPlayerDie(this.ID);
+        }
     }
     public virtual void AddHP(int heal)
     {
         this.CurrentHP += heal;
     }
+    public virtual void AddShield(int shieldUnit = -1)
+    {
+        if (shieldUnit <= 0)
+            shieldUnit = 1; //replace with this host info
+        Debug.Log("HOST: CREATE SHIELD" + shieldUnit);
+        this.CurrentShield += shieldUnit;
+    }
+    public virtual void ResetShield()
+    {
+        Debug.Log("HOST: RESET SHIELD");
+        this.CurrentShield = 0;
+    }
+
     public virtual void AttackSingleUnit(int dmg = -1)
     {
         if (dmg <= 0)
@@ -185,8 +233,8 @@ public class InGameBasePlayerItem : MonoBehaviour
     {
         if (heal <= 0)
             heal = 1; //replace with this host info
-        Debug.Log("HOST: HEAL ME" + heal);
-
+        Debug.Log("HOST: HEAL" + heal);
+        InGameManager.Instance.OnPlayerHeal(this.ID, heal);
         InGameManager.Instance.OnTellControllerContinueTurn();
     }
     public virtual void DefenseCreateShield(int shieldUnit = -1)
@@ -194,6 +242,7 @@ public class InGameBasePlayerItem : MonoBehaviour
         if (shieldUnit <= 0)
             shieldUnit = 1; //replace with this host info
         Debug.Log("HOST: DEFENSE" + shieldUnit);
+        InGameManager.Instance.OnPlayerDefense(this.ID, shieldUnit);
 
         InGameManager.Instance.OnTellControllerContinueTurn();
     }
@@ -226,11 +275,13 @@ public class BaseInGamePlayerDataModel
         }
     }
 
-    public virtual int CurrentHP { get => currentHP; set => currentHP = value; }
+    public virtual int CurrentHP { get => currentHP; set => currentHP = Mathf.Clamp(value, 0, MaxHP); }
     public virtual int MaxHP { get => maxHP; set => maxHP = value; }
+    public int Shield { get => shield; set => shield = Mathf.Clamp(value, 0, int.MaxValue); }
 
     protected int currentHP;
     protected int maxHP;
+    protected int shield;
 
     public BaseInGamePlayerDataModel()
     {

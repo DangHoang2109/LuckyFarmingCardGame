@@ -121,6 +121,20 @@ public class InGameMainPlayerItem : InGameBasePlayerItem
             this.BagVisual?.EnableToggleForEffectStage(false, null);
         }
     }
+    public override void AttackSingleUnit(int dmg = -1)
+    {
+        if (dmg <= 0)
+            dmg = 1; //replace with this host info
+        InGameManager.Instance.OnPlayerAttacking(InGameManager.Instance.FrontEnemy.ID, dmg);
+        base.AttackSingleUnit(dmg);
+    }
+    public override void AttackAllUnit(int dmg = -1)
+    {
+        if (dmg <= 0)
+            dmg = 1; //replace with this host info
+        InGameManager.Instance.OnPlayerAttackingAllUnit(isEnemySide: true, dmg);
+        base.AttackAllUnit(dmg);
+    }
     #endregion Turn Action
 
     public override void CustomUpdate()

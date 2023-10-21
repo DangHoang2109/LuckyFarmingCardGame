@@ -18,6 +18,7 @@ public class HPBarUI : MonoBehaviour
             this._currentValue = maxVal;
 
         this._tmpValue.SetText($"{_currentValue}/{this._maxValue}");
+        this._imgFill.fillAmount = Mathf.Clamp((float)_currentValue / _maxValue, 0f, 1f);
         return this;
     }
     public HPBarUI UpdateValue(int currentVal, bool isAllowExceedMax = false, bool isAnim = true, float durationValue = 1f)

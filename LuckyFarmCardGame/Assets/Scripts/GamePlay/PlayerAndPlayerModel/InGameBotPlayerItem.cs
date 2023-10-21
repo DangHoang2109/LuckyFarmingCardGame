@@ -108,7 +108,19 @@ public class InGameBotPlayerItem : InGameBasePlayerItem
         if (dmg <= 0)
             dmg = 1; //replace with this host info
         Debug.Log("ENEMY: FUCK THE MAIN" + dmg);
+
+        InGameManager.Instance.OnPlayerAttacking(InGameManager.Instance.MainUserPlayer.ID, dmg);
+
         base.AttackSingleUnit(dmg);
+    }
+    public override void AttackAllUnit(int dmg = -1)
+    {
+        if (dmg <= 0)
+            dmg = 1; //replace with this host info
+        Debug.Log("ENEMY: FUCK THE MAIN" + dmg);
+
+        InGameManager.Instance.OnPlayerAttackingAllUnit(isEnemySide: false, dmg);
+        base.AttackAllUnit(dmg);
     }
     #endregion Turn Action
 

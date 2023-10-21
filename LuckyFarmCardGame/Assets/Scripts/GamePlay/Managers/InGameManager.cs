@@ -33,12 +33,16 @@ public class InGameManager : MonoSingleton<InGameManager>
     protected GameState _gameState;
     public bool IsPlaying => this._gameState == GameState.PLAYING;
 
+    public List<int> idsMainPlayers; //main player and his coop/pet
+    public List<int> idsEnemys; //Enemy currently active
     #endregion Data
 
     #region Getter
     public InGameBasePlayerItem CurrentTurnPlayer => _players[this._turnIndex];
     public BaseInGamePlayerDataModel CurrentTurnPlayerModel => _players[this._turnIndex]?.PlayerModel;
 
+    public InGameBasePlayerItem MainUserPlayer => _players[0];
+    public InGameBasePlayerItem FrontEnemy => _players[1];
 
     #endregion Getter
 
@@ -76,6 +80,7 @@ public class InGameManager : MonoSingleton<InGameManager>
     protected void InitPlayers(int amountPlayerJoin)
     {
         _playersModels ??= new List<BaseInGamePlayerDataModel>();
+        idsMainPlayers ??= new List<int>();
         if (this._players != null && this._players.Count > 0)
         {
             //Pull a random goal Config to this player;
@@ -91,12 +96,14 @@ public class InGameManager : MonoSingleton<InGameManager>
 
                 _players[i].SetAPlayerModel(main);
                 this._playersModels.Add(main);
+                this.idsMainPlayers.Add(main._id);
             }
         }
     }
     protected void InitCreep(int amountCreepJoin)
     {
         _playersModels ??= new List<BaseInGamePlayerDataModel>();
+        idsEnemys ??= new List<int>();
         if (this._players != null && this._players.Count > 0)
         {
             int creepIndexMax = amountCreepJoin + 1;
@@ -109,10 +116,11 @@ public class InGameManager : MonoSingleton<InGameManager>
                 //change to parse from player item
                 BaseInGameEnemyDataModel enemyModel = new BaseInGameEnemyDataModel();
                 enemyModel.SetSeatID(id: i, isMain: false);
-                enemyModel.SetHP(maxHP: 10);
+                enemyModel.SetHP(maxHP: 1);
 
                 _players[i].SetAPlayerModel(enemyModel);
                 this._playersModels.Add(enemyModel);
+                idsEnemys.Add(enemyModel._id);
             }
         }
     }
@@ -143,6 +151,13 @@ public class InGameManager : MonoSingleton<InGameManager>
     }
     public void OnEndRound()
     {
+        //loop all the alive player and reset it shield, we not allow shield remain 
+        foreach (var item in this._players)
+        {
+            if (item.gameObject.activeInHierarchy && item.IsPlaying)
+                item.ResetShield();
+        }
+        //begin new round
         OnBeginRound();
     }
     #endregion Round Action
@@ -229,14 +244,74 @@ public class InGameManager : MonoSingleton<InGameManager>
     {
         this.CurrentTurnPlayer?.Action_DecideAndUseCoin(amountCoinNeeding, pointAdding);
     }
+    /// <summary>
+    /// Tấn công một unit
+    /// </summary>
+    /// <param name="idWhoAttacked"></param>
+    /// <param name="damage"></param>
     public void OnPlayerAttacking(int idWhoAttacked, int damage) //int idWhoAttacking: only the current turn user will be able to attack
     {
         if (TryGetSeatItem(idWhoAttacked, out InGameBasePlayerItem attacked))
         {
-            attacked.SubtractHP(damage);
+            attacked.Attacked(damage);
+            //create animation
+
+        }
+        else
+        {
+            //hết enemy
         }
 
+    }
+    /// <summary>
+    /// Tấn công toàn bộ đối thủ
+    /// </summary>
+    /// <param name="isEnemySide">Tấn công toàn bộ enemy hay toàn bộ main player character (future when multiplayer or pet)</param>
+    /// <param name="damage"></param>
+    public void OnPlayerAttackingAllUnit(bool isEnemySide, int damage) //int idWhoAttacking: only the current turn user will be able to attack
+    {
+        if (isEnemySide)
+        {
+            //get all enemy, list có thể bị thay đổi nếu có obj dead 
+            for (int i = idsEnemys.Count-1; i >=0; i--)
+            {
+                OnPlayerAttacking(idsEnemys[i], damage);
+            }
+        }
+        else
+        {
+            for (int i = idsMainPlayers.Count - 1; i >= 0; i--)
+            {
+                OnPlayerAttacking(idsMainPlayers[i], damage);
+            }
+        }
         //create animation
+    }
+    public void OnPlayerHeal(int idHealReceiver, int heal)
+    {
+        if (TryGetSeatItem(idHealReceiver, out InGameBasePlayerItem healReceive))
+        {
+            healReceive.AddHP(heal);
+        }
+    }
+    public void OnPlayerDefense(int idDefenseder, int def)
+    {
+        if (TryGetSeatItem(idDefenseder, out InGameBasePlayerItem defenseder))
+        {
+            defenseder.AddShield(def);
+        }
+    }
+    public void OnAPlayerDie(int id)
+    {
+        //disable the obj
+        if (TryGetSeatItem(id, out InGameBasePlayerItem dead))
+        {
+            dead.gameObject.SetActive(false);
+        }
+        //remove from the list
+        this._playersModels.RemoveAll(x => x._id == id);
+        this.idsMainPlayers.Remove(id);
+        this.idsEnemys.Remove(id);
     }
     private void OnLogicEndTurn()
     {

@@ -1142,6 +1142,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _tmpCoinValue: {fileID: 7140297098044310688}
   _hpBar: {fileID: 7596557053230550317}
+  _shieldUI: {fileID: 4721393066132068243}
   _btnEndTurn: {fileID: 2353484494566618358}
   _bagVisual: {fileID: 984839751162194694}
   _imgTimer: {fileID: 5568825570754601894}
@@ -1251,6 +1252,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 1281117367137589378, guid: 9f00dd87bd5d5fd4891aa3b7e8a5ca3f, type: 3}
   m_PrefabInstance: {fileID: 5808449760478955919}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &4721393066132068243 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1233427414655589916, guid: 9f00dd87bd5d5fd4891aa3b7e8a5ca3f, type: 3}
+  m_PrefabInstance: {fileID: 5808449760478955919}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bcf8fff882d20049aaf188324ae5db8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &7596557053230550317 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4176989887800968354, guid: 9f00dd87bd5d5fd4891aa3b7e8a5ca3f, type: 3}
