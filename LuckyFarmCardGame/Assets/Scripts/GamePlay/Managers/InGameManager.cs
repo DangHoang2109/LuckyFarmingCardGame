@@ -93,6 +93,7 @@ public class InGameManager : MonoSingleton<InGameManager>
                 BaseInGameMainPlayerDataModel main = new BaseInGameMainPlayerDataModel();
                 main.SetHP(maxHP: 10);
                 main.SetSeatID(id: i, isMain: i == 0);
+                main.StartGame();
 
                 _players[i].SetAPlayerModel(main);
                 this._playersModels.Add(main);
@@ -117,6 +118,7 @@ public class InGameManager : MonoSingleton<InGameManager>
                 BaseInGameEnemyDataModel enemyModel = new BaseInGameEnemyDataModel();
                 enemyModel.SetSeatID(id: i, isMain: false);
                 enemyModel.SetHP(maxHP: 1);
+                enemyModel.StartGame();
 
                 _players[i].SetAPlayerModel(enemyModel);
                 this._playersModels.Add(enemyModel);

@@ -20,9 +20,9 @@ public class InGameMainPlayerItem : InGameBasePlayerItem
     #region Prop on editor
     public Button _btnEndTurn;
 
-    [SerializeField]
-    protected InGameBasePlayerBagVisual _bagVisual;
-    public InGameBasePlayerBagVisual BagVisual => _bagVisual;
+    //[SerializeField]
+    //protected InGameBasePlayerBagVisual _bagVisual;
+    //public InGameBasePlayerBagVisual BagVisual => _bagVisual;
 
     public Image _imgTimer;
 
@@ -40,7 +40,6 @@ public class InGameMainPlayerItem : InGameBasePlayerItem
     {
         return base.InitPlayerItSelf();
     }
-
     #endregion InitAction
 
     #region Turn Action
@@ -84,7 +83,7 @@ public class InGameMainPlayerItem : InGameBasePlayerItem
         {
             this.MainDataModel.AddCardsToPallet(cardReceive);
         }
-        this.BagVisual?.RefreshPlayerBag(this.MainDataModel._dictionaryBags);
+        //this.BagVisual?.RefreshPlayerBag(this.MainDataModel._dictionaryBags);
 
         _tmpCoinValue.SetText($"{(PlayerModel.CurrentCoinPoint).ToString("D2")}");
 
@@ -93,33 +92,33 @@ public class InGameMainPlayerItem : InGameBasePlayerItem
     public override void ParseVisualBagUI()
     {
         base.ParseVisualBagUI();
-        this.BagVisual?.SetHostPlayer(this);
+        ///this.BagVisual?.SetHostPlayer(this);
     }
     public override void ReadyInDestroyCardEffectStage(int amountCardToBeChoseInEffect, Action<int, List<int>> onCompleteBeingChose)
     {
         base.ReadyInDestroyCardEffectStage(amountCardToBeChoseInEffect, onCompleteBeingChose);
-        this.BagVisual?.EnableToggleForEffectStage(true, OnACardItemInBagBeingChose_DestroyingPhase);
+        //this.BagVisual?.EnableToggleForEffectStage(true, OnACardItemInBagBeingChose_DestroyingPhase);
     }
     protected override void OnACardItemInBagBeingChose_DestroyingPhase(int cardID, bool isChosed)
     {
         base.OnACardItemInBagBeingChose_DestroyingPhase(cardID, isChosed);
-        if (CardBeingChose.Count == _amountCardToBeChoseInEffect)
-        {
-            this.BagVisual?.EnableToggleForEffectStage(false, null);
-        }
+        //if (CardBeingChose.Count == _amountCardToBeChoseInEffect)
+        //{
+        //    this.BagVisual?.EnableToggleForEffectStage(false, null);
+        //}
     }
     public override void ReadyInPullingCardEffectStage(int amountCardToBeChoseInEffect, Action<int, List<int>> onCompleteBeingChose)
     {
         base.ReadyInPullingCardEffectStage(amountCardToBeChoseInEffect, onCompleteBeingChose);
-        this.BagVisual?.EnableToggleForEffectStage(true, OnACardItemInBagBeingChose_PullingCardEffect);
+        //this.BagVisual?.EnableToggleForEffectStage(true, OnACardItemInBagBeingChose_PullingCardEffect);
     }
     protected override void OnACardItemInBagBeingChose_PullingCardEffect(int cardID, bool isChosed)
     {
         base.OnACardItemInBagBeingChose_PullingCardEffect(cardID, isChosed);
-        if (CardBeingChose.Count == _amountCardToBeChoseInEffect)
-        {
-            this.BagVisual?.EnableToggleForEffectStage(false, null);
-        }
+        //if (CardBeingChose.Count == _amountCardToBeChoseInEffect)
+        //{
+        //    this.BagVisual?.EnableToggleForEffectStage(false, null);
+        //}
     }
     public override void AttackSingleUnit(int dmg = -1)
     {

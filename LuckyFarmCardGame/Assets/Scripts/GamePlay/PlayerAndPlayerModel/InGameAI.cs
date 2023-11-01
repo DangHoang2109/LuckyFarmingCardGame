@@ -111,8 +111,8 @@ public class InGameAI
     public class OtherPlayerLookingInfo
     {
         public int _playerID;
-        public Dictionary<int, InGame_CardDataModelWithAmount> _bagDic;
-        public List<InGame_CardDataModelWithAmount> _bagList;
+        public Dictionary<int, InGame_CardDataModelLevels> _bagDic;
+        public List<InGame_CardDataModelLevels> _bagList;
         public int _totalCard;
         public int _currentCoin;
     }

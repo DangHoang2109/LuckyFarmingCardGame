@@ -1144,7 +1144,6 @@ MonoBehaviour:
   _hpBar: {fileID: 7596557053230550317}
   _shieldUI: {fileID: 4721393066132068243}
   _btnEndTurn: {fileID: 2353484494566618358}
-  _bagVisual: {fileID: 984839751162194694}
   _imgTimer: {fileID: 5568825570754601894}
 --- !u!1001 &5808449760478955919
 PrefabInstance:
@@ -1494,6 +1493,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: BagUIVisual
       objectReference: {fileID: 0}
+    - target: {fileID: 8769527946326167961, guid: f72021805559f144b9a606be3971b0ca, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8840997099427113566, guid: f72021805559f144b9a606be3971b0ca, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -1583,17 +1586,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f72021805559f144b9a606be3971b0ca, type: 3}
---- !u!114 &984839751162194694 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5978350501672065524, guid: f72021805559f144b9a606be3971b0ca, type: 3}
-  m_PrefabInstance: {fileID: 6871794370686087922}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 57db948398a5d964492113523d7fe41d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!224 &2732572917959841964 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8840997099427113566, guid: f72021805559f144b9a606be3971b0ca, type: 3}

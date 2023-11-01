@@ -297,6 +297,10 @@ public class BaseInGamePlayerDataModel
         this.CurrentHP = this.MaxHP = maxHP;
         return this;
     }
+    public virtual BaseInGamePlayerDataModel StartGame()
+    {
+        return this;
+    }
 
     public bool IsDead()
     {
@@ -340,7 +344,7 @@ public class InGame_CardDataModelWithAmount
     }
     public InGame_CardDataModelWithAmount AddACard(InGame_CardDataModel palletCard, int amount = 1)
     {
-        if(this._cardID == palletCard._id)
+        if (this._cardID == palletCard._id)
         {
             this._amountCard += amount;
         }
@@ -351,17 +355,17 @@ public class InGame_CardDataModelWithAmount
         this._amountCard = Mathf.Clamp(_amountCard - amount, 0, _amountCard);
         return this;
     }
-    public InGame_CardDataModelWithAmount PullSplitCard(out bool splitToTwoSuccess ,out InGame_CardDataModelWithAmount splitedCard, int amountToSplit = 1)
+    public InGame_CardDataModelWithAmount PullSplitCard(out bool splitToTwoSuccess, out InGame_CardDataModelWithAmount splitedCard, int amountToSplit = 1)
     {
         splitedCard = new InGame_CardDataModelWithAmount(this) { _amountCard = amountToSplit };
         splitToTwoSuccess = true;
-        if(this._amountCard <= amountToSplit)
+        if (this._amountCard <= amountToSplit)
         {
             splitToTwoSuccess = false;
             splitedCard._amountCard = this._amountCard;
             this._amountCard = 0;
         }
-        else 
+        else
         {
             splitToTwoSuccess = true;
             splitedCard._amountCard = amountToSplit;
@@ -380,22 +384,36 @@ public class InGame_CardDataModelWithAmount
 
 public class BaseInGameMainPlayerDataModel : BaseInGamePlayerDataModel
 {
-    public List<InGame_CardDataModelWithAmount> _bag;
-    public Dictionary<int, InGame_CardDataModelWithAmount> _dictionaryBags;
+    public List<InGame_CardDataModelLevels> _bag;
+    public Dictionary<int, InGame_CardDataModelLevels> _dictionaryBags;
 
-    public int AmountCardInBag => (_bag == null || _bag.Count == 0) ? 0 : this._bag.Sum(x => x._amountCard);
+    public int AmountCardInBag => 0;//(_bag == null || _bag.Count == 0) ? 0 : this._bag.Sum(x => x._amountCard);
     public bool IsHasCardIsBag => AmountCardInBag > 0;
-
-
 
     public BaseInGameMainPlayerDataModel() : base()
     {
-        this._bag = new List<InGame_CardDataModelWithAmount>();
-        this._dictionaryBags = new Dictionary<int, InGame_CardDataModelWithAmount>();
+        this._bag = new List<InGame_CardDataModelLevels>();
+        this._dictionaryBags = new Dictionary<int, InGame_CardDataModelLevels>();
     }
-    public bool TryGetCardInBag(int id, out InGame_CardDataModelWithAmount card)
+    public override BaseInGamePlayerDataModel StartGame()
     {
-        _dictionaryBags ??= new Dictionary<int, InGame_CardDataModelWithAmount>();
+        //setting up the dic with full of user monster card, starting at level 1
+        var _deckConfig = InGameDeckConfigs.Instance.GetStandardDeck();
+        if(_deckConfig != null)
+        {
+            foreach (var item in _deckConfig._deckContain)
+            {
+                InGame_CardDataModelLevels c = new InGame_CardDataModelLevels(id: item._cardID);
+                this._bag.Add(c);
+                this._dictionaryBags.Add(c._cardID, c);
+            }
+        }
+        this._bag.DebugListCardInGame();
+        return this;
+    }
+    public bool TryGetCardInBag(int id, out InGame_CardDataModelLevels card)
+    {
+        _dictionaryBags ??= new Dictionary<int, InGame_CardDataModelLevels>();
         return _dictionaryBags.TryGetValue(id, out card);
     }
 
@@ -404,21 +422,27 @@ public class BaseInGameMainPlayerDataModel : BaseInGamePlayerDataModel
     /// These usually from pallet
     /// </summary>
     /// <param name="cards"></param>
-    public void AddCardsToPallet(List<InGame_CardDataModel> cards)
+    /// return level up cards
+    public List<InGame_CardDataModel> AddCardsToPallet(List<InGame_CardDataModel> cards)
     {
-        _bag ??= new List<InGame_CardDataModelWithAmount>();
-        this._dictionaryBags ??= new Dictionary<int, InGame_CardDataModelWithAmount>();
+        _bag ??= new List<InGame_CardDataModelLevels>();
+        this._dictionaryBags ??= new Dictionary<int, InGame_CardDataModelLevels>();
+
+        List<InGame_CardDataModel> levelUpIfHas = new List<InGame_CardDataModel>();
+
         if (cards != null && cards.Count > 0)
         {
             foreach (InGame_CardDataModel cardDataModel in cards)
             {
-                if (_dictionaryBags.TryGetValue(cardDataModel._id, out InGame_CardDataModelWithAmount cardInBag))
+                if (_dictionaryBags.TryGetValue(cardDataModel._id, out InGame_CardDataModelLevels cardInBag))
                 {
-                    cardInBag.AddACard(cardDataModel);
+                    cardInBag.AddACard(cardDataModel, out bool isLevelUp);
+                    if (isLevelUp)
+                        levelUpIfHas.Add(cardDataModel);
                 }
                 else
                 {
-                    InGame_CardDataModelWithAmount c = new InGame_CardDataModelWithAmount(cardDataModel);
+                    InGame_CardDataModelLevels c = new InGame_CardDataModelLevels(cardDataModel, 1);
                     this._bag.Add(c);
                     this._dictionaryBags.Add(c._cardID, c);
                 }
@@ -426,16 +450,7 @@ public class BaseInGameMainPlayerDataModel : BaseInGamePlayerDataModel
                 this._currentCoinPoint += cardDataModel._coinPoint;
             }
         }
-    }
-    public void RemoveACard(InGame_CardDataModelWithAmount card)
-    {
-        _bag ??= new List<InGame_CardDataModelWithAmount>();
-        this._dictionaryBags ??= new Dictionary<int, InGame_CardDataModelWithAmount>();
-        if (this._dictionaryBags.ContainsKey(card._cardID))
-        {
-            _bag.Remove(card);
-            _dictionaryBags.Remove(card._cardID);
-        }
+        return levelUpIfHas;
     }
 }
 public class BaseInGameEnemyDataModel : BaseInGamePlayerDataModel

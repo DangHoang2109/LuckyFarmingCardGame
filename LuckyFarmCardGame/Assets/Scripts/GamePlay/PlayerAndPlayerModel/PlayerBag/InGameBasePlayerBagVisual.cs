@@ -23,13 +23,13 @@ public class InGameBasePlayerBagVisual : MonoBehaviour
         this._hostPlayer = p;
         return this;
     }
-    public InGameBasePlayerBagVisual RefreshPlayerBag(Dictionary<int, InGame_CardDataModelWithAmount> playerBag)
+    public InGameBasePlayerBagVisual RefreshPlayerBag(Dictionary<int, InGame_CardDataModelLevels> playerBag)
     {
         return this;
         foreach (KeyValuePair< int,InGameBagCardTypeUIItem> item in _dicItems)
         {
             int id = item.Value.CardID;
-            int amount = playerBag.TryGetValue(id, out InGame_CardDataModelWithAmount c) ? c._amountCard : 0 ;
+            int amount = playerBag.TryGetValue(id, out InGame_CardDataModelLevels c) ? c._currentCard : 0 ;
             _dicItems[id].UpdateValue(amount);
         }
         return this;
@@ -38,11 +38,11 @@ public class InGameBasePlayerBagVisual : MonoBehaviour
     public InGameBasePlayerBagVisual EnableToggleForEffectStage(bool isOn, System.Action<int, bool> onItemChosedWhileEffect)
     {
         this._onItemChosedWhileEffect = onItemChosedWhileEffect;
-        for (int i = 0; i < _uiItems.Count; i++)
-        {
-            _uiItems[i]
-                .EnableToggleForEffectStage(isOn);
-        }
+        //for (int i = 0; i < _uiItems.Count; i++)
+        //{
+        //    _uiItems[i]
+        //        .EnableToggleForEffectStage(isOn);
+        //}
         return this;
     }
 

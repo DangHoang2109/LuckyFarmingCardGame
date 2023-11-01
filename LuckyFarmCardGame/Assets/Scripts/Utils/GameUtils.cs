@@ -619,37 +619,39 @@ public static class InGameUtils
         return currentIndex;
     }
 
-    public static string DebugListCardInGame(this List<InGame_CardDataModelWithAmount> cards)
+    public static string DebugListCardInGame(this List<InGame_CardDataModelLevels> cards)
     {
         string debug = "";
         for (int i = 0; i < 6; i++)
         {
-            InGame_CardDataModelWithAmount c = cards.Find(x => x._cardID == i);
+            InGame_CardDataModelLevels c = cards.Find(x => x._cardID == i);
             if (c != null)
             {
-                debug = string.Format($"{debug}Card {i} - {c._amountCard}\n");
+                debug = string.Format($"{debug}Card {i} - {c._currentCard} - {c._currentLevel} \n");
             }
             else
             {
-                debug = string.Format($"{debug}Card {i} - {0}\n");
+                debug = string.Format($"{debug}Card {i} - {0} - {1}\n");
             }
         }
+        UnityEngine.Debug.Log(debug);
         return debug;
     }
-    public static string DebugDicCardInGame(this Dictionary<int,InGame_CardDataModelWithAmount> cards)
+    public static string DebugDicCardInGame(this Dictionary<int, InGame_CardDataModelLevels> cards)
     {
         string debug = "";
         for (int i = 0; i < 6; i++)
         {
-            if (cards.TryGetValue(i, out InGame_CardDataModelWithAmount c))
+            if (cards.TryGetValue(i, out InGame_CardDataModelLevels c))
             {
-                debug = string.Format($"{debug}Card {i} - {c._amountCard}\n");
+                debug = string.Format($"{debug}Card {i} - {c._currentCard} - {c._currentLevel} \n");
             }
             else
             {
-                debug = string.Format($"{debug}Card {i} - {0}\n");
+                debug = string.Format($"{debug}Card {i} - {0} - {1}\n");
             }
         }
+        UnityEngine.Debug.Log(debug);
         return debug;
     }
     public static InGameBaseCardEffectID GetActivatorEffectID(int cardID)

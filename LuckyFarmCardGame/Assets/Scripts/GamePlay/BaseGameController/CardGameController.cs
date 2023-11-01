@@ -324,14 +324,14 @@ public class CardGameController : MonoBehaviour
             yield return new WaitForSeconds(this.AnimationTimeConfig._timeConflictAnimationShowing);
             _gLightningAnimator.gameObject.SetActive(false);
 
-            //destroying the conflict card
-            cardItem.OnDestroyingEffect();
+
 
             yield return new WaitForSeconds(this.AnimationTimeConfig._timeWaitOnBeforeDestroyPallet);
 
             _onPalletConflict?.Invoke();
+            //destroying the conflict card
+            cardItem.OnDestroyingEffect();
             OnPalletConflict();
-
         }
         //else: let it in
         else
@@ -351,13 +351,16 @@ public class CardGameController : MonoBehaviour
 
     private void OnPalletConflict()
     {
-        //ask the rule to see what to do?
-        ThisFuncShouldOnRule_TellControllerToRollingDice();
+        //update rule of axie: Pallet conflict will cause to destroy it, remove the dice
+        this.DestroyPallet();
 
-        void ThisFuncShouldOnRule_TellControllerToRollingDice()
-        {
-            RollADiceAndCheckPalletCondition();
-        }
+        ////ask the rule to see what to do?
+        //ThisFuncShouldOnRule_TellControllerToRollingDice();
+
+        //void ThisFuncShouldOnRule_TellControllerToRollingDice()
+        //{
+        //    RollADiceAndCheckPalletCondition();
+        //}
     }
     public void RollADiceAndCheckPalletCondition()
     {
