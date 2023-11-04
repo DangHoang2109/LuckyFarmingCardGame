@@ -15,20 +15,21 @@ public class InGameTurnNotification : MonoBehaviour
     protected CanvasGroup _canvas;
     #endregion Property in Inspector
 
-    public void ShowText(string content, bool mainPlayerTurn, float timeStay = -1)
+    public void ShowText(string content, bool mainPlayerTurn, float timeStay = 5f)
     {
+        DOTween.Kill(this.GetInstanceID());
         this._tmpText.SetText(content);
         //this.transform.localPosition = new Vector3(this.transform.localPosition.x, mainPlayerTurn ? _yPostionForPlayer : _yPostionForBot);
         this._canvas.alpha = 0;
         Sequence seq = DOTween.Sequence();
         seq.SetId(this.GetInstanceID());
         seq.Join(this._canvas.DOFade(1f, 0.25f));
-        if(timeStay > 0)
+
+        if (timeStay > 0)
         {
             seq.AppendInterval(timeStay);
             seq.OnComplete(() => this.DisableText());
         }
-        
     }
     public void DisableText()
     {

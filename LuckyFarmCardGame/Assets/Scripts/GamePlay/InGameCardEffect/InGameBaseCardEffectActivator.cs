@@ -5,6 +5,9 @@ using UnityEngine;
 public class InGameBaseCardEffectActivator
 {
     public virtual InGameBaseCardEffectID ID => InGameBaseCardEffectID.NONE_EFFECT;
+    public int _cardID;
+    protected int _cardLevel;
+    public int CardLevel => this._cardLevel;
 
     protected InGameCardEffectConfig _effectConfig;
     public InGameCardEffectConfig EffectConfig
@@ -14,6 +17,21 @@ public class InGameBaseCardEffectActivator
             if (_effectConfig == null)
                 _effectConfig = InGameCardEffectConfigs.Instance.GetSkillConfig(this.ID);
             return _effectConfig;
+        }
+    }
+    protected InGameCardLevel _currentLevelConfig;
+    public InGameCardLevel CurrentLevelConfig
+    {
+        get
+        {
+            if (_currentLevelConfig == null || this._currentLevelConfig._level != this._cardLevel)
+            {
+                if (InGameCardLevelsConfigs.Instance.TryGetCardLevelConfig(this._cardID, this._cardLevel, out InGameCardLevel l))
+                    _currentLevelConfig = l;
+                else
+                    Debug.LogError($"NOT FOUNT {_cardID} {CardLevel}");
+            }
+            return _currentLevelConfig;
         }
     }
     public InGameBasePlayerItem _host;
@@ -36,11 +54,16 @@ public class InGameBaseCardEffectActivator
     }
     public virtual void ShowingNotification()
     {
-        InGameManager.Instance.ShowNotificationCardAction($"Card effect: {this.EffectConfig?._cardEffectDescription}");
+        InGameManager.Instance.ShowNotificationCardAction($"Card effect: {string.Format(this.EffectConfig?._cardEffectDescription, this.CurrentLevelConfig._stat)}");
     }
-    public virtual void SetHost(InGameBasePlayerItem host)
+    public virtual void SetIDAndHost(int id,InGameBasePlayerItem host)
     {
+        this._cardID = id;
         this._host = host;
+    }
+    public virtual void UpdateCardLevel(int cardLevel)
+    {
+        this._cardLevel = cardLevel;
     }
 }
 public enum InGameBaseCardEffectID
@@ -124,7 +147,7 @@ public class InGameCardEffectActivator_RevealTop : InGameBaseCardEffectActivator
     {
         base.ActiveEffectWhenPlaceToPallet();
         ShowingNotification();
-        InGameManager.Instance.OnTellControllerToRevealTopCard(1);
+        InGameManager.Instance.OnTellControllerToRevealTopCard(this.CurrentLevelConfig._stat);
     }
     public override void ActiveEffectWhenDestroyed()
     {
@@ -151,7 +174,7 @@ public class InGameCardEffectActivator_AttackSingleUnit : InGameBaseCardEffectAc
     {
         base.ActiveEffectWhenPlaceToPallet();
         ShowingNotification();
-        this._host?.AttackSingleUnit();
+        this._host?.AttackSingleUnit(this.CurrentLevelConfig._stat);
     }
     public override void ActiveEffectWhenDestroyed()
     {
@@ -179,7 +202,7 @@ public class InGameCardEffectActivator_AttackAllUnit : InGameBaseCardEffectActiv
     {
         base.ActiveEffectWhenPlaceToPallet();
         ShowingNotification();
-        this._host?.AttackAllUnit();
+        this._host?.AttackAllUnit(this.CurrentLevelConfig._stat);
     }
     public override void ActiveEffectWhenDestroyed()
     {
@@ -206,7 +229,7 @@ public class InGameCardEffectActivator_Defense : InGameBaseCardEffectActivator
     {
         base.ActiveEffectWhenPlaceToPallet();
         ShowingNotification();
-        this._host?.DefenseCreateShield();
+        this._host?.DefenseCreateShield(this.CurrentLevelConfig._stat);
     }
     public override void ActiveEffectWhenDestroyed()
     {
@@ -233,7 +256,7 @@ public class InGameCardEffectActivator_Heal : InGameBaseCardEffectActivator
     {
         base.ActiveEffectWhenPlaceToPallet();
         ShowingNotification();
-        this._host?.Heal();
+        this._host?.Heal(this.CurrentLevelConfig._stat);
     }
     public override void ActiveEffectWhenDestroyed()
     {

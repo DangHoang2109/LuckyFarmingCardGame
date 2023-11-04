@@ -223,7 +223,7 @@ public class InGameAI
 
     public class AIExecutor
     {
-        protected InGameBasePlayerItem _player;
+        protected InGameBotPlayerItem _player;
         public BaseInGamePlayerDataModel PlayerInfo => _player?.PlayerModel;
 
         protected DecidingMesssage _msg;
@@ -232,7 +232,7 @@ public class InGameAI
 
         public bool deQueue;
 
-        public AIExecutor(InGameBasePlayerItem _player)
+        public AIExecutor(InGameBotPlayerItem _player)
         {
             this._player = _player;
             _actions = new Queue<ExecutionAction>();

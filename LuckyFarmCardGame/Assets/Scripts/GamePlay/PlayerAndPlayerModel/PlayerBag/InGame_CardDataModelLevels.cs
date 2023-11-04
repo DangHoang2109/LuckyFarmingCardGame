@@ -7,7 +7,22 @@ public class InGame_CardDataModelLevels
     public int _cardID;
     public int _currentCard;
     public int _currentLevel = 1;
-    
+
+    protected InGameCardLevel _currentLevelConfig;
+    public InGameCardLevel CurrentLevelConfig
+    {
+        get
+        {
+            if (_currentLevelConfig == null || this._currentLevelConfig._level != this._currentLevel)
+            {
+                if (InGameCardLevelsConfigs.Instance.TryGetCardLevelConfig(this._cardID, this._currentLevel, out InGameCardLevel l))
+                    _currentLevelConfig = l;
+                else
+                    Debug.LogError($"NOT FOUNT {_cardID} {_currentLevel}");
+            }
+            return _currentLevelConfig;
+        }
+    }
     public InGame_CardDataModelLevels()
     {
         _currentCard = 0;
@@ -45,16 +60,14 @@ public class InGame_CardDataModelLevels
     }
     public bool CheckLevelUp()
     {
-        //tạm thời chưa có config, cứ là số card > cái level thì up
-        //level 1->2 thì cần 2 card 
-        return this._currentCard > this._currentLevel;
+        return this._currentCard > CurrentLevelConfig?._require;
     }
     public void LevelUp()
     {
         //trừ card đi bằng require
         //hiện chưa có thì - bằng level cũ +1
         //level 1->2 thì cần 2 card -> trừ 2
-        this._currentCard = Mathf.Clamp(this._currentCard - (this._currentLevel + 1), 0, int.MaxValue);
+        this._currentCard = Mathf.Clamp(this._currentCard - (CurrentLevelConfig?._require ?? 0), 0, int.MaxValue);
         this._currentLevel += 1;
 
     }

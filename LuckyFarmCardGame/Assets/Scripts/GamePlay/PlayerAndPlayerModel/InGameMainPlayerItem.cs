@@ -76,6 +76,15 @@ public class InGameMainPlayerItem : InGameBasePlayerItem
         _imgTimer.gameObject.SetActive(false);
         _btnEndTurn.interactable = false;
     }
+    public int GetCardLevel(int cardID)
+    {
+        if(this.MainDataModel.TryGetCardInBag(cardID, out InGame_CardDataModelLevels card))
+        {
+            return card._currentLevel;
+        }
+        Debug.LogError("NOT FOUND CARD " + cardID);
+        return 0;
+    }
     public override void PullCardToBag(List<InGame_CardDataModel> cardReceive)
     {
         base.PullCardToBag(cardReceive);

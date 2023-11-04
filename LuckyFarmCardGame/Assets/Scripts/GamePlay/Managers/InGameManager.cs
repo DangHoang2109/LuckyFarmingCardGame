@@ -29,6 +29,7 @@ public class InGameManager : MonoSingleton<InGameManager>
 
     #region Data
     protected int _turnIndex;
+    protected int _enemyWaveIndex = 0; //round=wave enemy hiện tại, 1 wave có thể kéo dài trong nhiều round nếu user không diệt được hết enemy
 
     protected GameState _gameState;
     public bool IsPlaying => this._gameState == GameState.PLAYING;
@@ -41,7 +42,7 @@ public class InGameManager : MonoSingleton<InGameManager>
     public InGameBasePlayerItem CurrentTurnPlayer => _players[this._turnIndex];
     public BaseInGamePlayerDataModel CurrentTurnPlayerModel => _players[this._turnIndex]?.PlayerModel;
 
-    public InGameBasePlayerItem MainUserPlayer => _players[0];
+    public InGameMainPlayerItem MainUserPlayer => _players[0] as InGameMainPlayerItem;
     public InGameBasePlayerItem FrontEnemy => _players[1];
 
     #endregion Getter
@@ -75,6 +76,8 @@ public class InGameManager : MonoSingleton<InGameManager>
         Debug.Log($"INGAME MANGE: Init {amountPlayerJoin} players");
         //Init player seat
         InitPlayers(amountPlayerJoin);
+        //inti enemy wave 0;
+        NewWaveAndSpawnEnemy();
     }
 
     protected void InitPlayers(int amountPlayerJoin)
@@ -101,28 +104,43 @@ public class InGameManager : MonoSingleton<InGameManager>
             }
         }
     }
-    protected void InitCreep(int amountCreepJoin)
+
+    protected void NewWaveAndSpawnEnemy()
+    {
+        //get wave config
+        InGameEnemyWaveConfig waveConfig = InGameEnemyConfigs.Instance.GetWaveConfig(this._enemyWaveIndex);
+        if(waveConfig != null)
+        {
+            InitCreep(waveConfig);
+        }
+    }
+    protected void InitCreep(InGameEnemyWaveConfig waveConfig)
     {
         _playersModels ??= new List<BaseInGamePlayerDataModel>();
         idsEnemys ??= new List<int>();
         if (this._players != null && this._players.Count > 0)
         {
-            int creepIndexMax = amountCreepJoin + 1;
+            int creepIndexMax = waveConfig.AmountEnemy + 1;
             for (int i = 1; i < this._players.Count; i++)
             {
                 _players[i].gameObject.SetActive(i < creepIndexMax);
                 if (i >= creepIndexMax)
                     continue;
 
-                //change to parse from player item
-                BaseInGameEnemyDataModel enemyModel = new BaseInGameEnemyDataModel();
-                enemyModel.SetSeatID(id: i, isMain: false);
-                enemyModel.SetHP(maxHP: 1);
-                enemyModel.StartGame();
+                int configIndex = i - 1;
+                InGameEnemyStatConfig enemyStat = waveConfig.GetEnemyStat(configIndex);
+                if(enemyStat != null)
+                {
+                    BaseInGameEnemyDataModel enemyModel = new BaseInGameEnemyDataModel();
+                    enemyModel.SetSeatID(id: i, isMain: false);
+                    enemyModel.SetStatConfig(enemyStat);
+                    enemyModel.StartGame();
 
-                _players[i].SetAPlayerModel(enemyModel);
-                this._playersModels.Add(enemyModel);
-                idsEnemys.Add(enemyModel._id);
+                    _players[i].SetAPlayerModel(enemyModel);
+                    this._playersModels.Add(enemyModel);
+                    idsEnemys.Add(enemyModel._id);
+                }
+
             }
         }
     }
@@ -141,8 +159,8 @@ public class InGameManager : MonoSingleton<InGameManager>
             //sinh thêm creep vì datamodel = 1 -> chỉ còn main player
             //không nên, nên set boolean
             //fill in the creep if it is dead
-            int amountCreepInThisTurn = 1; //add 1 creep thêm vào
-            InitCreep(amountCreepInThisTurn);
+            _enemyWaveIndex++;
+            NewWaveAndSpawnEnemy();
         }
 
         //bgein turn, luôn là từ player

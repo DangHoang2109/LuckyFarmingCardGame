@@ -455,5 +455,14 @@ public class BaseInGameMainPlayerDataModel : BaseInGamePlayerDataModel
 }
 public class BaseInGameEnemyDataModel : BaseInGamePlayerDataModel
 {
-
+    public InGameEnemyStatConfig _statConfig;
+    protected int baseDamagePerTurn = 0;
+    public int DamagePerTurn => baseDamagePerTurn;
+    public BaseInGameEnemyDataModel SetStatConfig(InGameEnemyStatConfig config)
+    {
+        _statConfig = config;
+        this.SetHP(config.enemyMaxHP);
+        this.baseDamagePerTurn = config.enemyDamage;
+        return this;
+    }
 }

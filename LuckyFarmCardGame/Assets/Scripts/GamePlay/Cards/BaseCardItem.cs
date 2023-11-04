@@ -136,13 +136,18 @@ public class InGame_CardDataModel : ICloneable
         this._host = h;
         return this;
     }
+    public InGame_CardDataModel SetCurrentLevel(int currentLevel)
+    {
+        this.EffectActivator?.UpdateCardLevel(currentLevel);
+        return this;
+    }
     #region These function should in cardItem
     protected void CreateEffectActivator()
     {
         try
         {
             this._effectActivator = System.Activator.CreateInstance(EnumUtility.GetStringType(this._effect)) as InGameBaseCardEffectActivator;
-            this.EffectActivator?.SetHost(this._host);
+            this.EffectActivator?.SetIDAndHost(this._id,this._host);
         }
         catch (Exception e)
         {

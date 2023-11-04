@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -25,6 +25,7 @@ public class InGameCardConfigs : ScriptableObject
     #region Data Prop
     public List<InGameCardConfig> _configs;
     public InGameCardEffectConfigs _skillConfigs;
+    public InGameCardLevelsConfigs _levelsConfigs;
     #endregion Data Prop
 
     #region Getter
@@ -33,6 +34,25 @@ public class InGameCardConfigs : ScriptableObject
         return _configs.Find(x => x._cardID == id);
     }
     #endregion Getter
+
+#if UNITY_EDITOR
+    #region VALIDATE
+    private void OnValidate()
+    {
+        foreach (var item in _levelsConfigs._configs)
+        {
+            for (int i = 0; i < item.levels.Count; i++)
+            {
+                InGameCardLevel level = item.levels[i];
+                level._ID = item._ID;
+                level._level = i + 1;
+                level._require = level._level+1;
+                level._stat = i == 0 ? 1 : item.levels[i - 1]._stat+1;
+            }
+        }
+    }
+    #endregion VALIDATE
+#endif
 }
 
 [System.Serializable]
@@ -47,12 +67,16 @@ public class InGameCardConfig
     public InGameBaseCardEffectID _skillID;
     public InGameCardEffectConfig SkillConfig => InGameCardEffectConfigs.Instance.GetSkillConfig(this._skillID);
 
+    public InGameCardLevelsConfig LevelsConfig => InGameCardLevelsConfigs.Instance.GetCardLevelsConfig(this._cardID);
+
     [Space(5f)]
     public Sprite _sprCardArtwork;
     public Sprite _sprCardBackground;
 
 
 }
+
+#region Card Effect
 
 [System.Serializable]
 public class InGameCardEffectConfigs
@@ -95,3 +119,80 @@ public class InGameCardEffectConfig
     public Sprite _sprCardEffect;
     public string _cardEffectDescription;
 }
+#endregion Card Effect
+
+#region Card Level ups
+[System.Serializable]
+public class InGameCardLevelsConfigs
+{
+
+    #region Singleton
+    private static InGameCardLevelsConfigs _instance;
+
+    public static InGameCardLevelsConfigs Instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                _instance = InGameCardConfigs.Instance._levelsConfigs;
+            }
+            return _instance;
+        }
+    }
+
+    #endregion Singleton
+
+    #region Data Prop
+    public List<InGameCardLevelsConfig> _configs;
+    #endregion Data Prop
+
+    #region Getter
+    public bool TryGetCardLevelsConfig(int id, out InGameCardLevelsConfig levels)
+    {
+        levels = GetCardLevelsConfig(id);
+        return levels != null;
+    }
+    public InGameCardLevelsConfig GetCardLevelsConfig(int id)
+    {
+        return this._configs.Find(x => x._ID == id);
+    }
+    public bool TryGetCardLevelConfig(int id, int level, out InGameCardLevel levelConfig)
+    {
+        if(TryGetCardLevelsConfig(id, out InGameCardLevelsConfig levels))
+        {
+            levelConfig = levels.GetLevelConfig(level);
+            return levelConfig != null;
+        }
+        levelConfig = null;
+        return false;
+    }
+
+    #endregion Getter
+}
+[System.Serializable]
+public class InGameCardLevelsConfig
+{
+    public int _ID;
+
+    [Space(5f)]
+    public List<InGameCardLevel> levels;
+
+    public InGameCardLevel GetLevelConfig(int level)
+    {
+        return levels.Find(x => x._level == level);
+    }
+}
+[System.Serializable]
+public class InGameCardLevel
+{
+    public int _ID;
+    public int _level;
+
+    [Space(5f)]
+    ///số card copy cần CÓ HƠN HOẶC BẰNG để upgrade lên đến
+    public int _require;
+    ///số HP heal, số damage gây ra, số shield add vào....
+    public int _stat; 
+}
+#endregion Card Level ups

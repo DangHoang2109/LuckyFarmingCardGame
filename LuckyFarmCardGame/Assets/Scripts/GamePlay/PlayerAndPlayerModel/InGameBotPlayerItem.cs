@@ -5,7 +5,8 @@ using UnityEngine;
 public class InGameBotPlayerItem : InGameBasePlayerItem
 {
     #region Prop on editor
-
+    public BaseInGameEnemyDataModel EnemyModel => (this.PlayerModel as BaseInGameEnemyDataModel);
+    public int DamagePerTurn => EnemyModel?.DamagePerTurn ?? 0;
     #endregion Prop on editor
 
     #region Data
@@ -106,7 +107,7 @@ public class InGameBotPlayerItem : InGameBasePlayerItem
     public override void AttackSingleUnit(int dmg = -1)
     {
         if (dmg <= 0)
-            dmg = 1; //replace with this host info
+            dmg = this.DamagePerTurn; //replace with this host info
         Debug.Log("ENEMY: FUCK THE MAIN" + dmg);
 
         InGameManager.Instance.OnPlayerAttacking(InGameManager.Instance.MainUserPlayer.ID, dmg);
@@ -116,7 +117,7 @@ public class InGameBotPlayerItem : InGameBasePlayerItem
     public override void AttackAllUnit(int dmg = -1)
     {
         if (dmg <= 0)
-            dmg = 1; //replace with this host info
+            dmg = this.DamagePerTurn; //replace with this host info
         Debug.Log("ENEMY: FUCK THE MAIN" + dmg);
 
         InGameManager.Instance.OnPlayerAttackingAllUnit(isEnemySide: false, dmg);

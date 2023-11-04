@@ -246,7 +246,7 @@ MonoBehaviour:
   _animationConfig:
     _timeConflictAnimationShowing: 0.5
     _timeACardStayOnActiveEffectPanel: 1
-    _timeWaitOnBeforeDestroyPallet: 1
+    _timeWaitOnBeforeDestroyPallet: 0.5
     _timeWaitPullingOnBeforeClearingPallet: 1
     _timeWaitDiceRolling: 1
     _timeWaitShowDiceResult: 1
@@ -1963,6 +1963,8 @@ MonoBehaviour:
   - {fileID: 1794975429}
   - {fileID: 2081513857}
   _notificator: {fileID: 2118289151}
+  idsMainPlayers: 
+  idsEnemys: 
 --- !u!224 &1686921528 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8979472826720060557, guid: 27a2c67cc80ab1e4e99fce7c96416e9c, type: 3}

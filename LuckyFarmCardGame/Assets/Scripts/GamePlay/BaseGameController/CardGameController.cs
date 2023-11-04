@@ -217,31 +217,27 @@ public class CardGameController : MonoBehaviour
     public void OnRevealTopDeck(int amount)
     {
         List<InGame_CardDataModel> topCards = GetDeckTopCards(amount,isWillPopThatCardOut: false);
+        StartCoroutine(ieOnRevealcardsAndDestroy(topCards));
 
-        List<BaseCardItem> cardRevealWhichWIllBeDestroy = new List<BaseCardItem>();
-        string topContent = "";
-        foreach (InGame_CardDataModel item in topCards)
+        IEnumerator ieOnRevealcardsAndDestroy(List<InGame_CardDataModel> topCards)
         {
-            topContent += $"{item._id} ";
+            //List<BaseCardItem> cardRevealWhichWIllBeDestroy = new List<BaseCardItem>();
 
-            BaseCardItem newCardItem = CreateCardItem(item._id, _tfDeckPanel);
-            cardRevealWhichWIllBeDestroy.Add(newCardItem);
-        }
-
-        StartCoroutine(ieOnRevealComplete());
-
-        IEnumerator ieOnRevealComplete()
-        {
-            yield return new WaitForSeconds(this.AnimationTimeConfig._timeWaitRevealTopDeck);
-            for (int i = cardRevealWhichWIllBeDestroy.Count - 1; i >=0 ; i--)
+            string topContent = "";
+            foreach (InGame_CardDataModel item in topCards)
             {
-                Destroy(cardRevealWhichWIllBeDestroy[i].gameObject);
-            }
-            InGameManager.Instance.Notificator?.DisableText();
+                topContent += $"{item._id} ";
 
+                BaseCardItem newCardItem = CreateCardItem(item._id, _tfDeckPanel);
+                yield return new WaitForSeconds(this.AnimationTimeConfig._timeWaitRevealTopDeck);
+                Destroy(newCardItem.gameObject);
+                yield return new WaitForEndOfFrame();
+            }
+
+            InGameManager.Instance.Notificator?.DisableText();
             TellGameManagerICanContinueTurn();
+            Debug.Log($"CONTROLLER: Reveal {amount} top card {topContent}");
         }
-        Debug.Log($"CONTROLLER: Reveal {amount} top card {topContent}");
     }
     public void OnDrawACard()
     {
@@ -260,8 +256,9 @@ public class CardGameController : MonoBehaviour
     private InGame_CardDataModel CreateCardDataModel(int id)
     {        
         InGameCardConfig cardConfig = IngameCardConfigs?.GetCardConfig(id);
+        int currentCardLevel = this.InGameManager?.MainUserPlayer?.GetCardLevel(id) ?? 0;
 
-        return new InGame_CardDataModel().SetHost(InGameManager.CurrentTurnPlayer).SetCardID(id, cardConfig);
+        return new InGame_CardDataModel().SetHost(InGameManager.CurrentTurnPlayer).SetCardID(id, cardConfig).SetCurrentLevel(currentCardLevel);
     }
     private BaseCardItem CreateCardItem(int cardID, Transform whereToSpawn)
     {

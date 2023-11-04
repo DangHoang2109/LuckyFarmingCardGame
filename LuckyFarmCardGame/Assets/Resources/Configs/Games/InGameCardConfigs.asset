@@ -65,16 +65,150 @@ MonoBehaviour:
       _cardEffectDescription: One more card will be drawn
     - _skillID: 2
       _sprCardEffect: {fileID: 21300000, guid: 217f81629bcb67c4e93f2ff1b4f9b2c4, type: 3}
-      _cardEffectDescription: Top card of deck will be reveal
+      _cardEffectDescription: '{0} top card(s) of deck will be reveal'
     - _skillID: 0
       _sprCardEffect: {fileID: 21300000, guid: 217f81629bcb67c4e93f2ff1b4f9b2c4, type: 3}
-      _cardEffectDescription: Heal the player
+      _cardEffectDescription: Heal the player {0} HP
     - _skillID: 3
       _sprCardEffect: {fileID: 21300000, guid: 217f81629bcb67c4e93f2ff1b4f9b2c4, type: 3}
-      _cardEffectDescription: Attack the front enemy
+      _cardEffectDescription: Attack the front enemy {0} damage(s)
     - _skillID: 4
       _sprCardEffect: {fileID: 21300000, guid: 217f81629bcb67c4e93f2ff1b4f9b2c4, type: 3}
-      _cardEffectDescription: Attack all enemy
+      _cardEffectDescription: Attack all enemy {0} damage(s)
     - _skillID: 5
       _sprCardEffect: {fileID: 21300000, guid: 217f81629bcb67c4e93f2ff1b4f9b2c4, type: 3}
-      _cardEffectDescription: Create one shield
+      _cardEffectDescription: Create {0} shield(s)
+  _levelsConfigs:
+    _configs:
+    - _ID: 0
+      levels:
+      - _ID: 0
+        _level: 1
+        _require: 2
+        _stat: 1
+      - _ID: 0
+        _level: 2
+        _require: 3
+        _stat: 2
+      - _ID: 0
+        _level: 3
+        _require: 4
+        _stat: 3
+      - _ID: 0
+        _level: 4
+        _require: 5
+        _stat: 4
+      - _ID: 0
+        _level: 5
+        _require: 6
+        _stat: 5
+    - _ID: 1
+      levels:
+      - _ID: 1
+        _level: 1
+        _require: 2
+        _stat: 1
+      - _ID: 1
+        _level: 2
+        _require: 3
+        _stat: 2
+      - _ID: 1
+        _level: 3
+        _require: 4
+        _stat: 3
+      - _ID: 1
+        _level: 4
+        _require: 5
+        _stat: 4
+      - _ID: 1
+        _level: 5
+        _require: 6
+        _stat: 5
+    - _ID: 2
+      levels:
+      - _ID: 2
+        _level: 1
+        _require: 2
+        _stat: 1
+      - _ID: 2
+        _level: 2
+        _require: 3
+        _stat: 2
+      - _ID: 2
+        _level: 3
+        _require: 4
+        _stat: 3
+      - _ID: 2
+        _level: 4
+        _require: 5
+        _stat: 4
+      - _ID: 2
+        _level: 5
+        _require: 6
+        _stat: 5
+    - _ID: 3
+      levels:
+      - _ID: 3
+        _level: 1
+        _require: 2
+        _stat: 1
+      - _ID: 3
+        _level: 2
+        _require: 3
+        _stat: 2
+      - _ID: 3
+        _level: 3
+        _require: 4
+        _stat: 3
+      - _ID: 3
+        _level: 4
+        _require: 5
+        _stat: 4
+      - _ID: 3
+        _level: 5
+        _require: 6
+        _stat: 5
+    - _ID: 4
+      levels:
+      - _ID: 4
+        _level: 1
+        _require: 2
+        _stat: 1
+      - _ID: 4
+        _level: 2
+        _require: 3
+        _stat: 2
+      - _ID: 4
+        _level: 3
+        _require: 4
+        _stat: 3
+      - _ID: 4
+        _level: 4
+        _require: 5
+        _stat: 4
+      - _ID: 4
+        _level: 5
+        _require: 6
+        _stat: 5
+    - _ID: 5
+      levels:
+      - _ID: 5
+        _level: 1
+        _require: 2
+        _stat: 1
+      - _ID: 5
+        _level: 2
+        _require: 3
+        _stat: 2
+      - _ID: 5
+        _level: 3
+        _require: 4
+        _stat: 3
+      - _ID: 5
+        _level: 4
+        _require: 5
+        _stat: 4
+      - _ID: 5
+        _level: 5
+        _require: 6
+        _stat: 5
