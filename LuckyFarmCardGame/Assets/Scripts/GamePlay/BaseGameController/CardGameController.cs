@@ -272,6 +272,7 @@ public class CardGameController : MonoBehaviour
     {
         BaseCardItem newCardItem = Instantiate(_cardPrefab, this._tfActEffectPanel);
         newCardItem.gameObject.SetActive(true);
+        newCardItem.transform.localPosition = Vector3.zero;
         newCardItem.ParseHost(InGameManager.CurrentTurnPlayer).ParseInfo(card._id);
 
         card.SetCardItemContainer(newCardItem);

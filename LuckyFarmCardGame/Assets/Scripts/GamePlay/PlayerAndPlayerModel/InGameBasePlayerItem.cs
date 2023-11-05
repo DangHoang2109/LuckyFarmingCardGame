@@ -40,7 +40,7 @@ public class InGameBasePlayerItem : MonoBehaviour
             if (this.PlayerModel != null)
             {
                 this.PlayerModel.Shield = value;
-                this._shieldUI.UpdateValue(this.PlayerModel.Shield);
+                this._shieldUI?.UpdateValue(this.PlayerModel.Shield);
             }
         }
     }
