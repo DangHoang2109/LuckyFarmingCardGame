@@ -89,13 +89,16 @@ public class CardGameController : MonoBehaviour
 
     public void InitGame()
     {
+        InitGame(InGameDeckConfigs.Instance.GetStandardDeck());
+    }
+    public void InitGame(InGameDeckConfig deckConfig)
+    {
         _cardsOnPallet = new List<InGame_CardDataModel>();
 
         //get deck contain
-        _deckConfig = InGameDeckConfigs.Instance.GetStandardDeck();
+        _deckConfig = deckConfig;
         RecreateTheDeck();
     }
-
     #region Action with Deck
     protected virtual void RecreateTheDeck()
     {

@@ -12,54 +12,93 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f47af49cc6419a147a7f75024ebbf094, type: 3}
   m_Name: InGameEnemyConfigs
   m_EditorClassIdentifier: 
+  _infoConfigs:
+    _configs:
+    - enemyID: 0
+      enemyName: Salamander
+      enemyDescription: "M\u1ED9t con th\u1EB1n l\u1EB1n l\u1EEDa"
+      _icon: {fileID: 21300000, guid: 6b675f733ced8f245919aff1fcbf1fb4, type: 3}
+      enemyBaseDamage: 4
+      enemyBaseMaxHP: 50
+      enemyEffectDes: 
+    - enemyID: 1
+      enemyName: Witch
+      enemyDescription: "Ph\xF9 th\u1EE7y tri\u1EC7u h\u1ED3i \u0111\u01B0\u1EE3c
+        01 Evil Eye"
+      _icon: {fileID: 21300000, guid: 1ecd21c63c6c16f4cac55b3f8e39d5aa, type: 3}
+      enemyBaseDamage: 2
+      enemyBaseMaxHP: 120
+      enemyEffectDes: 
+    - enemyID: 2
+      enemyName: Evil Eye
+      enemyDescription: "M\u1ED9t con creep si\xEAu y\u1EBFu nh\u01B0ng \u0111\u01B0\u1EE3c
+        spawn b\u1EDFi Witch"
+      _icon: {fileID: 21300000, guid: 9ed6daf7feb7e21469225df4d2eb9433, type: 3}
+      enemyBaseDamage: 3
+      enemyBaseMaxHP: 40
+      enemyEffectDes: 
+    - enemyID: 3
+      enemyName: Knight
+      enemyDescription: "Con n\xE0y c\xF3 khi\xEAn"
+      _icon: {fileID: 21300000, guid: 16527f1ca818225409ef04f81e529907, type: 3}
+      enemyBaseDamage: 5
+      enemyBaseMaxHP: 50
+      enemyEffectDes: 
+    - enemyID: 4
+      enemyName: Vampire
+      enemyDescription: "Con n\xE0y h\xFAt m\xE1u"
+      _icon: {fileID: 21300000, guid: 3e7c3bf339df6624e99ec855f036cb4f, type: 3}
+      enemyBaseDamage: 4
+      enemyBaseMaxHP: 40
+      enemyEffectDes: 
+    - enemyID: 5
+      enemyName: Orc
+      enemyDescription: "Elite Boss W1, c\xF3 cu\u1ED3ng n\u1ED9 x2 damage trong
+        l\u01B0\u1EE3t"
+      _icon: {fileID: 21300000, guid: e02506b899470d747b3cd2de09732850, type: 3}
+      enemyBaseDamage: 9
+      enemyBaseMaxHP: 180
+      enemyEffectDes: 
+    - enemyID: 6
+      enemyName: Mother Dragon
+      enemyDescription: "Final Boss World 1, Spawn Salamander v\xE0 c\xF3 khi\xEAn"
+      _icon: {fileID: 21300000, guid: 42df529954e5e474b835b6d55e03d2ec, type: 3}
+      enemyBaseDamage: 10
+      enemyBaseMaxHP: 280
+      enemyEffectDes: 
   _waveConfigs:
   - _wave: 0
     _enemyInRound:
-    - enemyID: 0
-      enemyName: Base Creep
-      enemyDescription: Base Creep
-      enemyDamage: 1
-      enemyMaxHP: 5
+    - enemyID: 2
   - _wave: 1
     _enemyInRound:
     - enemyID: 0
-      enemyName: Base Creep
-      enemyDescription: Base Creep
-      enemyDamage: 1
-      enemyMaxHP: 5
-    - enemyID: 0
-      enemyName: Base Creep
-      enemyDescription: Base Creep
-      enemyDamage: 1
-      enemyMaxHP: 5
   - _wave: 2
     _enemyInRound:
     - enemyID: 0
-      enemyName: Base Creep
-      enemyDescription: Base Creep
-      enemyDamage: 1
-      enemyMaxHP: 5
+    - enemyID: 0
   - _wave: 3
     _enemyInRound:
     - enemyID: 0
-      enemyName: Base Creep
-      enemyDescription: Base Creep
-      enemyDamage: 1
-      enemyMaxHP: 5
-    - enemyID: 0
-      enemyName: Base Creep
-      enemyDescription: Base Creep
-      enemyDamage: 1
-      enemyMaxHP: 5
-    - enemyID: 0
-      enemyName: Base Creep
-      enemyDescription: Base Creep
-      enemyDamage: 1
-      enemyMaxHP: 5
+    - enemyID: 1
   - _wave: 4
     _enemyInRound:
-    - enemyID: 0
-      enemyName: Base Creep
-      enemyDescription: Base Creep
-      enemyDamage: 1
-      enemyMaxHP: 5
+    - enemyID: 3
+    - enemyID: 3
+    - enemyID: 4
+  - _wave: 5
+    _enemyInRound:
+    - enemyID: 5
+  - _wave: 6
+    _enemyInRound:
+    - enemyID: 3
+    - enemyID: 3
+    - enemyID: 1
+  - _wave: 7
+    _enemyInRound:
+    - enemyID: 4
+    - enemyID: 4
+    - enemyID: 4
+  - _wave: 8
+    _enemyInRound:
+    - enemyID: 6

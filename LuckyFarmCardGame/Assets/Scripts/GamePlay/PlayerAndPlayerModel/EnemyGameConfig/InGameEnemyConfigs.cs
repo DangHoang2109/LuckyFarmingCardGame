@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -28,7 +29,9 @@ public class InGameEnemyConfigs : ScriptableObject
     #endregion Singleton
 
     #region Data Prop
+    public InGameEnemyInfoConfigs _infoConfigs;
     public List<InGameEnemyWaveConfig> _waveConfigs;
+
     #endregion Data Prop
 
     #region Getter
@@ -72,9 +75,47 @@ public class InGameEnemyWaveConfig
 public class InGameEnemyStatConfig
 {
     public int enemyID;
+    [NonSerialized]
+    private InGameEnemyInfoConfig _info;
+    public InGameEnemyInfoConfig Info
+    {
+        get
+        {
+            if (_info == null)
+                _info = InGameEnemyInfoConfigs.Instance.GetInfo(this.enemyID);
+            return _info;
+        }
+    }
+
+    public int Damage => this.Info?.enemyBaseDamage ?? 0;
+    public int MaxHP => this.Info?.enemyBaseMaxHP ?? 0 ;
+    public string EffectDes => this.Info?.enemyEffectDes;
+}
+#region Enemy Info
+[System.Serializable]
+public class InGameEnemyInfoConfigs
+{
+    public List<InGameEnemyInfoConfig> _configs;
+    public static InGameEnemyInfoConfigs Instance => InGameEnemyConfigs.Instance._infoConfigs;
+
+    public InGameEnemyInfoConfig GetInfo(int enemyId)
+    {
+        return _configs.Find(x => x.enemyID == enemyId);
+    }
+}
+[System.Serializable]
+public class InGameEnemyInfoConfig
+{
+    public int enemyID;
     public string enemyName;
     public string enemyDescription;
 
-    public int enemyDamage;
-    public int enemyMaxHP;
+    [Space(10f)]
+    public Sprite _icon;
+
+    [Space(10f)]
+    public int enemyBaseDamage;
+    public int enemyBaseMaxHP;
+    public string enemyEffectDes;
 }
+#endregion

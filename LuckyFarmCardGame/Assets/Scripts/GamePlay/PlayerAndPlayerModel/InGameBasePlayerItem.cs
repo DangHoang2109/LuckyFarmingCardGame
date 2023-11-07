@@ -282,7 +282,8 @@ public class BaseInGamePlayerDataModel
     protected int currentHP;
     protected int maxHP;
     protected int shield;
-
+    protected int baseDamagePerTurn = 0;
+    public int DamagePerTurn => baseDamagePerTurn;
     public BaseInGamePlayerDataModel()
     {
     }
@@ -384,6 +385,9 @@ public class InGame_CardDataModelWithAmount
 
 public class BaseInGameMainPlayerDataModel : BaseInGamePlayerDataModel
 {
+    public InGamePlayerConfig _statConfig;
+    public InGameDeckConfig DeckConfig => this._statConfig?.DeckConfig;
+ 
     public List<InGame_CardDataModelLevels> _bag;
     public Dictionary<int, InGame_CardDataModelLevels> _dictionaryBags;
 
@@ -394,6 +398,13 @@ public class BaseInGameMainPlayerDataModel : BaseInGamePlayerDataModel
     {
         this._bag = new List<InGame_CardDataModelLevels>();
         this._dictionaryBags = new Dictionary<int, InGame_CardDataModelLevels>();
+    }
+    public BaseInGameMainPlayerDataModel SetStatConfig(InGamePlayerConfig config)
+    {
+        _statConfig = config;
+        this.SetHP(config._maxHP);
+        this.baseDamagePerTurn = config._baseDamage;
+        return this;
     }
     public override BaseInGamePlayerDataModel StartGame()
     {
@@ -456,13 +467,12 @@ public class BaseInGameMainPlayerDataModel : BaseInGamePlayerDataModel
 public class BaseInGameEnemyDataModel : BaseInGamePlayerDataModel
 {
     public InGameEnemyStatConfig _statConfig;
-    protected int baseDamagePerTurn = 0;
-    public int DamagePerTurn => baseDamagePerTurn;
+
     public BaseInGameEnemyDataModel SetStatConfig(InGameEnemyStatConfig config)
     {
         _statConfig = config;
-        this.SetHP(config.enemyMaxHP);
-        this.baseDamagePerTurn = config.enemyDamage;
+        this.SetHP(config.MaxHP);
+        this.baseDamagePerTurn = config.Damage;
         return this;
     }
 }

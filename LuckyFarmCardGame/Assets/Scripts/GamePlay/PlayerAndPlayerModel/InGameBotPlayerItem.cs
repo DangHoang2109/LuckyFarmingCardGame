@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UI;
 public class InGameBotPlayerItem : InGameBasePlayerItem
 {
     #region Prop on editor
     public BaseInGameEnemyDataModel EnemyModel => (this.PlayerModel as BaseInGameEnemyDataModel);
     public int DamagePerTurn => EnemyModel?.DamagePerTurn ?? 0;
+    public Image _avatar;
+
     #endregion Prop on editor
 
     #region Data
@@ -55,6 +57,8 @@ public class InGameBotPlayerItem : InGameBasePlayerItem
             return this._AIexecutor;
         }
     }
+    public InGameEnemyStatConfig StatConfig => this.EnemyModel?._statConfig;
+    public InGameEnemyInfoConfig InfoConfig => this.StatConfig?.Info;
     #endregion Getter
 
     #region Init Action
@@ -66,6 +70,17 @@ public class InGameBotPlayerItem : InGameBasePlayerItem
         _AIdecider = new InGameAI.AIDecider(this);
 
         return base.InitPlayerItSelf();
+    }
+    public override InGameBasePlayerItem SetAPlayerModel(BaseInGamePlayerDataModel model)
+    {
+        base.SetAPlayerModel(model);
+
+        //set avatar
+        this._avatar.sprite = InfoConfig?._icon; 
+
+        InitPlayerItSelf();
+
+        return this;
     }
 
     #endregion InitAction

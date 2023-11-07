@@ -64,7 +64,7 @@ public class InGameManager : MonoSingleton<InGameManager>
         GameController?.AddCallback_PalletPulledByRule(this.OnPalletPulledByRule);
         GameController?.AddCallback_DiceResultShowed(this.DiceResultShowed);
 
-        GameController?.InitGame();
+        GameController?.InitGame(this.MainUserPlayer.DeckConfig);
 
         //Start the game
         StartGame();
@@ -94,13 +94,17 @@ public class InGameManager : MonoSingleton<InGameManager>
                     continue;
 
                 BaseInGameMainPlayerDataModel main = new BaseInGameMainPlayerDataModel();
-                main.SetHP(maxHP: 10);
-                main.SetSeatID(id: i, isMain: i == 0);
-                main.StartGame();
+                InGamePlayerConfig characterConfig = InGamePlayerConfigs.Instance.GetCharacterConfig(10);
+                if (characterConfig != null)
+                {
+                    main.SetStatConfig(characterConfig);
+                    main.SetSeatID(id: i, isMain: i == 0);
+                    main.StartGame();
 
-                _players[i].SetAPlayerModel(main);
-                this._playersModels.Add(main);
-                this.idsMainPlayers.Add(main._id);
+                    _players[i].SetAPlayerModel(main);
+                    this._playersModels.Add(main);
+                    this.idsMainPlayers.Add(main._id);
+                }
             }
         }
     }

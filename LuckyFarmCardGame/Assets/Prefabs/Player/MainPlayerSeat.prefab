@@ -1328,7 +1328,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5378401596211071532}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
@@ -2234,6 +2234,7 @@ MonoBehaviour:
   _shieldUI: {fileID: 3263658578679305270}
   _btnEndTurn: {fileID: 2353484494566618358}
   _imgTimer: {fileID: 5568825570754601894}
+  _imgAvatar: {fileID: 5612100448907548556}
 --- !u!1001 &5808449760478955919
 PrefabInstance:
   m_ObjectHideFlags: 0

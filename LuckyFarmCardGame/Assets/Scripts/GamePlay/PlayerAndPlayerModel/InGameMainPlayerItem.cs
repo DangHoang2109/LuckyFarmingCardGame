@@ -16,7 +16,7 @@ public class InGameMainPlayerItem : InGameBasePlayerItem
             return _mainDataModel;
         }
     }
-
+    public InGameDeckConfig DeckConfig => this.MainDataModel?.DeckConfig;
     #region Prop on editor
     public Button _btnEndTurn;
 
@@ -25,6 +25,7 @@ public class InGameMainPlayerItem : InGameBasePlayerItem
     //public InGameBasePlayerBagVisual BagVisual => _bagVisual;
 
     public Image _imgTimer;
+    public Image _imgAvatar;
 
 
     #endregion Prop on editor
@@ -39,6 +40,15 @@ public class InGameMainPlayerItem : InGameBasePlayerItem
     public override InGameBasePlayerItem InitPlayerItSelf()
     {
         return base.InitPlayerItSelf();
+    }
+    public override InGameBasePlayerItem SetAPlayerModel(BaseInGamePlayerDataModel model)
+    {
+        base.SetAPlayerModel(model);
+        InitPlayerItSelf();
+
+        this._imgAvatar.sprite = this.MainDataModel?._statConfig?._icon;
+
+        return this;
     }
     #endregion InitAction
 

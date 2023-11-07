@@ -31,6 +31,15 @@ public class InGameDeckConfigs : ScriptableObject
     {
         return _configs.Find(x => x._id == 0);
     }
+    public InGameDeckConfig GetDeckByName(string name)
+    {
+        return _configs.Find(x => x._name.Equals(name));
+
+    }
+    public InGameDeckConfig GetDeckByID(int id)
+    {
+        return _configs.Find(x => x._id == id);
+    }
     #endregion Getter
 }
 
@@ -38,6 +47,7 @@ public class InGameDeckConfigs : ScriptableObject
 public class InGameDeckConfig
 {
     public int _id;
+    public string _name;
     public List<InGame_CardDataModelWithAmount> _deckContain;
 
     public InGameDeckConfig()

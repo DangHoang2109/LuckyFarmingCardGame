@@ -49,7 +49,7 @@ GameObject:
   - component: {fileID: 1595069881800616747}
   - component: {fileID: 977731227444438186}
   m_Layer: 5
-  m_Name: Image
+  m_Name: Avatar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -569,6 +569,7 @@ MonoBehaviour:
   _tmpCoinValue: {fileID: 2553410070035482620}
   _hpBar: {fileID: 1402352535211609144}
   _shieldUI: {fileID: 5426955629915527209}
+  _avatar: {fileID: 977731227444438186}
 --- !u!1001 &431573694971957978
 PrefabInstance:
   m_ObjectHideFlags: 0

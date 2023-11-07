@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _configs:
   - _id: 0
+    _name: KnightMale
     _deckContain:
     - _cardID: 0
       _amountCard: 9

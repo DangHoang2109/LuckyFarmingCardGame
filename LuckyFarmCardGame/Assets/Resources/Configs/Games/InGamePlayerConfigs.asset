@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1fc7f49bd8e7da43a1006641b036909, type: 3}
+  m_Name: InGamePlayerConfigs
+  m_EditorClassIdentifier: 
+  _character:
+  - _characterID: 10
+    _name: Knight Male
+    _maxHP: 100
+    _baseDamage: 10
+    _icon: {fileID: 21300000, guid: 3094f2d10d417124782a2120875594c3, type: 3}
+    _deckLink: KnightMale
