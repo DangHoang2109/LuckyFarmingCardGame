@@ -15,57 +15,57 @@ MonoBehaviour:
   _infoConfigs:
     _configs:
     - enemyID: 0
-      enemyName: Salamander
-      enemyDescription: "M\u1ED9t con th\u1EB1n l\u1EB1n l\u1EEDa"
-      _icon: {fileID: 21300000, guid: 6b675f733ced8f245919aff1fcbf1fb4, type: 3}
+      enemyName: Mycolino
+      enemyDescription: "Qu\xE1i c\xE2y c\u01A1 b\u1EA3n"
       enemyBaseDamage: 4
       enemyBaseMaxHP: 50
       enemyEffectDes: 
+      _animator: {fileID: 3454053281331012186, guid: dffc6b6d3bf25044c97a1b2da6b74116, type: 3}
     - enemyID: 1
-      enemyName: Witch
+      enemyName: Illucia
       enemyDescription: "Ph\xF9 th\u1EE7y tri\u1EC7u h\u1ED3i \u0111\u01B0\u1EE3c
-        01 Evil Eye"
-      _icon: {fileID: 21300000, guid: 1ecd21c63c6c16f4cac55b3f8e39d5aa, type: 3}
+        01 Crystal Beetle"
       enemyBaseDamage: 2
       enemyBaseMaxHP: 120
       enemyEffectDes: 
+      _animator: {fileID: 4178270343921277840, guid: d891e0ca39bcd28448d299608df8cb8c, type: 3}
     - enemyID: 2
-      enemyName: Evil Eye
+      enemyName: Beetle
       enemyDescription: "M\u1ED9t con creep si\xEAu y\u1EBFu nh\u01B0ng \u0111\u01B0\u1EE3c
-        spawn b\u1EDFi Witch"
-      _icon: {fileID: 21300000, guid: 9ed6daf7feb7e21469225df4d2eb9433, type: 3}
+        spawn b\u1EDFi Illucia"
       enemyBaseDamage: 3
       enemyBaseMaxHP: 40
       enemyEffectDes: 
+      _animator: {fileID: 5132455824953149453, guid: e2871ff5e512ee64cad255f9da90fa90, type: 3}
     - enemyID: 3
-      enemyName: Knight
+      enemyName: Pirate
       enemyDescription: "Con n\xE0y c\xF3 khi\xEAn"
-      _icon: {fileID: 21300000, guid: 16527f1ca818225409ef04f81e529907, type: 3}
       enemyBaseDamage: 5
       enemyBaseMaxHP: 50
       enemyEffectDes: 
+      _animator: {fileID: 2427606093563321950, guid: 0c70d845ced1bc145b21df50fc896440, type: 3}
     - enemyID: 4
-      enemyName: Vampire
+      enemyName: Leechie
       enemyDescription: "Con n\xE0y h\xFAt m\xE1u"
-      _icon: {fileID: 21300000, guid: 3e7c3bf339df6624e99ec855f036cb4f, type: 3}
       enemyBaseDamage: 4
-      enemyBaseMaxHP: 40
+      enemyBaseMaxHP: 100
       enemyEffectDes: 
+      _animator: {fileID: 9180666634123970954, guid: a5554e1e0dc7fee4abf2e0e079cbb2c0, type: 3}
     - enemyID: 5
-      enemyName: Orc
+      enemyName: Ergincrox
       enemyDescription: "Elite Boss W1, c\xF3 cu\u1ED3ng n\u1ED9 x2 damage trong
         l\u01B0\u1EE3t"
-      _icon: {fileID: 21300000, guid: e02506b899470d747b3cd2de09732850, type: 3}
       enemyBaseDamage: 9
       enemyBaseMaxHP: 180
       enemyEffectDes: 
+      _animator: {fileID: -5964719866328608844, guid: 2342125815d2b7c4180235d478d26be1, type: 3}
     - enemyID: 6
-      enemyName: Mother Dragon
-      enemyDescription: "Final Boss World 1, Spawn Salamander v\xE0 c\xF3 khi\xEAn"
-      _icon: {fileID: 21300000, guid: 42df529954e5e474b835b6d55e03d2ec, type: 3}
+      enemyName: Minotaur
+      enemyDescription: "Final Boss World 1, Spawn Mycolino v\xE0 c\xF3 khi\xEAn"
       enemyBaseDamage: 10
       enemyBaseMaxHP: 280
       enemyEffectDes: 
+      _animator: {fileID: 5349720046968819121, guid: fa6a2aade403b074e84bf72ac90683b4, type: 3}
   _waveConfigs:
   - _wave: 0
     _enemyInRound:

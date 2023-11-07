@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Spine.Unity;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -110,12 +111,14 @@ public class InGameEnemyInfoConfig
     public string enemyName;
     public string enemyDescription;
 
-    [Space(10f)]
-    public Sprite _icon;
-
+    [Header("STAT BASE")]
     [Space(10f)]
     public int enemyBaseDamage;
     public int enemyBaseMaxHP;
     public string enemyEffectDes;
+
+    [Header("SKIN AND ANIM")]
+    [Space(10f)]
+    public CSkeletonAnimator _animator; //must contain the skeleton Graphic in here
 }
 #endregion

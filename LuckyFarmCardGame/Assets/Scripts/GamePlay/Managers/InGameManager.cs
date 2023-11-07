@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 /// <summary>
@@ -326,16 +327,20 @@ public class InGameManager : MonoSingleton<InGameManager>
         }
     }
     public void OnAPlayerDie(int id)
-    {
+    {            
         //disable the obj
         if (TryGetSeatItem(id, out InGameBasePlayerItem dead))
         {
-            dead.gameObject.SetActive(false);
+            dead.Dead(OnCallbackAnimation);
         }
-        //remove from the list
-        this._playersModels.RemoveAll(x => x._id == id);
-        this.idsMainPlayers.Remove(id);
-        this.idsEnemys.Remove(id);
+        void OnCallbackAnimation()
+        {
+            dead.gameObject.SetActive(false);
+            //remove from the list
+            this._playersModels.RemoveAll(x => x._id == id);
+            this.idsMainPlayers.Remove(id);
+            this.idsEnemys.Remove(id);
+        }
     }
     private void OnLogicEndTurn()
     {

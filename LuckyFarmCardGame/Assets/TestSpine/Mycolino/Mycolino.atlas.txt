@@ -1,0 +1,461 @@
+
+Mycolino.png
+size: 2048,1024
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+ArmSwooshLeft_SkinCactroll
+  rotate: false
+  xy: 1257, 858
+  size: 70, 163
+  orig: 70, 163
+  offset: 0, 0
+  index: -1
+ArmSwooshLeft_SkinLostMycolino
+  rotate: false
+  xy: 1329, 858
+  size: 70, 163
+  orig: 70, 163
+  offset: 0, 0
+  index: -1
+ArmSwooshLeft_SkinMycolino
+  rotate: false
+  xy: 1401, 858
+  size: 70, 163
+  orig: 70, 163
+  offset: 0, 0
+  index: -1
+ArmSwooshRight_SkinCactroll
+  rotate: false
+  xy: 1473, 858
+  size: 70, 163
+  orig: 70, 163
+  offset: 0, 0
+  index: -1
+ArmSwooshRight_SkinLostMycolino
+  rotate: false
+  xy: 1292, 425
+  size: 70, 163
+  orig: 70, 163
+  offset: 0, 0
+  index: -1
+ArmSwooshRight_SkinMycolino
+  rotate: false
+  xy: 1292, 260
+  size: 70, 163
+  orig: 70, 163
+  offset: 0, 0
+  index: -1
+BodyOutline_SkinCactroll
+  rotate: false
+  xy: 772, 580
+  size: 321, 441
+  orig: 321, 441
+  offset: 0, 0
+  index: -1
+BodyOutline_SkinMycolino
+  rotate: false
+  xy: 2, 23
+  size: 393, 492
+  orig: 393, 492
+  offset: 0, 0
+  index: -1
+Body_SkinCactroll
+  rotate: false
+  xy: 772, 151
+  size: 304, 427
+  orig: 304, 427
+  offset: 0, 0
+  index: -1
+Body_SkinLostMycolino
+  rotate: false
+  xy: 397, 533
+  size: 373, 488
+  orig: 373, 488
+  offset: 0, 0
+  index: -1
+Body_SkinMycolino
+  rotate: false
+  xy: 397, 57
+  size: 373, 474
+  orig: 373, 474
+  offset: 0, 0
+  index: -1
+BoudyOutline_SkinLostMycolino
+  rotate: false
+  xy: 2, 517
+  size: 393, 504
+  orig: 393, 504
+  offset: 0, 0
+  index: -1
+EyebrowLeft_SkinCactroll
+  rotate: false
+  xy: 1292, 237
+  size: 56, 21
+  orig: 56, 21
+  offset: 0, 0
+  index: -1
+EyebrowLeft_SkinLostMycolino
+  rotate: false
+  xy: 1417, 749
+  size: 43, 29
+  orig: 43, 29
+  offset: 0, 0
+  index: -1
+EyebrowLeft_SkinMycolino
+  rotate: true
+  xy: 1364, 269
+  size: 70, 27
+  orig: 70, 27
+  offset: 0, 0
+  index: -1
+EyebrowRight_SkinCactroll
+  rotate: false
+  xy: 1350, 237
+  size: 56, 21
+  orig: 56, 21
+  offset: 0, 0
+  index: -1
+EyebrowRight_SkinLostMycolino
+  rotate: false
+  xy: 1408, 238
+  size: 43, 29
+  orig: 43, 29
+  offset: 0, 0
+  index: -1
+EyebrowRight_SkinMycolino
+  rotate: true
+  xy: 1393, 269
+  size: 70, 27
+  orig: 70, 27
+  offset: 0, 0
+  index: -1
+EyesBlink_SkinCactroll
+  rotate: true
+  xy: 862, 8
+  size: 141, 58
+  orig: 141, 58
+  offset: 0, 0
+  index: -1
+EyesBlink_SkinLostMycolino
+  rotate: true
+  xy: 1095, 581
+  size: 160, 61
+  orig: 160, 61
+  offset: 0, 0
+  index: -1
+EyesBlink_SkinMycolino
+  rotate: true
+  xy: 1338, 7
+  size: 150, 68
+  orig: 150, 68
+  offset: 0, 0
+  index: -1
+Eyes_SkinCactroll
+  rotate: true
+  xy: 922, 8
+  size: 141, 58
+  orig: 141, 58
+  offset: 0, 0
+  index: -1
+Eyes_SkinLostMycolino
+  rotate: true
+  xy: 1158, 581
+  size: 160, 61
+  orig: 160, 61
+  offset: 0, 0
+  index: -1
+Eyes_SkinMycolino
+  rotate: true
+  xy: 1408, 13
+  size: 150, 68
+  orig: 150, 68
+  offset: 0, 0
+  index: -1
+Face_SkinCactroll
+  rotate: false
+  xy: 1078, 237
+  size: 212, 341
+  orig: 212, 341
+  offset: 0, 0
+  index: -1
+Face_SkinLostMycolino
+  rotate: false
+  xy: 1118, 3
+  size: 218, 151
+  orig: 218, 151
+  offset: 0, 0
+  index: -1
+Face_SkinMycolino
+  rotate: false
+  xy: 1221, 590
+  size: 218, 151
+  orig: 218, 151
+  offset: 0, 0
+  index: -1
+Flower1
+  rotate: true
+  xy: 982, 12
+  size: 137, 134
+  orig: 137, 134
+  offset: 0, 0
+  index: -1
+Flower2
+  rotate: false
+  xy: 1078, 156
+  size: 62, 79
+  orig: 62, 79
+  offset: 0, 0
+  index: -1
+LeftLeg_SkinCactroll
+  rotate: false
+  xy: 1142, 159
+  size: 49, 76
+  orig: 49, 76
+  offset: 0, 0
+  index: -1
+LeftLeg_SkinLostMycolino
+  rotate: false
+  xy: 1193, 159
+  size: 49, 76
+  orig: 49, 76
+  offset: 0, 0
+  index: -1
+LeftLeg_SkinMycolino
+  rotate: false
+  xy: 1244, 159
+  size: 49, 76
+  orig: 49, 76
+  offset: 0, 0
+  index: -1
+LowerLeftArmExtended_SkinCactroll
+  rotate: false
+  xy: 1364, 341
+  size: 55, 118
+  orig: 55, 118
+  offset: 0, 0
+  index: -1
+LowerLeftArmExtended_SkinLostMycolino
+  rotate: false
+  xy: 1421, 341
+  size: 55, 118
+  orig: 55, 118
+  offset: 0, 0
+  index: -1
+LowerLeftArmExtended_SkinMycolino
+  rotate: false
+  xy: 1433, 470
+  size: 55, 118
+  orig: 55, 118
+  offset: 0, 0
+  index: -1
+LowerLeftArmOutline
+  rotate: false
+  xy: 1322, 755
+  size: 62, 101
+  orig: 62, 101
+  offset: 0, 0
+  index: -1
+LowerLeftArm_SkinCactroll
+  rotate: true
+  xy: 397, 2
+  size: 53, 91
+  orig: 53, 91
+  offset: 0, 0
+  index: -1
+LowerLeftArm_SkinLostMycolino
+  rotate: true
+  xy: 490, 2
+  size: 53, 91
+  orig: 53, 91
+  offset: 0, 0
+  index: -1
+LowerLeftArm_SkinMycolino
+  rotate: true
+  xy: 583, 2
+  size: 53, 91
+  orig: 53, 91
+  offset: 0, 0
+  index: -1
+LowerRightArmExtendedOutline
+  rotate: false
+  xy: 1364, 461
+  size: 67, 127
+  orig: 67, 127
+  offset: 0, 0
+  index: -1
+LowerRightArmExtended_SkinCactroll
+  rotate: true
+  xy: 1447, 284
+  size: 55, 118
+  orig: 55, 118
+  offset: 0, 0
+  index: -1
+LowerRightArmExtended_SkinLostMycolino
+  rotate: false
+  xy: 1478, 350
+  size: 55, 118
+  orig: 55, 118
+  offset: 0, 0
+  index: -1
+LowerRightArmExtended_SkinMycolino
+  rotate: true
+  xy: 1430, 181
+  size: 55, 118
+  orig: 55, 118
+  offset: 0, 0
+  index: -1
+LowerRightArmOutline
+  rotate: false
+  xy: 1257, 755
+  size: 63, 101
+  orig: 63, 101
+  offset: 0, 0
+  index: -1
+LowerRightArm_SkinCactroll
+  rotate: true
+  xy: 676, 2
+  size: 53, 91
+  orig: 53, 91
+  offset: 0, 0
+  index: -1
+LowerRightArm_SkinLostMycolino
+  rotate: true
+  xy: 769, 2
+  size: 53, 91
+  orig: 53, 91
+  offset: 0, 0
+  index: -1
+LowerRightArm_SkinMycolino
+  rotate: false
+  xy: 772, 58
+  size: 53, 91
+  orig: 53, 91
+  offset: 0, 0
+  index: -1
+MouthHurt_SkinCactroll
+  rotate: true
+  xy: 827, 87
+  size: 62, 32
+  orig: 62, 32
+  offset: 0, 0
+  index: -1
+MouthHurt_SkinLostMycolino
+  rotate: true
+  xy: 1387, 165
+  size: 70, 41
+  orig: 70, 41
+  offset: 0, 0
+  index: -1
+MouthHurt_SkinMycolino
+  rotate: true
+  xy: 1346, 162
+  size: 73, 39
+  orig: 73, 39
+  offset: 0, 0
+  index: -1
+Mouth_SkinCactroll
+  rotate: false
+  xy: 1462, 753
+  size: 47, 25
+  orig: 47, 25
+  offset: 0, 0
+  index: -1
+Mouth_SkinLostMycolino
+  rotate: false
+  xy: 1386, 743
+  size: 29, 35
+  orig: 29, 35
+  offset: 0, 0
+  index: -1
+Mouth_SkinMycolino
+  rotate: true
+  xy: 1422, 275
+  size: 64, 23
+  orig: 64, 23
+  offset: 0, 0
+  index: -1
+RightLeg_SkinCactroll
+  rotate: false
+  xy: 1386, 780
+  size: 49, 76
+  orig: 49, 76
+  offset: 0, 0
+  index: -1
+RightLeg_SkinLostMycolino
+  rotate: false
+  xy: 1437, 780
+  size: 49, 76
+  orig: 49, 76
+  offset: 0, 0
+  index: -1
+RightLeg_SkinMycolino
+  rotate: false
+  xy: 1295, 159
+  size: 49, 76
+  orig: 49, 76
+  offset: 0, 0
+  index: -1
+Shadow
+  rotate: true
+  xy: 1095, 743
+  size: 278, 160
+  orig: 278, 160
+  offset: 0, 0
+  index: -1
+UpperLeftArmOutline
+  rotate: false
+  xy: 1441, 694
+  size: 53, 53
+  orig: 53, 53
+  offset: 0, 0
+  index: -1
+UpperLeftArm_SkinCactroll
+  rotate: true
+  xy: 1441, 649
+  size: 43, 42
+  orig: 43, 42
+  offset: 0, 0
+  index: -1
+UpperLeftArm_SkinLostMycolino
+  rotate: true
+  xy: 1441, 604
+  size: 43, 42
+  orig: 43, 42
+  offset: 0, 0
+  index: -1
+UpperLeftArm_SkinMycolino
+  rotate: true
+  xy: 1485, 649
+  size: 43, 42
+  orig: 43, 42
+  offset: 0, 0
+  index: -1
+UpperRightArmOutline
+  rotate: false
+  xy: 1488, 803
+  size: 53, 53
+  orig: 53, 53
+  offset: 0, 0
+  index: -1
+UpperRightArm_SkinCactroll
+  rotate: true
+  xy: 1453, 238
+  size: 44, 42
+  orig: 44, 42
+  offset: 0, 0
+  index: -1
+UpperRightArm_SkinLostMycolino
+  rotate: true
+  xy: 1497, 238
+  size: 44, 42
+  orig: 44, 42
+  offset: 0, 0
+  index: -1
+UpperRightArm_SkinMycolino
+  rotate: true
+  xy: 1541, 238
+  size: 44, 42
+  orig: 44, 42
+  offset: 0, 0
+  index: -1

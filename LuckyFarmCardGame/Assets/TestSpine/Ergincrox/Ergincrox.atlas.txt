@@ -1,0 +1,188 @@
+
+Ergincrox.png
+size: 2048,1024
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+ArmGlowLeft
+  rotate: false
+  xy: 1084, 95
+  size: 146, 181
+  orig: 146, 181
+  offset: 0, 0
+  index: -1
+ArmGlowRight
+  rotate: false
+  xy: 1103, 838
+  size: 146, 181
+  orig: 146, 181
+  offset: 0, 0
+  index: -1
+ArmLeft
+  rotate: false
+  xy: 804, 2
+  size: 138, 244
+  orig: 138, 244
+  offset: 0, 0
+  index: -1
+ArmRight
+  rotate: false
+  xy: 944, 24
+  size: 138, 244
+  orig: 138, 244
+  offset: 0, 0
+  index: -1
+ArmRightUp
+  rotate: true
+  xy: 301, 207
+  size: 378, 234
+  orig: 378, 234
+  offset: 0, 0
+  index: -1
+ArmShardsLeft
+  rotate: false
+  xy: 1046, 278
+  size: 66, 90
+  orig: 66, 90
+  offset: 0, 0
+  index: -1
+ArmShardsRight
+  rotate: false
+  xy: 1004, 667
+  size: 66, 90
+  orig: 66, 90
+  offset: 0, 0
+  index: -1
+BodyGlow
+  rotate: false
+  xy: 2, 587
+  size: 432, 432
+  orig: 432, 432
+  offset: 0, 0
+  index: -1
+EYeRightBlink
+  rotate: false
+  xy: 436, 591
+  size: 19, 8
+  orig: 19, 8
+  offset: 0, 0
+  index: -1
+EyeLeft
+  rotate: false
+  xy: 537, 223
+  size: 20, 23
+  orig: 20, 23
+  offset: 0, 0
+  index: -1
+EyeLeftBlink
+  rotate: false
+  xy: 457, 591
+  size: 19, 8
+  orig: 19, 8
+  offset: 0, 0
+  index: -1
+EyeRight
+  rotate: false
+  xy: 559, 223
+  size: 20, 23
+  orig: 20, 23
+  offset: 0, 0
+  index: -1
+Head
+  rotate: false
+  xy: 2, 191
+  size: 297, 394
+  orig: 297, 394
+  offset: 0, 0
+  index: -1
+Shadow
+  rotate: false
+  xy: 458, 7
+  size: 344, 198
+  orig: 344, 198
+  offset: 0, 0
+  index: -1
+Shards1
+  rotate: false
+  xy: 2, 2
+  size: 313, 187
+  orig: 313, 187
+  offset: 0, 0
+  index: -1
+Shards2
+  rotate: true
+  xy: 646, 731
+  size: 288, 183
+  orig: 288, 183
+  offset: 0, 0
+  index: -1
+ShoulderLeft
+  rotate: true
+  xy: 831, 758
+  size: 261, 138
+  orig: 261, 138
+  offset: 0, 0
+  index: -1
+ShoulderRight
+  rotate: true
+  xy: 971, 759
+  size: 260, 130
+  orig: 260, 130
+  offset: 0, 0
+  index: -1
+Torso
+  rotate: false
+  xy: 537, 248
+  size: 328, 351
+  orig: 328, 351
+  offset: 0, 0
+  index: -1
+TorsoShardLeft
+  rotate: true
+  xy: 825, 630
+  size: 99, 177
+  orig: 99, 177
+  offset: 0, 0
+  index: -1
+TorsoShardMiddle
+  rotate: true
+  xy: 646, 624
+  size: 105, 177
+  orig: 105, 177
+  offset: 0, 0
+  index: -1
+TorsoShardRight
+  rotate: true
+  xy: 867, 270
+  size: 98, 177
+  orig: 98, 177
+  offset: 0, 0
+  index: -1
+Wand
+  rotate: true
+  xy: 317, 2
+  size: 203, 139
+  orig: 203, 139
+  offset: 0, 0
+  index: -1
+WandShine
+  rotate: true
+  xy: 867, 370
+  size: 258, 257
+  orig: 258, 257
+  offset: 0, 0
+  index: -1
+Weapon
+  rotate: true
+  xy: 436, 650
+  size: 369, 208
+  orig: 369, 208
+  offset: 0, 0
+  index: -1
+WeaponHandle
+  rotate: false
+  xy: 436, 601
+  size: 108, 47
+  orig: 108, 47
+  offset: 0, 0
+  index: -1

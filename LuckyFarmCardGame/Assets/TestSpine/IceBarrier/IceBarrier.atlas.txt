@@ -1,0 +1,55 @@
+
+IceBarrier.png
+size: 256,512
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+IceBarrier1
+  rotate: true
+  xy: 2, 263
+  size: 89, 211
+  orig: 89, 211
+  offset: 0, 0
+  index: -1
+IceBarrier2
+  rotate: false
+  xy: 157, 31
+  size: 86, 116
+  orig: 86, 116
+  offset: 0, 0
+  index: -1
+IceBarrier3
+  rotate: true
+  xy: 2, 72
+  size: 99, 153
+  orig: 99, 153
+  offset: 0, 0
+  index: -1
+IceBarrier4
+  rotate: true
+  xy: 2, 173
+  size: 88, 187
+  orig: 88, 187
+  offset: 0, 0
+  index: -1
+IceBarrier5
+  rotate: true
+  xy: 2, 354
+  size: 124, 213
+  orig: 124, 213
+  offset: 0, 0
+  index: -1
+IceBarrier6
+  rotate: false
+  xy: 191, 149
+  size: 60, 112
+  orig: 60, 112
+  offset: 0, 0
+  index: -1
+IceBarrier7
+  rotate: true
+  xy: 2, 2
+  size: 68, 104
+  orig: 68, 104
+  offset: 0, 0
+  index: -1

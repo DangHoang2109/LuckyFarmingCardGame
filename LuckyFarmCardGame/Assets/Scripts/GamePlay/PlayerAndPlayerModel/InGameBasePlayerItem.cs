@@ -246,6 +246,10 @@ public class InGameBasePlayerItem : MonoBehaviour
 
         InGameManager.Instance.OnTellControllerContinueTurn();
     }
+    public virtual void Dead(System.Action cb)
+    {
+        Debug.Log("DEAD");
+    }
     #endregion Turn Action
 
     public virtual bool isDead()

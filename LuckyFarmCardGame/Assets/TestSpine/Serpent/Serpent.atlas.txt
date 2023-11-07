@@ -1,0 +1,272 @@
+
+Serpent.png
+size: 1844,1544
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+BladeLine
+  rotate: false
+  xy: 2, 811
+  size: 301, 731
+  orig: 301, 817
+  offset: 0, 0
+  index: -1
+HandLeft
+  rotate: false
+  xy: 555, 95
+  size: 240, 255
+  orig: 240, 255
+  offset: 0, 0
+  index: -1
+HandLeftOutline
+  rotate: false
+  xy: 1271, 2
+  size: 125, 96
+  orig: 125, 96
+  offset: 0, 0
+  index: -1
+HeadBottom
+  rotate: true
+  xy: 1072, 243
+  size: 228, 232
+  orig: 228, 233
+  offset: 0, 0
+  index: -1
+HeadBottomOutline
+  rotate: true
+  xy: 797, 84
+  size: 240, 242
+  orig: 240, 242
+  offset: 0, 0
+  index: -1
+HeadTop
+  rotate: false
+  xy: 817, 473
+  size: 226, 286
+  orig: 228, 297
+  offset: 1, 1
+  index: -1
+HeadTopOutline
+  rotate: false
+  xy: 315, 45
+  size: 238, 260
+  orig: 238, 260
+  offset: 0, 0
+  index: -1
+Layer_18
+  rotate: false
+  xy: 305, 1001
+  size: 427, 541
+  orig: 427, 541
+  offset: 0, 0
+  index: -1
+Layer_28
+  rotate: true
+  xy: 1421, 1057
+  size: 485, 263
+  orig: 485, 263
+  offset: 0, 0
+  index: -1
+LeftArmUp
+  rotate: true
+  xy: 817, 326
+  size: 145, 253
+  orig: 145, 253
+  offset: 0, 0
+  index: -1
+LeftArmUpOutline
+  rotate: false
+  xy: 1686, 1277
+  size: 154, 265
+  orig: 154, 265
+  offset: 0, 0
+  index: -1
+LowerArmLeftDown
+  rotate: false
+  xy: 1366, 742
+  size: 136, 273
+  orig: 136, 273
+  offset: 0, 0
+  index: -1
+LowerArmLeftDownOutline
+  rotate: true
+  xy: 513, 352
+  size: 89, 287
+  orig: 89, 287
+  offset: 0, 0
+  index: -1
+LowerArmLeftLayer1
+  rotate: true
+  xy: 1667, 320
+  size: 164, 93
+  orig: 164, 93
+  offset: 0, 0
+  index: -1
+LowerArmLeftLayer2
+  rotate: false
+  xy: 1504, 739
+  size: 144, 71
+  orig: 144, 71
+  offset: 0, 0
+  index: -1
+LowerArmLeftOutline
+  rotate: true
+  xy: 1718, 486
+  size: 172, 98
+  orig: 172, 98
+  offset: 0, 0
+  index: -1
+LowerArmRightLayer1
+  rotate: false
+  xy: 1525, 34
+  size: 197, 214
+  orig: 197, 214
+  offset: 0, 0
+  index: -1
+LowerArmRightLayer2
+  rotate: false
+  xy: 1542, 541
+  size: 174, 196
+  orig: 174, 196
+  offset: 0, 0
+  index: -1
+LowerArmRightOutline
+  rotate: true
+  xy: 1718, 660
+  size: 140, 124
+  orig: 140, 124
+  offset: 0, 0
+  index: -1
+LowerBodyBack
+  rotate: false
+  xy: 1146, 1017
+  size: 273, 525
+  orig: 274, 526
+  offset: 0, 1
+  index: -1
+LowerBodyBackOutline
+  rotate: false
+  xy: 2, 268
+  size: 291, 541
+  orig: 291, 541
+  offset: 0, 0
+  index: -1
+LowerBodyLayer2
+  rotate: true
+  xy: 305, 756
+  size: 243, 478
+  orig: 243, 478
+  offset: 0, 0
+  index: -1
+LowerBodyLayer3
+  rotate: false
+  xy: 295, 307
+  size: 216, 447
+  orig: 216, 447
+  offset: 0, 0
+  index: -1
+TailBack
+  rotate: true
+  xy: 1045, 473
+  size: 254, 271
+  orig: 254, 271
+  offset: 0, 0
+  index: -1
+TailLayer1
+  rotate: false
+  xy: 734, 1017
+  size: 410, 525
+  orig: 410, 526
+  offset: 0, 1
+  index: -1
+TailLayer2
+  rotate: true
+  xy: 2, 3
+  size: 263, 311
+  orig: 263, 311
+  offset: 0, 0
+  index: -1
+TailMiddle
+  rotate: false
+  xy: 1306, 244
+  size: 215, 223
+  orig: 215, 223
+  offset: 0, 0
+  index: -1
+Tongue
+  rotate: true
+  xy: 555, 46
+  size: 47, 216
+  orig: 47, 216
+  offset: 0, 0
+  index: -1
+TorsoLayer1
+  rotate: true
+  xy: 1069, 729
+  size: 286, 295
+  orig: 287, 295
+  offset: 0, 0
+  index: -1
+TorsoLayer2
+  rotate: true
+  xy: 785, 761
+  size: 254, 282
+  orig: 254, 282
+  offset: 0, 0
+  index: -1
+TorsoLayer3
+  rotate: false
+  xy: 1318, 469
+  size: 222, 258
+  orig: 222, 258
+  offset: 0, 0
+  index: -1
+TorsoOutline
+  rotate: false
+  xy: 513, 443
+  size: 302, 311
+  orig: 302, 311
+  offset: 0, 0
+  index: -1
+UpperArmLeftLAyer2
+  rotate: false
+  xy: 1523, 250
+  size: 142, 217
+  orig: 142, 217
+  offset: 0, 0
+  index: -1
+UpperArmLeftLayer1
+  rotate: false
+  xy: 1686, 1047
+  size: 153, 228
+  orig: 153, 228
+  offset: 0, 0
+  index: -1
+UpperArmLeftOutline
+  rotate: false
+  xy: 1504, 812
+  size: 167, 243
+  orig: 167, 243
+  offset: 0, 0
+  index: -1
+UpperArmRightLayer1
+  rotate: true
+  xy: 1041, 88
+  size: 153, 228
+  orig: 153, 228
+  offset: 0, 0
+  index: -1
+UpperArmRightLayer2
+  rotate: true
+  xy: 1306, 100
+  size: 142, 217
+  orig: 142, 217
+  offset: 0, 0
+  index: -1
+UpperArmRightOutline
+  rotate: false
+  xy: 1673, 802
+  size: 167, 243
+  orig: 167, 243
+  offset: 0, 0
+  index: -1

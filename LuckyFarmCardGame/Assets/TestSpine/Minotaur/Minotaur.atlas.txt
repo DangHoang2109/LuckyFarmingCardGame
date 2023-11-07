@@ -1,0 +1,272 @@
+
+Minotaur.png
+size: 2048,1024
+format: RGBA4444
+filter: Linear,Linear
+repeat: none
+AngerPuff
+  rotate: true
+  xy: 1327, 668
+  size: 82, 79
+  orig: 82, 79
+  offset: 0, 0
+  index: -1
+ArmLeft
+  rotate: true
+  xy: 671, 10
+  size: 186, 254
+  orig: 186, 254
+  offset: 0, 0
+  index: -1
+ArmRight
+  rotate: true
+  xy: 1338, 14
+  size: 202, 338
+  orig: 202, 338
+  offset: 0, 0
+  index: -1
+Bullet
+  rotate: true
+  xy: 1519, 623
+  size: 180, 221
+  orig: 180, 221
+  offset: 0, 0
+  index: -1
+CordBack
+  rotate: false
+  xy: 866, 591
+  size: 119, 159
+  orig: 119, 159
+  offset: 0, 0
+  index: -1
+EarLeft
+  rotate: true
+  xy: 987, 634
+  size: 116, 75
+  orig: 116, 75
+  offset: 0, 0
+  index: -1
+EarRight
+  rotate: true
+  xy: 1064, 634
+  size: 116, 75
+  orig: 116, 75
+  offset: 0, 0
+  index: -1
+EyebrowLeft
+  rotate: true
+  xy: 1408, 692
+  size: 58, 39
+  orig: 58, 39
+  offset: 0, 0
+  index: -1
+EyebrowRight
+  rotate: true
+  xy: 1449, 692
+  size: 58, 39
+  orig: 58, 39
+  offset: 0, 0
+  index: -1
+EyesBlink
+  rotate: false
+  xy: 2, 2
+  size: 180, 18
+  orig: 180, 18
+  offset: 0, 0
+  index: -1
+Eyes_0
+  rotate: false
+  xy: 987, 591
+  size: 184, 41
+  orig: 184, 41
+  offset: 0, 0
+  index: -1
+Eyes_1
+  rotate: false
+  xy: 1141, 707
+  size: 184, 43
+  orig: 184, 43
+  offset: 0, 0
+  index: -1
+Eyes_2
+  rotate: false
+  xy: 1141, 662
+  size: 184, 43
+  orig: 184, 43
+  offset: 0, 0
+  index: -1
+Eyes_3
+  rotate: false
+  xy: 1173, 617
+  size: 184, 43
+  orig: 184, 43
+  offset: 0, 0
+  index: -1
+Gauge1
+  rotate: false
+  xy: 613, 161
+  size: 40, 35
+  orig: 40, 35
+  offset: 0, 0
+  index: -1
+Gauge2
+  rotate: true
+  xy: 1464, 763
+  size: 40, 53
+  orig: 40, 53
+  offset: 0, 0
+  index: -1
+Gauge3
+  rotate: false
+  xy: 1359, 595
+  size: 40, 71
+  orig: 40, 71
+  offset: 0, 0
+  index: -1
+Gun
+  rotate: true
+  xy: 1464, 805
+  size: 216, 439
+  orig: 216, 439
+  offset: 0, 0
+  index: -1
+HandRight
+  rotate: true
+  xy: 1444, 346
+  size: 270, 307
+  orig: 270, 307
+  offset: 0, 0
+  index: -1
+Head_0
+  rotate: false
+  xy: 404, 312
+  size: 518, 269
+  orig: 518, 269
+  offset: 0, 0
+  index: -1
+Head_1
+  rotate: false
+  xy: 424, 752
+  size: 518, 269
+  orig: 518, 269
+  offset: 0, 0
+  index: -1
+Head_2
+  rotate: false
+  xy: 944, 752
+  size: 518, 269
+  orig: 518, 269
+  offset: 0, 0
+  index: -1
+Head_3
+  rotate: false
+  xy: 924, 320
+  size: 518, 269
+  orig: 518, 269
+  offset: 0, 0
+  index: -1
+LowerLegLeft
+  rotate: true
+  xy: 2, 22
+  size: 126, 228
+  orig: 126, 228
+  offset: 0, 0
+  index: -1
+LowerLegRight
+  rotate: true
+  xy: 232, 22
+  size: 126, 228
+  orig: 126, 228
+  offset: 0, 0
+  index: -1
+Shadow
+  rotate: false
+  xy: 927, 10
+  size: 409, 198
+  orig: 409, 198
+  offset: 0, 0
+  index: -1
+SnoutOutline
+  rotate: false
+  xy: 613, 198
+  size: 190, 112
+  orig: 190, 112
+  offset: 0, 0
+  index: -1
+Snout_0
+  rotate: false
+  xy: 805, 210
+  size: 177, 100
+  orig: 177, 100
+  offset: 0, 0
+  index: -1
+Snout_1
+  rotate: false
+  xy: 984, 218
+  size: 177, 100
+  orig: 177, 100
+  offset: 0, 0
+  index: -1
+Snout_2
+  rotate: false
+  xy: 1163, 218
+  size: 177, 100
+  orig: 177, 100
+  offset: 0, 0
+  index: -1
+Snout_3
+  rotate: false
+  xy: 1342, 218
+  size: 177, 100
+  orig: 177, 100
+  offset: 0, 0
+  index: -1
+Torso
+  rotate: false
+  xy: 2, 583
+  size: 420, 438
+  orig: 420, 438
+  offset: 0, 0
+  index: -1
+TorsoOutline
+  rotate: true
+  xy: 2, 150
+  size: 431, 400
+  orig: 431, 400
+  offset: 0, 0
+  index: -1
+UpperLegLeft
+  rotate: true
+  xy: 404, 158
+  size: 152, 207
+  orig: 152, 207
+  offset: 0, 0
+  index: -1
+UpperLegLeftOutline
+  rotate: true
+  xy: 424, 586
+  size: 164, 219
+  orig: 164, 219
+  offset: 0, 0
+  index: -1
+UpperLegRight
+  rotate: true
+  xy: 462, 4
+  size: 152, 207
+  orig: 152, 207
+  offset: 0, 0
+  index: -1
+UpperLegRightOutline
+  rotate: true
+  xy: 645, 586
+  size: 164, 219
+  orig: 164, 219
+  offset: 0, 0
+  index: -1
+empty
+  rotate: false
+  xy: 1401, 618
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1

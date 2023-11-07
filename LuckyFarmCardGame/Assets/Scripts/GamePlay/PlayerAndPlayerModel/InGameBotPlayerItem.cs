@@ -1,3 +1,4 @@
+﻿using Spine.Unity;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,8 +8,10 @@ public class InGameBotPlayerItem : InGameBasePlayerItem
     #region Prop on editor
     public BaseInGameEnemyDataModel EnemyModel => (this.PlayerModel as BaseInGameEnemyDataModel);
     public int DamagePerTurn => EnemyModel?.DamagePerTurn ?? 0;
-    public Image _avatar;
 
+
+    public Transform _tfPosition;
+    protected CSkeletonAnimator _animator;
     #endregion Prop on editor
 
     #region Data
@@ -76,11 +79,20 @@ public class InGameBotPlayerItem : InGameBasePlayerItem
         base.SetAPlayerModel(model);
 
         //set avatar
-        this._avatar.sprite = InfoConfig?._icon; 
-
+        SetUI();
         InitPlayerItSelf();
-
+        StartCoroutine(ShowUp());
         return this;
+    }
+    protected virtual void SetUI()
+    {
+        this._animator = Instantiate(this.StatConfig?.Info?._animator, this._tfPosition);
+    }
+    private IEnumerator ShowUp()
+    {
+        Debug.Log("Yo?");
+        yield return new WaitForEndOfFrame();
+        this._animator?.ShowAppear();
     }
 
     #endregion InitAction
@@ -119,6 +131,11 @@ public class InGameBotPlayerItem : InGameBasePlayerItem
     {
         base.EndTurn();
     }
+    public override void Attacked(int dmg)
+    {
+        base.Attacked(dmg);
+        this._animator?.ShowAttacked();
+    }
     public override void AttackSingleUnit(int dmg = -1)
     {
         if (dmg <= 0)
@@ -126,7 +143,7 @@ public class InGameBotPlayerItem : InGameBasePlayerItem
         Debug.Log("ENEMY: FUCK THE MAIN" + dmg);
 
         InGameManager.Instance.OnPlayerAttacking(InGameManager.Instance.MainUserPlayer.ID, dmg);
-
+        this._animator?.ShowAttack();
         base.AttackSingleUnit(dmg);
     }
     public override void AttackAllUnit(int dmg = -1)
@@ -134,7 +151,7 @@ public class InGameBotPlayerItem : InGameBasePlayerItem
         if (dmg <= 0)
             dmg = this.DamagePerTurn; //replace with this host info
         Debug.Log("ENEMY: FUCK THE MAIN" + dmg);
-
+        this._animator?.ShowAttack();
         InGameManager.Instance.OnPlayerAttackingAllUnit(isEnemySide: false, dmg);
         base.AttackAllUnit(dmg);
     }

@@ -1,0 +1,370 @@
+
+RitualAide.png
+size: 2048,2048
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+Body
+  rotate: false
+  xy: 1544, 1483
+  size: 472, 485
+  orig: 472, 485
+  offset: 0, 0
+  index: -1
+BodyOutline
+  rotate: false
+  xy: 2, 2
+  size: 492, 494
+  orig: 492, 494
+  offset: 0, 0
+  index: -1
+BottomLeftLowerArm
+  rotate: false
+  xy: 1241, 741
+  size: 199, 198
+  orig: 199, 198
+  offset: 0, 0
+  index: -1
+BottomLeftLowerArmOutline
+  rotate: true
+  xy: 1279, 1244
+  size: 205, 206
+  orig: 205, 206
+  offset: 0, 0
+  index: -1
+BottomLeftUpperArm
+  rotate: true
+  xy: 1687, 711
+  size: 96, 97
+  orig: 96, 97
+  offset: 0, 0
+  index: -1
+BottomLeftUpperArmOutline
+  rotate: false
+  xy: 1720, 977
+  size: 120, 117
+  orig: 120, 117
+  offset: 0, 0
+  index: -1
+BottomRightLowerArm
+  rotate: true
+  xy: 1025, 1211
+  size: 238, 252
+  orig: 238, 252
+  offset: 0, 0
+  index: -1
+BottomRightLowerArmOutline
+  rotate: true
+  xy: 1040, 331
+  size: 262, 271
+  orig: 262, 271
+  offset: 0, 0
+  index: -1
+BottomRightUpperArm
+  rotate: false
+  xy: 1581, 706
+  size: 104, 101
+  orig: 104, 101
+  offset: 0, 0
+  index: -1
+BottomRightUpperArmOutline
+  rotate: true
+  xy: 1871, 1353
+  size: 128, 122
+  orig: 128, 122
+  offset: 0, 0
+  index: -1
+Bowl
+  rotate: true
+  xy: 1313, 346
+  size: 176, 90
+  orig: 176, 90
+  offset: 0, 0
+  index: -1
+BowlOutline
+  rotate: true
+  xy: 859, 752
+  size: 187, 101
+  orig: 187, 101
+  offset: 0, 0
+  index: -1
+ChainLink1
+  rotate: false
+  xy: 496, 449
+  size: 20, 47
+  orig: 20, 47
+  offset: 0, 0
+  index: -1
+ChainLink1Outline
+  rotate: true
+  xy: 1388, 1214
+  size: 28, 55
+  orig: 28, 55
+  offset: 0, 0
+  index: -1
+ChainLink2
+  rotate: false
+  xy: 1487, 1390
+  size: 54, 59
+  orig: 54, 59
+  offset: 0, 0
+  index: -1
+ChainLink2Outline
+  rotate: true
+  xy: 962, 753
+  size: 61, 65
+  orig: 61, 65
+  offset: 0, 0
+  index: -1
+ChainLink3
+  rotate: false
+  xy: 496, 400
+  size: 20, 47
+  orig: 20, 47
+  offset: 0, 0
+  index: -1
+ChainLink3Outline
+  rotate: false
+  xy: 1995, 1426
+  size: 28, 55
+  orig: 28, 55
+  offset: 0, 0
+  index: -1
+ChainLink4
+  rotate: false
+  xy: 1487, 1329
+  size: 54, 59
+  orig: 54, 59
+  offset: 0, 0
+  index: -1
+ChainLink4Outline
+  rotate: true
+  xy: 1976, 1221
+  size: 61, 65
+  orig: 61, 65
+  offset: 0, 0
+  index: -1
+ChainLink5
+  rotate: false
+  xy: 496, 351
+  size: 20, 47
+  orig: 20, 47
+  offset: 0, 0
+  index: -1
+ChainLink5Outline
+  rotate: false
+  xy: 1995, 1369
+  size: 28, 55
+  orig: 28, 55
+  offset: 0, 0
+  index: -1
+Eye
+  rotate: true
+  xy: 859, 1191
+  size: 343, 164
+  orig: 343, 164
+  offset: 0, 0
+  index: -1
+Noise1
+  rotate: false
+  xy: 1025, 1451
+  size: 517, 517
+  orig: 517, 517
+  offset: 0, 0
+  index: -1
+Noise2
+  rotate: false
+  xy: 2, 1017
+  size: 517, 517
+  orig: 517, 517
+  offset: 0, 0
+  index: -1
+Noise3
+  rotate: false
+  xy: 2, 498
+  size: 517, 517
+  orig: 517, 517
+  offset: 0, 0
+  index: -1
+Noise4
+  rotate: false
+  xy: 521, 229
+  size: 517, 517
+  orig: 517, 517
+  offset: 0, 0
+  index: -1
+Pupil
+  rotate: true
+  xy: 1313, 192
+  size: 152, 88
+  orig: 152, 88
+  offset: 0, 0
+  index: -1
+PupilCross
+  rotate: true
+  xy: 1040, 241
+  size: 88, 82
+  orig: 88, 82
+  offset: 0, 0
+  index: -1
+PupilCrosshair
+  rotate: true
+  xy: 1512, 497
+  size: 105, 102
+  orig: 105, 102
+  offset: 0, 0
+  index: -1
+PupilExag
+  rotate: true
+  xy: 1871, 1213
+  size: 69, 103
+  orig: 69, 103
+  offset: 0, 0
+  index: -1
+PupilSkull
+  rotate: true
+  xy: 1747, 880
+  size: 95, 110
+  orig: 95, 110
+  offset: 0, 0
+  index: -1
+Scanlines1
+  rotate: false
+  xy: 1442, 809
+  size: 303, 130
+  orig: 303, 130
+  offset: 0, 0
+  index: -1
+Scanlines2
+  rotate: false
+  xy: 1241, 604
+  size: 305, 135
+  orig: 305, 135
+  offset: 0, 0
+  index: -1
+Shadow
+  rotate: true
+  xy: 1040, 595
+  size: 344, 199
+  orig: 344, 199
+  offset: 0, 0
+  index: -1
+ShineBody
+  rotate: true
+  xy: 1544, 1206
+  size: 275, 325
+  orig: 275, 325
+  offset: 0, 0
+  index: -1
+ShineEye
+  rotate: false
+  xy: 1720, 1096
+  size: 198, 108
+  orig: 198, 108
+  offset: 0, 0
+  index: -1
+Swing1
+  rotate: false
+  xy: 2, 1536
+  size: 1021, 432
+  orig: 1021, 432
+  offset: 0, 0
+  index: -1
+Swing2
+  rotate: true
+  xy: 521, 748
+  size: 786, 336
+  orig: 786, 336
+  offset: 0, 0
+  index: -1
+Swing3
+  rotate: false
+  xy: 859, 941
+  size: 859, 248
+  orig: 859, 248
+  offset: 0, 0
+  index: -1
+TopLeftLowerArm
+  rotate: true
+  xy: 1279, 1204
+  size: 38, 107
+  orig: 38, 107
+  offset: 0, 0
+  index: -1
+TopLeftLowerArmOutline
+  rotate: false
+  xy: 1487, 1214
+  size: 53, 113
+  orig: 53, 113
+  offset: 0, 0
+  index: -1
+TopLeftUpperArm
+  rotate: false
+  xy: 1842, 1027
+  size: 185, 67
+  orig: 185, 67
+  offset: 0, 0
+  index: -1
+TopLeftUpperArmOutline
+  rotate: false
+  xy: 1313, 524
+  size: 197, 78
+  orig: 197, 78
+  offset: 0, 0
+  index: -1
+TopRightLowerArm
+  rotate: true
+  xy: 1442, 742
+  size: 65, 137
+  orig: 65, 137
+  offset: 0, 0
+  index: -1
+TopRightLowerArmLeftFinger
+  rotate: true
+  xy: 1920, 1129
+  size: 82, 120
+  orig: 82, 120
+  offset: 0, 0
+  index: -1
+TopRightLowerArmLeftFingerOutline
+  rotate: true
+  xy: 1548, 607
+  size: 97, 138
+  orig: 97, 138
+  offset: 0, 0
+  index: -1
+TopRightLowerArmOutline
+  rotate: false
+  xy: 1040, 91
+  size: 80, 148
+  orig: 80, 148
+  offset: 0, 0
+  index: -1
+TopRightLowerArmRightFinger
+  rotate: false
+  xy: 962, 816
+  size: 73, 123
+  orig: 73, 123
+  offset: 0, 0
+  index: -1
+TopRightLowerArmRightFingerOutline
+  rotate: false
+  xy: 1405, 380
+  size: 89, 142
+  orig: 89, 142
+  offset: 0, 0
+  index: -1
+TopRightUpperArm
+  rotate: false
+  xy: 1871, 1284
+  size: 163, 67
+  orig: 163, 67
+  offset: 0, 0
+  index: -1
+TopRightUpperArmOutline
+  rotate: false
+  xy: 1405, 297
+  size: 176, 81
+  orig: 176, 81
+  offset: 0, 0
+  index: -1

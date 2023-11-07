@@ -1,0 +1,258 @@
+
+Leechie.png
+size: 2048,1024
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+Body
+  rotate: true
+  xy: 248, 689
+  size: 333, 305
+  orig: 333, 305
+  offset: 0, 0
+  index: -1
+BodyOutline
+  rotate: true
+  xy: 2, 300
+  size: 353, 322
+  orig: 353, 322
+  offset: 0, 0
+  index: -1
+EyeLeft
+  rotate: false
+  xy: 950, 243
+  size: 101, 103
+  orig: 101, 103
+  offset: 0, 0
+  index: -1
+EyeLeftHurt
+  rotate: false
+  xy: 626, 17
+  size: 114, 123
+  orig: 114, 123
+  offset: 0, 0
+  index: -1
+EyeLeftHurtOutline
+  rotate: false
+  xy: 374, 2
+  size: 124, 131
+  orig: 124, 131
+  offset: 0, 0
+  index: -1
+EyeLeftOutline
+  rotate: false
+  xy: 1003, 735
+  size: 111, 112
+  orig: 111, 112
+  offset: 0, 0
+  index: -1
+EyeRight
+  rotate: false
+  xy: 1029, 139
+  size: 101, 102
+  orig: 101, 102
+  offset: 0, 0
+  index: -1
+EyeRightHurt
+  rotate: false
+  xy: 987, 577
+  size: 114, 123
+  orig: 114, 123
+  offset: 0, 0
+  index: -1
+EyeRightHurtOutline
+  rotate: false
+  xy: 500, 2
+  size: 124, 131
+  orig: 124, 131
+  offset: 0, 0
+  index: -1
+EyeRightOutline
+  rotate: false
+  xy: 1053, 910
+  size: 111, 112
+  orig: 111, 112
+  offset: 0, 0
+  index: -1
+Mouth
+  rotate: true
+  xy: 669, 514
+  size: 173, 152
+  orig: 173, 152
+  offset: 0, 0
+  index: -1
+MouthClosed
+  rotate: false
+  xy: 745, 695
+  size: 173, 152
+  orig: 173, 152
+  offset: 0, 0
+  index: -1
+MouthWide
+  rotate: true
+  xy: 899, 849
+  size: 173, 152
+  orig: 173, 152
+  offset: 0, 0
+  index: -1
+Shadow
+  rotate: true
+  xy: 2, 655
+  size: 367, 244
+  orig: 367, 244
+  offset: 0, 0
+  index: -1
+Tail1
+  rotate: false
+  xy: 555, 689
+  size: 93, 158
+  orig: 93, 158
+  offset: 0, 0
+  index: -1
+Tail1Outline
+  rotate: false
+  xy: 693, 151
+  size: 113, 175
+  orig: 113, 175
+  offset: 0, 0
+  index: -1
+Tail2
+  rotate: false
+  xy: 650, 689
+  size: 93, 158
+  orig: 93, 158
+  offset: 0, 0
+  index: -1
+Tail2Outline
+  rotate: false
+  xy: 652, 328
+  size: 114, 175
+  orig: 114, 175
+  offset: 0, 0
+  index: -1
+Tail3
+  rotate: false
+  xy: 920, 702
+  size: 81, 145
+  orig: 81, 145
+  offset: 0, 0
+  index: -1
+Tail3Outline
+  rotate: false
+  xy: 825, 3
+  size: 100, 161
+  orig: 100, 161
+  offset: 0, 0
+  index: -1
+Tail4
+  rotate: false
+  xy: 742, 3
+  size: 81, 146
+  orig: 81, 146
+  offset: 0, 0
+  index: -1
+Tail4Outline
+  rotate: false
+  xy: 927, 3
+  size: 100, 161
+  orig: 100, 161
+  offset: 0, 0
+  index: -1
+WingLeft1
+  rotate: true
+  xy: 326, 504
+  size: 183, 173
+  orig: 183, 173
+  offset: 0, 0
+  index: -1
+WingLeft2
+  rotate: true
+  xy: 501, 323
+  size: 180, 149
+  orig: 180, 149
+  offset: 0, 0
+  index: -1
+WingLeft3
+  rotate: true
+  xy: 932, 348
+  size: 171, 140
+  orig: 171, 140
+  offset: 0, 0
+  index: -1
+WingLeft4
+  rotate: true
+  xy: 768, 340
+  size: 172, 162
+  orig: 172, 162
+  offset: 0, 0
+  index: -1
+WingLeft5
+  rotate: false
+  xy: 188, 48
+  size: 184, 250
+  orig: 184, 250
+  offset: 0, 0
+  index: -1
+WingLeft6
+  rotate: true
+  xy: 555, 849
+  size: 173, 170
+  orig: 173, 170
+  offset: 0, 0
+  index: -1
+WingLeft7
+  rotate: true
+  xy: 374, 135
+  size: 182, 166
+  orig: 182, 166
+  offset: 0, 0
+  index: -1
+WingRight1
+  rotate: true
+  xy: 326, 319
+  size: 183, 173
+  orig: 183, 173
+  offset: 0, 0
+  index: -1
+WingRight2
+  rotate: true
+  xy: 542, 142
+  size: 179, 149
+  orig: 179, 149
+  offset: 0, 0
+  index: -1
+WingRight3
+  rotate: true
+  xy: 808, 166
+  size: 172, 140
+  orig: 172, 140
+  offset: 0, 0
+  index: -1
+WingRight4
+  rotate: true
+  xy: 823, 521
+  size: 172, 162
+  orig: 172, 162
+  offset: 0, 0
+  index: -1
+WingRight5
+  rotate: false
+  xy: 2, 47
+  size: 184, 251
+  orig: 184, 251
+  offset: 0, 0
+  index: -1
+WingRight6
+  rotate: true
+  xy: 727, 849
+  size: 173, 170
+  orig: 173, 170
+  offset: 0, 0
+  index: -1
+WingRight7
+  rotate: true
+  xy: 501, 505
+  size: 182, 166
+  orig: 182, 166
+  offset: 0, 0
+  index: -1
