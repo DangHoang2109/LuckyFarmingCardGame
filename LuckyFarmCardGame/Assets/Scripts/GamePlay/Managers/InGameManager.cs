@@ -278,7 +278,7 @@ public class InGameManager : MonoSingleton<InGameManager>
     {
         if (TryGetSeatItem(idWhoAttacked, out InGameBasePlayerItem attacked))
         {
-            attacked.Attacked(damage);
+            attacked.Attacked(damage, this.OnCallbackPlayerDead);
             //create animation
 
         }
@@ -331,16 +331,16 @@ public class InGameManager : MonoSingleton<InGameManager>
         //disable the obj
         if (TryGetSeatItem(id, out InGameBasePlayerItem dead))
         {
-            dead.Dead(OnCallbackAnimation);
+            //dead.Dead(OnCallbackPlayerDead);
         }
-        void OnCallbackAnimation()
-        {
-            dead.gameObject.SetActive(false);
-            //remove from the list
-            this._playersModels.RemoveAll(x => x._id == id);
-            this.idsMainPlayers.Remove(id);
-            this.idsEnemys.Remove(id);
-        }
+    }
+    public void OnCallbackPlayerDead(InGameBasePlayerItem dead)
+    {
+        dead.ClearWhenDead();
+        //remove from the list
+        this._playersModels.RemoveAll(x => x._id == dead.ID);
+        this.idsMainPlayers.Remove(dead.ID);
+        this.idsEnemys.Remove(dead.ID);
     }
     private void OnLogicEndTurn()
     {

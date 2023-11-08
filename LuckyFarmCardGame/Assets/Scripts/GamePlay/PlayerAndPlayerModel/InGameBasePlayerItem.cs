@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
+using Spine;
+using UnityEditor.Experimental.GraphView;
 
 public class InGameBasePlayerItem : MonoBehaviour
 {
@@ -44,6 +46,7 @@ public class InGameBasePlayerItem : MonoBehaviour
             }
         }
     }
+    public int BaseDamagePerTurn => this.PlayerModel?.DamagePerTurn ?? 0;
 
     public bool IsPlaying => this._playerModel != null;
     protected BaseInGamePlayerDataModel _playerModel;
@@ -173,7 +176,7 @@ public class InGameBasePlayerItem : MonoBehaviour
     {
 
     }
-    public virtual void Attacked(int dmg)
+    public virtual void Attacked(int dmg, System.Action<InGameBasePlayerItem> deaded = null)
     {
         if(this.CurrentShield > 0)
         {
@@ -249,6 +252,10 @@ public class InGameBasePlayerItem : MonoBehaviour
     public virtual void Dead(System.Action cb)
     {
         Debug.Log("DEAD");
+    }
+    public virtual void ClearWhenDead()
+    {
+        this.gameObject.SetActive(false);
     }
     #endregion Turn Action
 

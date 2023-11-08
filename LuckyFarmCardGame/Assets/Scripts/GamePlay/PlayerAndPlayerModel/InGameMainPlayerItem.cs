@@ -17,6 +17,8 @@ public class InGameMainPlayerItem : InGameBasePlayerItem
         }
     }
     public InGameDeckConfig DeckConfig => this.MainDataModel?.DeckConfig;
+
+
     #region Prop on editor
     public Button _btnEndTurn;
 
@@ -142,14 +144,14 @@ public class InGameMainPlayerItem : InGameBasePlayerItem
     public override void AttackSingleUnit(int dmg = -1)
     {
         if (dmg <= 0)
-            dmg = 1; //replace with this host info
+            dmg = BaseDamagePerTurn; //replace with this host info
         InGameManager.Instance.OnPlayerAttacking(InGameManager.Instance.FrontEnemy.ID, dmg);
         base.AttackSingleUnit(dmg);
     }
     public override void AttackAllUnit(int dmg = -1)
     {
         if (dmg <= 0)
-            dmg = 1; //replace with this host info
+            dmg = BaseDamagePerTurn; //replace with this host info
         InGameManager.Instance.OnPlayerAttackingAllUnit(isEnemySide: true, dmg);
         base.AttackAllUnit(dmg);
     }

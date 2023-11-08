@@ -192,7 +192,10 @@ public class InGameCardLevel
     [Space(5f)]
     ///số card copy cần CÓ HƠN HOẶC BẰNG để upgrade lên đến
     public int _require;
-    ///số HP heal, số damage gây ra, số shield add vào....
-    public int _stat; 
+    ///số HP heal, số damage gây ra, số shield add vào.... <summary>
+    /// Stat có thể ở dạng int dùng trực tiếp : HP, Shield...
+    /// Stat cũng có thể ở dạng float để nhân với character stat: Damage
+    /// </summary>
+    public float _stat; 
 }
 #endregion Card Level ups

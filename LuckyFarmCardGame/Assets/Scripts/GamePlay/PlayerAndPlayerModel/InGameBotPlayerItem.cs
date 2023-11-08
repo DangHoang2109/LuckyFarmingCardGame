@@ -1,4 +1,6 @@
-﻿using Spine.Unity;
+﻿using Spine;
+using Spine.Unity;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,8 +9,6 @@ public class InGameBotPlayerItem : InGameBasePlayerItem
 {
     #region Prop on editor
     public BaseInGameEnemyDataModel EnemyModel => (this.PlayerModel as BaseInGameEnemyDataModel);
-    public int DamagePerTurn => EnemyModel?.DamagePerTurn ?? 0;
-
 
     public Transform _tfPosition;
     protected CSkeletonAnimator _animator;
@@ -86,11 +86,14 @@ public class InGameBotPlayerItem : InGameBasePlayerItem
     }
     protected virtual void SetUI()
     {
+        if(this._animator != null)
+        {
+            Destroy(this._animator.gameObject);
+        }
         this._animator = Instantiate(this.StatConfig?.Info?._animator, this._tfPosition);
     }
     private IEnumerator ShowUp()
     {
-        Debug.Log("Yo?");
         yield return new WaitForEndOfFrame();
         this._animator?.ShowAppear();
     }
@@ -131,15 +134,20 @@ public class InGameBotPlayerItem : InGameBasePlayerItem
     {
         base.EndTurn();
     }
-    public override void Attacked(int dmg)
+    public override void Attacked(int dmg, System.Action<InGameBasePlayerItem> deaded = null)
     {
         base.Attacked(dmg);
-        this._animator?.ShowAttacked();
+        this._animator?.ShowAttacked(isDead(), OnDeadComplete);
+
+        void OnDeadComplete()
+        {
+            deaded?.Invoke(this);
+        }
     }
     public override void AttackSingleUnit(int dmg = -1)
     {
         if (dmg <= 0)
-            dmg = this.DamagePerTurn; //replace with this host info
+            dmg = BaseDamagePerTurn; //replace with this host info
         Debug.Log("ENEMY: FUCK THE MAIN" + dmg);
 
         InGameManager.Instance.OnPlayerAttacking(InGameManager.Instance.MainUserPlayer.ID, dmg);
@@ -149,11 +157,21 @@ public class InGameBotPlayerItem : InGameBasePlayerItem
     public override void AttackAllUnit(int dmg = -1)
     {
         if (dmg <= 0)
-            dmg = this.DamagePerTurn; //replace with this host info
+            dmg = this.BaseDamagePerTurn; //replace with this host info
         Debug.Log("ENEMY: FUCK THE MAIN" + dmg);
         this._animator?.ShowAttack();
         InGameManager.Instance.OnPlayerAttackingAllUnit(isEnemySide: false, dmg);
         base.AttackAllUnit(dmg);
+    }
+    public override void Dead(Action cb)
+    {
+        base.Dead(cb);
+        //this._animator?.ShowDead(cb);
+    }
+    public override void ClearWhenDead()
+    {
+        base.ClearWhenDead();
+        Destroy(this._animator.gameObject);
     }
     #endregion Turn Action
 

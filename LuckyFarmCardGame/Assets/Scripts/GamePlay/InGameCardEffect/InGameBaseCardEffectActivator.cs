@@ -147,7 +147,7 @@ public class InGameCardEffectActivator_RevealTop : InGameBaseCardEffectActivator
     {
         base.ActiveEffectWhenPlaceToPallet();
         ShowingNotification();
-        InGameManager.Instance.OnTellControllerToRevealTopCard(this.CurrentLevelConfig._stat);
+        InGameManager.Instance.OnTellControllerToRevealTopCard(this.GetReveal());
     }
     public override void ActiveEffectWhenDestroyed()
     {
@@ -161,6 +161,8 @@ public class InGameCardEffectActivator_RevealTop : InGameBaseCardEffectActivator
     {
         base.ShowingNotification();
     }
+    public int GetReveal() => ((int)this.CurrentLevelConfig?._stat);
+
 }
 public class InGameCardEffectActivator_AttackSingleUnit : InGameBaseCardEffectActivator
 {
@@ -174,7 +176,7 @@ public class InGameCardEffectActivator_AttackSingleUnit : InGameBaseCardEffectAc
     {
         base.ActiveEffectWhenPlaceToPallet();
         ShowingNotification();
-        this._host?.AttackSingleUnit(this.CurrentLevelConfig._stat);
+        this._host?.AttackSingleUnit(GetDamage());
     }
     public override void ActiveEffectWhenDestroyed()
     {
@@ -188,6 +190,7 @@ public class InGameCardEffectActivator_AttackSingleUnit : InGameBaseCardEffectAc
     {
         base.ShowingNotification();
     }
+    public int GetDamage() => ((int)this.CurrentLevelConfig?._stat * _host?.BaseDamagePerTurn) ?? 0;
 }
 
 public class InGameCardEffectActivator_AttackAllUnit : InGameBaseCardEffectActivator
@@ -202,7 +205,7 @@ public class InGameCardEffectActivator_AttackAllUnit : InGameBaseCardEffectActiv
     {
         base.ActiveEffectWhenPlaceToPallet();
         ShowingNotification();
-        this._host?.AttackAllUnit(this.CurrentLevelConfig._stat);
+        this._host?.AttackAllUnit(GetDamage());
     }
     public override void ActiveEffectWhenDestroyed()
     {
@@ -216,6 +219,7 @@ public class InGameCardEffectActivator_AttackAllUnit : InGameBaseCardEffectActiv
     {
         base.ShowingNotification();
     }
+    public int GetDamage() => ((int)this.CurrentLevelConfig?._stat * _host?.BaseDamagePerTurn) ?? 0;
 }
 public class InGameCardEffectActivator_Defense : InGameBaseCardEffectActivator
 {
@@ -229,7 +233,7 @@ public class InGameCardEffectActivator_Defense : InGameBaseCardEffectActivator
     {
         base.ActiveEffectWhenPlaceToPallet();
         ShowingNotification();
-        this._host?.DefenseCreateShield(this.CurrentLevelConfig._stat);
+        this._host?.DefenseCreateShield(this.GetShield());
     }
     public override void ActiveEffectWhenDestroyed()
     {
@@ -243,6 +247,7 @@ public class InGameCardEffectActivator_Defense : InGameBaseCardEffectActivator
     {
         base.ShowingNotification();
     }
+    public int GetShield() => ((int)this.CurrentLevelConfig?._stat);
 }
 public class InGameCardEffectActivator_Heal : InGameBaseCardEffectActivator
 {
@@ -256,7 +261,7 @@ public class InGameCardEffectActivator_Heal : InGameBaseCardEffectActivator
     {
         base.ActiveEffectWhenPlaceToPallet();
         ShowingNotification();
-        this._host?.Heal(this.CurrentLevelConfig._stat);
+        this._host?.Heal(this.GetHeal());
     }
     public override void ActiveEffectWhenDestroyed()
     {
@@ -270,4 +275,5 @@ public class InGameCardEffectActivator_Heal : InGameBaseCardEffectActivator
     {
         base.ShowingNotification();
     }
+    public int GetHeal() => ((int)this.CurrentLevelConfig?._stat);
 }
