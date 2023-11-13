@@ -38,22 +38,23 @@ public class InGameBaseCardEffectActivator
 
     public virtual void ActiveEffectWhenDrawed()
     {
-        Debug.Log($"CARD {(int)ID}: activate effect {ID} when drawed");
+        //Debug.Log($"CARD {(int)ID}: activate effect {ID} when drawed");
     }
     public virtual void ActiveEffectWhenPlaceToPallet()
     {
-        Debug.Log($"CARD {(int)ID}: activate effect {ID} when place to pallet");
+        //Debug.Log($"CARD {(int)ID}: activate effect {ID} when place to pallet");
     }
     public virtual void ActiveEffectWhenDestroyed()
     {
-        Debug.Log($"CARD {(int)ID}: activate effect {ID} when destroyed");
+        //Debug.Log($"CARD {(int)ID}: activate effect {ID} when destroyed");
     }
     public virtual void ActiveEffectWhenPulledToBag()
     {
-        Debug.Log($"CARD {(int)ID}: activate effect {ID} when pulled to bag");
+        //Debug.Log($"CARD {(int)ID}: activate effect {ID} when pulled to bag");
     }
     public virtual void ShowingNotification()
     {
+        Debug.Log("Show noti " + string.Format(this.EffectConfig?._cardEffectDescription, this.CurrentLevelConfig._stat));
         InGameManager.Instance.ShowNotificationCardAction($"Card effect: {string.Format(this.EffectConfig?._cardEffectDescription, this.CurrentLevelConfig._stat)}");
     }
     public virtual void SetIDAndHost(int id,InGameBasePlayerItem host)

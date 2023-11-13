@@ -14,46 +14,46 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _configs:
   - _cardID: 0
-    _cardName: Card 0
+    _cardName: Health Looper
     _cardDescription: 
     _gamePointOfCard: 3
     _skillID: 0
-    _sprCardArtwork: {fileID: 21300000, guid: db4a043bb6c4f91469f8ff6b4abcc070, type: 3}
+    _sprCardArtwork: {fileID: 21300000, guid: d694da8a96e1c8944b4d21e2036b4d6e, type: 3}
     _sprCardBackground: {fileID: 21300000, guid: a535a86e198a9674f866f07c0283c31c, type: 3}
   - _cardID: 1
     _cardName: Card 1
     _cardDescription: 
     _gamePointOfCard: 4
     _skillID: 1
-    _sprCardArtwork: {fileID: 21300000, guid: 553a50e441f216f44b9faa9259e499d1, type: 3}
+    _sprCardArtwork: {fileID: 21300000, guid: 24ec04a0a610cda498e1a0339854b969, type: 3}
     _sprCardBackground: {fileID: 21300000, guid: a535a86e198a9674f866f07c0283c31c, type: 3}
   - _cardID: 2
     _cardName: Card 2
     _cardDescription: 
     _gamePointOfCard: 4
     _skillID: 2
-    _sprCardArtwork: {fileID: 21300000, guid: e1248d70cd5412c4aa5c4a1cab9bc495, type: 3}
+    _sprCardArtwork: {fileID: 21300000, guid: 5d2770dbc7510524cbcffebd80c47818, type: 3}
     _sprCardBackground: {fileID: 21300000, guid: a535a86e198a9674f866f07c0283c31c, type: 3}
   - _cardID: 3
-    _cardName: Card 3
+    _cardName: Cleaver
     _cardDescription: 
     _gamePointOfCard: 1
     _skillID: 3
-    _sprCardArtwork: {fileID: 21300000, guid: 0ea12033018e75e4eb8f22bf61ad32bb, type: 3}
+    _sprCardArtwork: {fileID: 21300000, guid: 3fe56e0fc35f39e4ab9b36bf0f96fdbb, type: 3}
     _sprCardBackground: {fileID: 21300000, guid: a535a86e198a9674f866f07c0283c31c, type: 3}
   - _cardID: 4
-    _cardName: Card 4
+    _cardName: Blinding Flash
     _cardDescription: 
     _gamePointOfCard: 1
     _skillID: 4
-    _sprCardArtwork: {fileID: 21300000, guid: 24d0f2abe9b273a41a472937dcb2f16d, type: 3}
+    _sprCardArtwork: {fileID: 21300000, guid: fe348f85808c3f54e9b0f2cb7bc7ae48, type: 3}
     _sprCardBackground: {fileID: 21300000, guid: a535a86e198a9674f866f07c0283c31c, type: 3}
   - _cardID: 5
-    _cardName: Card 5
+    _cardName: Buckler
     _cardDescription: 
     _gamePointOfCard: 2
     _skillID: 5
-    _sprCardArtwork: {fileID: 21300000, guid: 08ad24bb59477e644bd64fc5f0e9f821, type: 3}
+    _sprCardArtwork: {fileID: 21300000, guid: 2d2601f2a99512640bc06ada1855bac3, type: 3}
     _sprCardBackground: {fileID: 21300000, guid: a535a86e198a9674f866f07c0283c31c, type: 3}
   _skillConfigs:
     _configs:
@@ -61,22 +61,22 @@ MonoBehaviour:
       _sprCardEffect: {fileID: 0}
       _cardEffectDescription: This card have no effect
     - _skillID: 1
-      _sprCardEffect: {fileID: 21300000, guid: d213c945883b4e748b45f2bc2feff96e, type: 3}
+      _sprCardEffect: {fileID: 21300000, guid: 1c10f27e8a36b2747afd88630bbfa676, type: 3}
       _cardEffectDescription: One more card will be drawn
     - _skillID: 2
-      _sprCardEffect: {fileID: 21300000, guid: 217f81629bcb67c4e93f2ff1b4f9b2c4, type: 3}
+      _sprCardEffect: {fileID: 21300000, guid: ff1cf923ce40aad41940f9df2efbb8a8, type: 3}
       _cardEffectDescription: '{0} top card(s) of deck will be reveal'
     - _skillID: 0
-      _sprCardEffect: {fileID: 21300000, guid: 217f81629bcb67c4e93f2ff1b4f9b2c4, type: 3}
+      _sprCardEffect: {fileID: 21300000, guid: 74b85af84e84515499ec3c33dc72b950, type: 3}
       _cardEffectDescription: Heal the player {0} HP
     - _skillID: 3
-      _sprCardEffect: {fileID: 21300000, guid: 217f81629bcb67c4e93f2ff1b4f9b2c4, type: 3}
+      _sprCardEffect: {fileID: 21300000, guid: 84b2163fd7d530243b791dbb5e3da74f, type: 3}
       _cardEffectDescription: Attack the front enemy {0} damage(s)
     - _skillID: 4
-      _sprCardEffect: {fileID: 21300000, guid: 217f81629bcb67c4e93f2ff1b4f9b2c4, type: 3}
+      _sprCardEffect: {fileID: 21300000, guid: 84b2163fd7d530243b791dbb5e3da74f, type: 3}
       _cardEffectDescription: Attack all enemy {0} damage(s)
     - _skillID: 5
-      _sprCardEffect: {fileID: 21300000, guid: 217f81629bcb67c4e93f2ff1b4f9b2c4, type: 3}
+      _sprCardEffect: {fileID: 21300000, guid: eaba1188c22e6874f9debbef0da7f449, type: 3}
       _cardEffectDescription: Create {0} shield(s)
   _levelsConfigs:
     _configs:

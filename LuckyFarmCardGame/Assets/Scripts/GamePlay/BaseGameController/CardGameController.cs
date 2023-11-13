@@ -26,6 +26,7 @@ public class CardGameController : MonoBehaviour
     public InGameAnimationTimeController AnimationTimeConfig => _animationConfig;
     [Space(5f)]
 
+    [SerializeField] protected CardAnimationItem _cardAnim;
     [SerializeField] protected BaseCardItem _cardPrefab;
     [SerializeField] protected Transform _tfPalletPanel, _tfActEffectPanel, _tfDeckPanel;
     [Space(5f)]
@@ -306,6 +307,9 @@ public class CardGameController : MonoBehaviour
         _cardsOnPallet ??= new List<InGame_CardDataModel>();
 
         BaseCardItem newCardItem = CreateCardItem(ref card);
+
+
+        _cardAnim.PlayDraw(card._id);
 
         StartCoroutine(ieDrawAndAddCardToPallet(card, newCardItem));
     }
