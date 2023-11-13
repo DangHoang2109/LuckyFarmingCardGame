@@ -13,6 +13,7 @@ public class InGameBasePlayerItem : MonoBehaviour
 
     public HPBarUI _hpBar;
     public ShieldUI _shieldUI;
+
     #endregion Prop on editor
 
     #region Data

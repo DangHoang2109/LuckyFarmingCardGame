@@ -44,7 +44,20 @@ public class InGameManager : MonoSingleton<InGameManager>
     public BaseInGamePlayerDataModel CurrentTurnPlayerModel => _players[this._turnIndex]?.PlayerModel;
 
     public InGameMainPlayerItem MainUserPlayer => _players[0] as InGameMainPlayerItem;
-    public InGameBasePlayerItem FrontEnemy => _players[1];
+    public InGameBasePlayerItem FrontEnemy
+    {
+        get
+        {
+            for (int i = 1; i < _players.Count; i++)
+            {
+                if (_players[i].gameObject.activeInHierarchy && !_players[i].isDead())
+                    return _players[i];
+            }
+            Debug.LogError("MAY BE THERE IS NO ENEMY LEFT");
+            return null;
+        }
+    }
+    public bool IsHaveEnemy => (this.idsEnemys?.Count ?? 0) > 0; //1 is main player model;
 
     #endregion Getter
 
@@ -159,7 +172,7 @@ public class InGameManager : MonoSingleton<InGameManager>
     #region Round Action
     public void OnBeginRound()
     {
-        if (this._playersModels.Count == 1)
+        if (!IsHaveEnemy)
         {
             //sinh thêm creep vì datamodel = 1 -> chỉ còn main player
             //không nên, nên set boolean
@@ -365,8 +378,15 @@ public class InGameManager : MonoSingleton<InGameManager>
         }
         else
         {
-            //roll to next index
+            //roll to next index, but caution enemy 1 may dead but enemy 2 still alive
+            //we can remove this do while when we apply the roll change enemy position system
             this._turnIndex = InGameUtils.RollIndex(this._turnIndex, this._playersModels.Count);
+            Debug.Log($"ROLL TURN INDEX TO {this._turnIndex } in {this._playersModels.Count}");
+            while (this._players[_turnIndex].isDead())
+            {
+                this._turnIndex = InGameUtils.RollIndex(this._turnIndex, this._playersModels.Count);
+                Debug.Log($"ROLL TURN INDEX TO {this._turnIndex } in {this._playersModels.Count}");
+            }
 
             //begin next user turn
             OnBeginTurn();

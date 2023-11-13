@@ -145,15 +145,24 @@ public class InGameMainPlayerItem : InGameBasePlayerItem
     {
         if (dmg <= 0)
             dmg = BaseDamagePerTurn; //replace with this host info
-        InGameManager.Instance.OnPlayerAttacking(InGameManager.Instance.FrontEnemy.ID, dmg);
-        base.AttackSingleUnit(dmg);
+
+        InGameBasePlayerItem frontEnemy = InGameManager.Instance.FrontEnemy;
+        if(frontEnemy != null)
+        {
+            InGameManager.Instance.OnPlayerAttacking(frontEnemy.ID, dmg);
+            base.AttackSingleUnit(dmg);
+        }
     }
     public override void AttackAllUnit(int dmg = -1)
     {
         if (dmg <= 0)
             dmg = BaseDamagePerTurn; //replace with this host info
-        InGameManager.Instance.OnPlayerAttackingAllUnit(isEnemySide: true, dmg);
-        base.AttackAllUnit(dmg);
+
+        if (InGameManager.Instance.IsHaveEnemy)
+        {
+            InGameManager.Instance.OnPlayerAttackingAllUnit(isEnemySide: true, dmg);
+            base.AttackAllUnit(dmg);
+        }
     }
     #endregion Turn Action
 
