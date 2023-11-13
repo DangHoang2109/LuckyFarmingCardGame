@@ -53,7 +53,7 @@ public class InGamePlayerConfig
     public int _characterID; //XY - X: class (see in CharacterClassConfig - define later) - Y: gender 0: male 1:female
     public string _name;
     public int _maxHP;
-    public int _baseDamage;
+    public int _baseDamage, _baseShield, _baseHeal;
     public Sprite _icon;
     public string _deckLink;
 

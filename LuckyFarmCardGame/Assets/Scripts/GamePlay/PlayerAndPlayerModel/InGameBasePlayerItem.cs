@@ -48,6 +48,8 @@ public class InGameBasePlayerItem : MonoBehaviour
         }
     }
     public int BaseDamagePerTurn => this.PlayerModel?.DamagePerTurn ?? 0;
+    public int BaseShieldPerAdd => this.PlayerModel?.ShieldPerAdd ?? 0;
+    public int BaseHPPerHeal => this.PlayerModel?.HPPerHeal ?? 0;
 
     public bool IsPlaying => this._playerModel != null;
     protected BaseInGamePlayerDataModel _playerModel;
@@ -257,6 +259,7 @@ public class InGameBasePlayerItem : MonoBehaviour
     public virtual void ClearWhenDead()
     {
         this.gameObject.SetActive(false);
+        this._playerModel = null;
     }
     #endregion Turn Action
 
@@ -264,7 +267,10 @@ public class InGameBasePlayerItem : MonoBehaviour
     {
         return this.PlayerModel?.IsDead() ?? false;
     }
-
+    public virtual bool IsActive()
+    {
+        return IsPlaying && this.gameObject.activeInHierarchy;
+    }
     public virtual void CustomUpdate()
     {
     }
@@ -294,8 +300,11 @@ public class BaseInGamePlayerDataModel
     protected int currentHP;
     protected int maxHP;
     protected int shield;
-    protected int baseDamagePerTurn = 0;
+    protected int baseDamagePerTurn = 0, baseShieldPerAdd = 0, baseHPPerHeal = 0;
     public int DamagePerTurn => baseDamagePerTurn;
+    public int ShieldPerAdd => baseShieldPerAdd;
+    public int HPPerHeal => baseHPPerHeal;
+
     public BaseInGamePlayerDataModel()
     {
     }
@@ -310,11 +319,18 @@ public class BaseInGamePlayerDataModel
         this.CurrentHP = this.MaxHP = maxHP;
         return this;
     }
+    public virtual BaseInGamePlayerDataModel SetBaseStat(int baseDamge, int baseShieldAdd, int baseHealAdd)
+    {
+        this.baseDamagePerTurn = baseDamge;
+        this.baseShieldPerAdd = baseShieldAdd;
+        this.baseHPPerHeal = baseHealAdd;
+        return this;
+    }
+
     public virtual BaseInGamePlayerDataModel StartGame()
     {
         return this;
     }
-
     public bool IsDead()
     {
         return CurrentHP <= 0;
@@ -415,7 +431,7 @@ public class BaseInGameMainPlayerDataModel : BaseInGamePlayerDataModel
     {
         _statConfig = config;
         this.SetHP(config._maxHP);
-        this.baseDamagePerTurn = config._baseDamage;
+        this.SetBaseStat(config._baseDamage, config._baseShield, config._baseHeal);
         return this;
     }
     public override BaseInGamePlayerDataModel StartGame()
@@ -484,7 +500,7 @@ public class BaseInGameEnemyDataModel : BaseInGamePlayerDataModel
     {
         _statConfig = config;
         this.SetHP(config.MaxHP);
-        this.baseDamagePerTurn = config.Damage;
+        this.SetBaseStat(config.Damage, config.Shield, config.Heal);
         return this;
     }
 }

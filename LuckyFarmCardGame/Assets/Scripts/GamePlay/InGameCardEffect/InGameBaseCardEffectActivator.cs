@@ -247,7 +247,7 @@ public class InGameCardEffectActivator_Defense : InGameBaseCardEffectActivator
     {
         base.ShowingNotification();
     }
-    public int GetShield() => ((int)this.CurrentLevelConfig?._stat);
+    public int GetShield() => ((int)(this.CurrentLevelConfig?._stat * _host?.BaseShieldPerAdd));
 }
 public class InGameCardEffectActivator_Heal : InGameBaseCardEffectActivator
 {
@@ -275,5 +275,5 @@ public class InGameCardEffectActivator_Heal : InGameBaseCardEffectActivator
     {
         base.ShowingNotification();
     }
-    public int GetHeal() => ((int)this.CurrentLevelConfig?._stat);
+    public int GetHeal() => ((int)(this.CurrentLevelConfig?._stat * _host?.BaseHPPerHeal));
 }

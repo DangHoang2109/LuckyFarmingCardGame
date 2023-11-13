@@ -35,8 +35,8 @@ public class InGameManager : MonoSingleton<InGameManager>
     protected GameState _gameState;
     public bool IsPlaying => this._gameState == GameState.PLAYING;
 
-    public List<int> idsMainPlayers; //main player and his coop/pet
-    public List<int> idsEnemys; //Enemy currently active
+    public List<int> idsMainPlayersAlive; //main player and his coop/pet
+    public List<int> idsEnemysAlive; //Enemy currently active
     #endregion Data
 
     #region Getter
@@ -57,7 +57,7 @@ public class InGameManager : MonoSingleton<InGameManager>
             return null;
         }
     }
-    public bool IsHaveEnemy => (this.idsEnemys?.Count ?? 0) > 0; //1 is main player model;
+    public bool IsHaveEnemy => (this.idsEnemysAlive?.Count ?? 0) > 0; //1 is main player model;
 
     #endregion Getter
 
@@ -97,7 +97,7 @@ public class InGameManager : MonoSingleton<InGameManager>
     protected void InitPlayers(int amountPlayerJoin)
     {
         _playersModels ??= new List<BaseInGamePlayerDataModel>();
-        idsMainPlayers ??= new List<int>();
+        idsMainPlayersAlive ??= new List<int>();
         if (this._players != null && this._players.Count > 0)
         {
             //Pull a random goal Config to this player;
@@ -117,7 +117,7 @@ public class InGameManager : MonoSingleton<InGameManager>
 
                     _players[i].SetAPlayerModel(main);
                     this._playersModels.Add(main);
-                    this.idsMainPlayers.Add(main._id);
+                    this.idsMainPlayersAlive.Add(main._id);
                 }
             }
         }
@@ -135,7 +135,7 @@ public class InGameManager : MonoSingleton<InGameManager>
     protected void InitCreep(InGameEnemyWaveConfig waveConfig)
     {
         _playersModels ??= new List<BaseInGamePlayerDataModel>();
-        idsEnemys ??= new List<int>();
+        idsEnemysAlive ??= new List<int>();
         if (this._players != null && this._players.Count > 0)
         {
             int creepIndexMax = waveConfig.AmountEnemy + 1;
@@ -156,7 +156,7 @@ public class InGameManager : MonoSingleton<InGameManager>
 
                     _players[i].SetAPlayerModel(enemyModel);
                     this._playersModels.Add(enemyModel);
-                    idsEnemys.Add(enemyModel._id);
+                    idsEnemysAlive.Add(enemyModel._id);
                 }
 
             }
@@ -175,8 +175,9 @@ public class InGameManager : MonoSingleton<InGameManager>
         if (!IsHaveEnemy)
         {
             //sinh thêm creep vì datamodel = 1 -> chỉ còn main player
-            //không nên, nên set boolean
-            //fill in the creep if it is dead
+            //clear model creep đã chết
+            this._playersModels.RemoveAll(x => x.IsDead());
+
             _enemyWaveIndex++;
             NewWaveAndSpawnEnemy();
         }
@@ -192,7 +193,7 @@ public class InGameManager : MonoSingleton<InGameManager>
         //loop all the alive player and reset it shield, we not allow shield remain 
         foreach (var item in this._players)
         {
-            if (item.gameObject.activeInHierarchy && item.IsPlaying)
+            if (item.IsActive())
                 item.ResetShield();
         }
         //begin new round
@@ -293,7 +294,6 @@ public class InGameManager : MonoSingleton<InGameManager>
         {
             attacked.Attacked(damage, this.OnCallbackPlayerDead);
             //create animation
-
         }
         else
         {
@@ -310,17 +310,17 @@ public class InGameManager : MonoSingleton<InGameManager>
     {
         if (isEnemySide)
         {
-            //get all enemy, list có thể bị thay đổi nếu có obj dead 
-            for (int i = idsEnemys.Count-1; i >=0; i--)
+            //get all enemy alive, list có thể bị thay đổi nếu có obj dead 
+            for (int i = idsEnemysAlive.Count-1; i >=0; i--)
             {
-                OnPlayerAttacking(idsEnemys[i], damage);
+                OnPlayerAttacking(idsEnemysAlive[i], damage);
             }
         }
         else
         {
-            for (int i = idsMainPlayers.Count - 1; i >= 0; i--)
+            for (int i = idsMainPlayersAlive.Count - 1; i >= 0; i--)
             {
-                OnPlayerAttacking(idsMainPlayers[i], damage);
+                OnPlayerAttacking(idsMainPlayersAlive[i], damage);
             }
         }
         //create animation
@@ -349,26 +349,20 @@ public class InGameManager : MonoSingleton<InGameManager>
     }
     public void OnCallbackPlayerDead(InGameBasePlayerItem dead)
     {
+        this.idsMainPlayersAlive.Remove(dead.ID);
+        this.idsEnemysAlive.Remove(dead.ID);
         dead.ClearWhenDead();
-        //remove from the list
+
+        //remove from the list -> move to remove when no enemy left
+        //RemoveCharacter(dead);
+    }
+    private void RemoveCharacter(InGameBasePlayerItem dead)
+    {
         this._playersModels.RemoveAll(x => x._id == dead.ID);
-        this.idsMainPlayers.Remove(dead.ID);
-        this.idsEnemys.Remove(dead.ID);
     }
     private void OnLogicEndTurn()
     {
         CurrentTurnPlayer.EndTurn();
-
-        //Check creep die or the main player is edead
-        Debug.Log($"INGAME MANGE: Check creep die or the main player is edead");
-
-        //if (this.CurrentTurnPlayer.IsWin())
-        //{
-        //    Debug.Log($"INGAME MANGE: Seat {CurrentTurnPlayer.ID} won the game");
-        //    OnEndGame();
-        //    return;
-        //}
-        //return the function here if the main player is dead
 
         //else: keep roll index, if end, go next round
         if(_turnIndex == this._playersModels.Count-1)
@@ -382,8 +376,14 @@ public class InGameManager : MonoSingleton<InGameManager>
             //we can remove this do while when we apply the roll change enemy position system
             this._turnIndex = InGameUtils.RollIndex(this._turnIndex, this._playersModels.Count);
             Debug.Log($"ROLL TURN INDEX TO {this._turnIndex } in {this._playersModels.Count}");
-            while (this._players[_turnIndex].isDead())
+            while (!this._players[_turnIndex].IsActive())
             {
+                if (_turnIndex == this._playersModels.Count - 1)
+                {
+                    this.OnEndRound();
+                    return;
+                }
+
                 this._turnIndex = InGameUtils.RollIndex(this._turnIndex, this._playersModels.Count);
                 Debug.Log($"ROLL TURN INDEX TO {this._turnIndex } in {this._playersModels.Count}");
             }

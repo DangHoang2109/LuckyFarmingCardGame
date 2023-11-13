@@ -17,5 +17,7 @@ MonoBehaviour:
     _name: Knight Male
     _maxHP: 100
     _baseDamage: 40
+    _baseShield: 10
+    _baseHeal: 5
     _icon: {fileID: 21300000, guid: 3094f2d10d417124782a2120875594c3, type: 3}
     _deckLink: KnightMale

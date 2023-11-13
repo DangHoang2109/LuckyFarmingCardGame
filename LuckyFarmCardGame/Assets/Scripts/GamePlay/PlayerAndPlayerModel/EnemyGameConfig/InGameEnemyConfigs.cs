@@ -89,6 +89,9 @@ public class InGameEnemyStatConfig
     }
 
     public int Damage => this.Info?.enemyBaseDamage ?? 0;
+    public int Shield => this.Info?.enemybaseShield ?? 0;
+    public int Heal => this.Info?.enemybaseHeal ?? 0;
+
     public int MaxHP => this.Info?.enemyBaseMaxHP ?? 0 ;
     public string EffectDes => this.Info?.enemyEffectDes;
 }
@@ -113,7 +116,7 @@ public class InGameEnemyInfoConfig
 
     [Header("STAT BASE")]
     [Space(10f)]
-    public int enemyBaseDamage;
+    public int enemyBaseDamage, enemybaseShield, enemybaseHeal;
     public int enemyBaseMaxHP;
     public string enemyEffectDes;
 
