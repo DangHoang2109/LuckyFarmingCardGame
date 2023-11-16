@@ -28,12 +28,14 @@ public class CardGameController : MonoBehaviour
 
     [SerializeField] protected CardAnimationItem _cardAnim;
     [SerializeField] protected BaseCardItem _cardPrefab;
+    [SerializeField] protected BaseCardCircleItem _cardCirclePrefab;
+
     [SerializeField] protected Transform _tfPalletPanel, _tfActEffectPanel, _tfDeckPanel;
     [Space(5f)]
     [SerializeField] protected GameObject _gLightningAnimator;
-    [Space(5f)]
-    [SerializeField] protected InGameDiceRollingAnimator _diceAnimator;
-    public InGameDiceRollingAnimator DiceAnimator => _diceAnimator;
+    //[Space(5f)]
+    //[SerializeField] protected InGameDiceRollingAnimator _diceAnimator;
+    //public InGameDiceRollingAnimator DiceAnimator => _diceAnimator;
 
     [Space(5f)]
     public Button _btnDeckDraw;
@@ -208,7 +210,7 @@ public class CardGameController : MonoBehaviour
             //mechanic này để giảm độ rủi ro với việc roll dice, vì số dice bé hơn pallet thì user sẽ bị destroy
             this._currentTurnDiceResult += Mathf.RoundToInt(amountAdding);
 
-            this.DiceAnimator?.AddDiceValue(amountAdding, _currentTurnDiceResult, OnFinalCheckDiceResultWithPallet);
+            //this.DiceAnimator?.AddDiceValue(amountAdding, _currentTurnDiceResult, OnFinalCheckDiceResultWithPallet);
         }
         else
         {
@@ -274,11 +276,10 @@ public class CardGameController : MonoBehaviour
     }
     private BaseCardItem CreateCardItem(ref InGame_CardDataModel card)
     {
-        BaseCardItem newCardItem = Instantiate(_cardPrefab, this._tfActEffectPanel);
-        newCardItem.gameObject.SetActive(true);
+        BaseCardItem newCardItem = Instantiate(_cardCirclePrefab, _tfActEffectPanel);
         newCardItem.transform.localPosition = Vector3.zero;
-        newCardItem.ParseHost(InGameManager.CurrentTurnPlayer).ParseInfo(card._id);
-
+        newCardItem.gameObject.SetActive(true);
+        newCardItem.ParseHost(InGameManager.CurrentTurnPlayer).ParseInfo(card._id); 
         card.SetCardItemContainer(newCardItem);
         return newCardItem;
     }
@@ -305,20 +306,20 @@ public class CardGameController : MonoBehaviour
     private void PutACardToPallet(InGame_CardDataModel card)
     {
         _cardsOnPallet ??= new List<InGame_CardDataModel>();
+        _cardAnim.PlayDraw(card._id, cb: OnCompleteAnimationDrawFromDeck);
 
-        BaseCardItem newCardItem = CreateCardItem(ref card);
-
-
-        _cardAnim.PlayDraw(card._id);
-
-        StartCoroutine(ieDrawAndAddCardToPallet(card, newCardItem));
+        void OnCompleteAnimationDrawFromDeck()
+        {
+            BaseCardItem newCardItem = CreateCardItem(ref card); //spawn a circle in standing 
+            StartCoroutine(ieDrawAndAddCardToPallet(card, newCardItem));
+        }
     }
 
 
 
     protected IEnumerator ieDrawAndAddCardToPallet(InGame_CardDataModel card, BaseCardItem cardItem)
     {
-        yield return new WaitForSeconds(this.AnimationTimeConfig._timeACardStayOnActiveEffectPanel);
+        yield return new WaitForSeconds(0.2f); //this.AnimationTimeConfig._timeACardStayOnActiveEffectPanel
 
         //if in pallet already has this card
         int indexOfSameIDCardIfExistOnPallet = _cardsOnPallet.FindIndex(x => x._id == card._id);
@@ -328,8 +329,6 @@ public class CardGameController : MonoBehaviour
             _gLightningAnimator.gameObject.SetActive(true);
             yield return new WaitForSeconds(this.AnimationTimeConfig._timeConflictAnimationShowing);
             _gLightningAnimator.gameObject.SetActive(false);
-
-
 
             yield return new WaitForSeconds(this.AnimationTimeConfig._timeWaitOnBeforeDestroyPallet);
 
@@ -342,15 +341,16 @@ public class CardGameController : MonoBehaviour
         else
         {
             _cardsOnPallet.Add(card);
-            Debug.Log($"RULE: ADD CARD {card._id} at index {_cardsOnPallet.Count - 1}");
 
-            //activate that card effect
-            card?.OnPlacedToPallet();
 
             //Let it move to pallet
             cardItem.transform.SetParent(this._tfPalletPanel);
-
             _onCardPutToPallet?.Invoke(card._id);
+
+            yield return new WaitForEndOfFrame(); //this.AnimationTimeConfig._timeACardStayOnActiveEffectPanel
+
+            //activate that card effect
+            card?.OnPlacedToPallet();
         }
     }
 
@@ -379,7 +379,7 @@ public class CardGameController : MonoBehaviour
         Debug.Log($"RULE: Rolling dice {_currentTurnDiceResult} compare to pallet {this._cardsOnPallet.Count}");
         //if dice result < pallet amount card => the pallet will be destroyed
 
-        this.DiceAnimator?.RollingDice(_currentTurnDiceResult, stayWhenRollComplete: willDestroy, callback: OnDiceShowResultComplte, this.AnimationTimeConfig._timeWaitDiceRolling, this.AnimationTimeConfig._timeWaitShowDiceResult);
+        //this.DiceAnimator?.RollingDice(_currentTurnDiceResult, stayWhenRollComplete: willDestroy, callback: OnDiceShowResultComplte, this.AnimationTimeConfig._timeWaitDiceRolling, this.AnimationTimeConfig._timeWaitShowDiceResult);
 
         void OnDiceShowResultComplte()
         {
@@ -404,7 +404,7 @@ public class CardGameController : MonoBehaviour
     protected void OnFinalCheckDiceResultWithPallet()
     {
         Debug.Log($"CONTROLER: Wait deciding complete, handle dice result");
-        DiceAnimator?.Hide();
+        //DiceAnimator?.Hide();
 
         if (WillPalletBeDestroyWithThisDiceResult(out _))
         {

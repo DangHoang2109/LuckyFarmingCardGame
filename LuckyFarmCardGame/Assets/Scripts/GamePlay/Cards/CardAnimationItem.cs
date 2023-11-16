@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -22,13 +22,30 @@ public class CardAnimationItem : MonoBehaviour
     #endregion Anim Key
 
     #region Callback
-    public System.Action onCompleteDraw;
+    /// <summary>
+    /// Callback được giữ và luôn gọi nên là nhớ - trước khi + để tránh duplicate
+    /// </summary>
+    public System.Action onCompleteDrawPersistent;
+    /// <summary>
+    /// Callback bị clear đi mỗi khi card hide
+    /// </summary>
+    public System.Action onCompleteDrawInTurn;
 
     #endregion Callback
 
-
-    public void PlayDraw(int cardID)
+    public void AssignCallbackPersistent(System.Action cb)
     {
+        onCompleteDrawPersistent -= cb;
+        onCompleteDrawPersistent += cb;
+    }
+    public void UnAssignCallbackPersistent(System.Action cb)
+    {
+        onCompleteDrawPersistent -= cb;
+    }
+    public void PlayDraw(int cardID, System.Action cb = null)
+    {
+        onCompleteDrawInTurn = cb;
+
         InGameCardConfig cardConfig = InGameCardConfigs.Instance.GetCardConfig(cardID);
         if (cardConfig != null)
         {
@@ -38,9 +55,16 @@ public class CardAnimationItem : MonoBehaviour
         }
 
     }
+
+    /// <summary>
+    /// Calling from the animation events
+    /// </summary>
     public void OnCompleteDraw()
     {
-        onCompleteDraw?.Invoke();
+        //Debug.Log("OnCompleteDraw, me hide");
+        onCompleteDrawPersistent?.Invoke();
+        onCompleteDrawInTurn?.Invoke();
+
         this.gameObject.SetActive(false);
     }
 }

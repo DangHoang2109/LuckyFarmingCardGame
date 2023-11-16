@@ -22,7 +22,7 @@ public class BaseCardItem : MonoBehaviour
     public int CardID => _cardID;
     #endregion Data
 
-    private void OnDisable()
+    protected void OnDisable()
     {
         this._host = null;
     }
@@ -60,7 +60,7 @@ public class BaseCardItem : MonoBehaviour
     {
         //Find this on dissolve Component, it is suck, but the package only allow this and not have any callback
         float dissolveDuration = 1f;
-        this._uIDissolveBackgroundEffect.Play(reset:true);
+        this._uIDissolveBackgroundEffect?.Play(reset:true);
 
         Cosina.Components.Invoker.Invoke(OnDissolveComplete, delay: dissolveDuration);
         return this;
@@ -74,7 +74,7 @@ public class BaseCardItem : MonoBehaviour
     {
         //Find this on dissolve Component, it is suck, but the package only allow this and not have any callback
         float shinyDuration = 1f;
-        this._uIShinyAvatarEffect.Play(reset: true);
+        this._uIShinyAvatarEffect?.Play(reset: true);
 
         Cosina.Components.Invoker.Invoke(OnShinyComplete, delay: shinyDuration);
         return this;
@@ -117,7 +117,6 @@ public class InGame_CardDataModel : ICloneable
 
     public InGame_CardDataModel SetCardID(int id, InGameCardConfig cardConfig)
     {
-        Debug.Log(_effect);
         this._id = id;
         this._effect = InGameUtils.GetActivatorEffectID(this._id);
         this._coinPoint = cardConfig?._gamePointOfCard ?? 0;
