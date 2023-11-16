@@ -8,6 +8,8 @@ public class InGame_CardDataModelLevels
     public int _currentCard;
     public int _currentLevel = 1;
 
+    public int CurrentGoal => CurrentLevelConfig?._require ?? 0;
+
     protected InGameCardLevel _currentLevelConfig;
     public InGameCardLevel CurrentLevelConfig
     {

@@ -33,6 +33,7 @@ public class CardGameController : MonoBehaviour
     [SerializeField] protected Transform _tfPalletPanel, _tfActEffectPanel, _tfDeckPanel;
     [Space(5f)]
     [SerializeField] protected GameObject _gLightningAnimator;
+    [SerializeField] public InGamePlayerUpgradePalletAnim _upgradeCollectorAnim;
     //[Space(5f)]
     //[SerializeField] protected InGameDiceRollingAnimator _diceAnimator;
     //public InGameDiceRollingAnimator DiceAnimator => _diceAnimator;

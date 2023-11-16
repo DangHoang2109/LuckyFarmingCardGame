@@ -20,7 +20,6 @@ public class InGameBagCardTypeUIItem : MonoBehaviour
     #region Data
     protected int _cardID; public int CardID => _cardID;
     protected InGameBasePlayerItem _hostPlayer;
-    protected InGameBasePlayerBagVisual _hostBagVisual;
     public bool IsOwnedByMainUser => _hostPlayer?.IsMainPlayer ?? false;
 
     protected int _maxValue;
@@ -66,14 +65,6 @@ public class InGameBagCardTypeUIItem : MonoBehaviour
             this._tglChosingInEffect.enabled = isOnToggle;
 
         return this;
-    }
-    /// <summary>
-    /// Called by toggle event 
-    /// </summary>
-    /// <param name="isOn"></param>
-    public void ToggleEvent_OnChangeChosingValue(bool isOn)
-    {
-        _hostBagVisual?.ToggleEvent_OnChangeChosingValue(this._cardID,isOn);
     }
 
     /// <summary>

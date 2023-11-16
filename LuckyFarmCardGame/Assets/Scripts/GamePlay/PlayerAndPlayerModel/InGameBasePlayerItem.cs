@@ -473,8 +473,16 @@ public class BaseInGameMainPlayerDataModel : BaseInGamePlayerDataModel
         {
             foreach (InGame_CardDataModel cardDataModel in cards)
             {
+                int old = 0;
+                int newValue = 1;
+                int currentGoal = 0;
+
                 if (_dictionaryBags.TryGetValue(cardDataModel._id, out InGame_CardDataModelLevels cardInBag))
                 {
+                    old = cardInBag._currentCard;
+                    newValue = old + 1;
+                    currentGoal = cardInBag.CurrentGoal;
+
                     cardInBag.AddACard(cardDataModel, out bool isLevelUp);
                     if (isLevelUp)
                         levelUpIfHas.Add(cardDataModel);
@@ -484,9 +492,15 @@ public class BaseInGameMainPlayerDataModel : BaseInGamePlayerDataModel
                     InGame_CardDataModelLevels c = new InGame_CardDataModelLevels(cardDataModel, 1);
                     this._bag.Add(c);
                     this._dictionaryBags.Add(c._cardID, c);
+
+                    old = 0;
+                    newValue = 1;
+                    currentGoal = cardInBag.CurrentGoal;
                 }
 
                 this._currentCoinPoint += cardDataModel._coinPoint;
+
+                InGamePlayerUpgradePalletAnim.Instance.ShowCollectUpgrade(cardDataModel._id, old, newValue, currentGoal);
             }
         }
         return levelUpIfHas;
