@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class CollectUpgradeActionManager : DoActionManager
 {
+    public static CollectUpgradeActionManager Instance => CardGameActionController.Instance.collectUpgradeActionManager;
 }
 public class DoCollectUpgrade : IDoAction
 {

@@ -58,7 +58,20 @@ public class InGameManager : MonoSingleton<InGameManager>
         }
     }
     public bool IsHaveEnemy => (this.idsEnemysAlive?.Count ?? 0) > 0; //1 is main player model;
-
+    public List<InGameBasePlayerItem> EnemysAlive
+    {
+        get
+        {
+            List< InGameBasePlayerItem > enemies = new List< InGameBasePlayerItem >();
+            //get all enemy alive, list có thể bị thay đổi nếu có obj dead 
+            for (int i = idsEnemysAlive.Count - 1; i >= 0; i--)
+            {
+                if (TryGetSeatItem(idsEnemysAlive[i], out InGameBasePlayerItem e) && e.IsPlaying)
+                    enemies.Add(e);
+            }
+            return enemies;
+        }
+    }
     #endregion Getter
 
 
@@ -362,35 +375,40 @@ public class InGameManager : MonoSingleton<InGameManager>
     }
     private void OnLogicEndTurn()
     {
-        CurrentTurnPlayer.EndTurn();
+        CardGameActionController.Instance.AddCallbackWhenFXComplete(cb: () =>
+        {
+            CurrentTurnPlayer.EndTurn();
 
-        //else: keep roll index, if end, go next round
-        if(_turnIndex == this._playersModels.Count-1)
-        {
-            this.OnEndRound();
-            return;
-        }
-        else
-        {
-            //roll to next index, but caution enemy 1 may dead but enemy 2 still alive
-            //we can remove this do while when we apply the roll change enemy position system
-            this._turnIndex = InGameUtils.RollIndex(this._turnIndex, this._playersModels.Count);
-            Debug.Log($"ROLL TURN INDEX TO {this._turnIndex } in {this._playersModels.Count}");
-            while (!this._players[_turnIndex].IsActive())
+            //else: keep roll index, if end, go next round
+            if (_turnIndex == this._playersModels.Count - 1)
             {
-                if (_turnIndex == this._playersModels.Count - 1)
+                this.OnEndRound();
+                return;
+            }
+            else
+            {
+                //roll to next index, but caution enemy 1 may dead but enemy 2 still alive
+                //we can remove this do while when we apply the roll change enemy position system
+                this._turnIndex = InGameUtils.RollIndex(this._turnIndex, this._playersModels.Count);
+                Debug.Log($"ROLL TURN INDEX TO {this._turnIndex} in {this._playersModels.Count}");
+                while (!this._players[_turnIndex].IsActive())
                 {
-                    this.OnEndRound();
-                    return;
+                    if (_turnIndex == this._playersModels.Count - 1)
+                    {
+                        this.OnEndRound();
+                        return;
+                    }
+
+                    this._turnIndex = InGameUtils.RollIndex(this._turnIndex, this._playersModels.Count);
+                    Debug.Log($"ROLL TURN INDEX TO {this._turnIndex} in {this._playersModels.Count}");
                 }
 
-                this._turnIndex = InGameUtils.RollIndex(this._turnIndex, this._playersModels.Count);
-                Debug.Log($"ROLL TURN INDEX TO {this._turnIndex } in {this._playersModels.Count}");
+                //begin next user turn
+                OnBeginTurn();
             }
+        });
 
-            //begin next user turn
-            OnBeginTurn();
-        }
+        
     }
     /// <summary>
     /// Bật UI chọn card, simulate hành động click chọn của bot
@@ -460,6 +478,7 @@ public class InGameManager : MonoSingleton<InGameManager>
     {
         this.GameController?.ContinueTurn();
         CurrentTurnPlayer?.ContinueTurn();
+
     }
     public void OnTellControllerToRollDice()
     {

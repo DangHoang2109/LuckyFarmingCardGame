@@ -2,11 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DoActionManager : MonoSingleton<DoActionManager>
+public class DoActionManager : MonoBehaviour
 {
     protected Queue<IDoAction> doSomething = new Queue<IDoAction>();
     protected Coroutine coRunining;
-
+    public virtual bool IsRunning =>  this.coRunining != null || doSomething.Count > 0; // 
     public virtual void AddAction(IDoAction action)
     {
         this.doSomething.Enqueue(action);
@@ -36,7 +36,8 @@ public class DoActionManager : MonoSingleton<DoActionManager>
     {
         while (this.doSomething.Count > 0)
         {
-            yield return this.doSomething.Dequeue().DoAction();
+            yield return this.doSomething.Peek().DoAction();
+            doSomething.Dequeue();
         }
 
         this.coRunining = null;

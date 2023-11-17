@@ -223,15 +223,12 @@ public class InGameBasePlayerItem : MonoBehaviour
     {
         if (dmg <= 0)
             dmg = 1; //replace with this host info
-        Debug.Log("HOST: ATTACK ONE UNIT" + dmg);
-
         InGameManager.Instance.OnTellControllerContinueTurn();
     }
     public virtual void AttackAllUnit(int dmg = -1)
     {
         if (dmg <= 0)
             dmg = 1; //replace with this host info
-        Debug.Log("HOST: ATTACK ALL UNIT" + dmg);
 
         InGameManager.Instance.OnTellControllerContinueTurn();
     }
@@ -239,7 +236,6 @@ public class InGameBasePlayerItem : MonoBehaviour
     {
         if (heal <= 0)
             heal = 1; //replace with this host info
-        Debug.Log("HOST: HEAL" + heal);
         InGameManager.Instance.OnPlayerHeal(this.ID, heal);
         InGameManager.Instance.OnTellControllerContinueTurn();
     }
@@ -247,10 +243,20 @@ public class InGameBasePlayerItem : MonoBehaviour
     {
         if (shieldUnit <= 0)
             shieldUnit = 1; //replace with this host info
-        Debug.Log("HOST: DEFENSE" + shieldUnit);
         InGameManager.Instance.OnPlayerDefense(this.ID, shieldUnit);
-
         InGameManager.Instance.OnTellControllerContinueTurn();
+    }
+    public virtual void RevealCard(int reveal = -1)
+    {
+        if (reveal <= 0)
+            reveal = 1; //replace with this host info
+        InGameManager.Instance.OnTellControllerToRevealTopCard(reveal);
+    }
+    public virtual void ForceDrawCard(int draw = -1)
+    {
+        if (draw <= 0)
+            draw = 1; //replace with this host info
+        InGameManager.Instance.OnTellControllerToDrawCards(draw);
     }
     public virtual void Dead(System.Action cb)
     {
@@ -499,6 +505,7 @@ public class BaseInGameMainPlayerDataModel : BaseInGamePlayerDataModel
                 }
 
                 this._currentCoinPoint += cardDataModel._coinPoint;
+
 
                 InGamePlayerUpgradePalletAnim.Instance.ShowCollectUpgrade(cardDataModel._id, old, newValue, currentGoal);
             }

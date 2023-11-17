@@ -343,7 +343,6 @@ public class CardGameController : MonoBehaviour
         {
             _cardsOnPallet.Add(card);
 
-
             //Let it move to pallet
             cardItem.transform.SetParent(this._tfPalletPanel);
             _onCardPutToPallet?.Invoke(card._id);

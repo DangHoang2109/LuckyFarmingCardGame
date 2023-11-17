@@ -2524,6 +2524,7 @@ MonoBehaviour:
   _tmpCoinValue: {fileID: 7140297098044310688}
   _hpBar: {fileID: 7596557053230550317}
   _shieldUI: {fileID: 3263658578679305270}
+  _btnDeck: {fileID: 6089616617573809243}
   _btnEndTurn: {fileID: 2353484494566618358}
   _imgTimer: {fileID: 5568825570754601894}
   _imgAvatar: {fileID: 5612100448907548556}
@@ -2579,6 +2580,18 @@ PrefabInstance:
       value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 5270554622905817640, guid: 9d1acb19caa8379499d2f62fca889935, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.99999994
+      objectReference: {fileID: 0}
+    - target: {fileID: 5270554622905817640, guid: 9d1acb19caa8379499d2f62fca889935, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.99999994
+      objectReference: {fileID: 0}
+    - target: {fileID: 5270554622905817640, guid: 9d1acb19caa8379499d2f62fca889935, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.99999994
+      objectReference: {fileID: 0}
+    - target: {fileID: 5270554622905817640, guid: 9d1acb19caa8379499d2f62fca889935, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -2608,11 +2621,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5270554622905817640, guid: 9d1acb19caa8379499d2f62fca889935, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 0.000061035156
       objectReference: {fileID: 0}
     - target: {fileID: 5270554622905817640, guid: 9d1acb19caa8379499d2f62fca889935, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -88.99999
+      value: -88.999985
       objectReference: {fileID: 0}
     - target: {fileID: 5270554622905817640, guid: 9d1acb19caa8379499d2f62fca889935, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

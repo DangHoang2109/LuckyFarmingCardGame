@@ -18,6 +18,7 @@ public class InGameMainPlayerItem : InGameBasePlayerItem
     }
     public InGameDeckConfig DeckConfig => this.MainDataModel?.DeckConfig;
 
+    public Button _btnDeck;
 
     #region Prop on editor
     public Button _btnEndTurn;
@@ -149,8 +150,15 @@ public class InGameMainPlayerItem : InGameBasePlayerItem
         InGameBasePlayerItem frontEnemy = InGameManager.Instance.FrontEnemy;
         if(frontEnemy != null)
         {
-            InGameManager.Instance.OnPlayerAttacking(frontEnemy.ID, dmg);
-            base.AttackSingleUnit(dmg);
+            //create attack vfx
+            VFXActionManager.Instance.ShowVFxXBycard(vfxId: VFXGameID.AttackSword, amount: 1, desPos: frontEnemy.transform, delay: 0.25f, cb: OnCallbackProjectileHit);
+
+            void OnCallbackProjectileHit(VFXBaseObject _)
+            {
+                InGameManager.Instance.OnPlayerAttacking(frontEnemy.ID, dmg);
+                base.AttackSingleUnit(dmg);
+            }
+            
         }
     }
     public override void AttackAllUnit(int dmg = -1)
@@ -160,8 +168,58 @@ public class InGameMainPlayerItem : InGameBasePlayerItem
 
         if (InGameManager.Instance.IsHaveEnemy)
         {
-            InGameManager.Instance.OnPlayerAttackingAllUnit(isEnemySide: true, dmg);
-            base.AttackAllUnit(dmg);
+
+            List<InGameBasePlayerItem> EnemysAlive = InGameManager.Instance.EnemysAlive;
+            for (int i = 0; i < EnemysAlive.Count; i++)
+            {
+                //create attack vfx
+                VFXActionManager.Instance.ShowVFxXBycard(vfxId: VFXGameID.AttackSword, amount: 1, desPos: EnemysAlive[i].transform, delay: 0.25f, cb: (i==0 ? OnCallbackProjectileHit : null));
+            }
+            void OnCallbackProjectileHit(VFXBaseObject _)
+            {
+                InGameManager.Instance.OnPlayerAttackingAllUnit(isEnemySide: true, dmg);
+                base.AttackAllUnit(dmg);
+            }
+        }
+    }
+    public override void AddShield(int shieldUnit = -1)
+    {
+        //create attack vfx
+        VFXActionManager.Instance.ShowVFxXBycard(vfxId: VFXGameID.DefendShield, amount: 1, desPos: _shieldUI.transform, delay: 0.25f, cb: OnCallbackProjectileHit);
+
+        void OnCallbackProjectileHit(VFXBaseObject _)
+        {
+            base.AddShield(shieldUnit);
+        }
+    }
+    public override void AddHP(int heal)
+    {
+        //create attack vfx
+        VFXActionManager.Instance.ShowVFxXBycard(vfxId: VFXGameID.HealFlower, amount: 1, desPos: _hpBar.transform, delay: 0.25f, cb: OnCallbackProjectileHit);
+
+        void OnCallbackProjectileHit(VFXBaseObject _)
+        {
+            base.AddHP(heal);
+        }
+    }
+    public override void RevealCard(int reveal = -1)
+    {
+        //create attack vfx
+        VFXActionManager.Instance.ShowVFxXBycard(vfxId: VFXGameID.CardFly, amount: 1, desPos: _btnDeck.transform, delay: 0.25f, cb: OnCallbackProjectileHit);
+
+        void OnCallbackProjectileHit(VFXBaseObject _)
+        {
+            base.RevealCard(reveal);
+        }
+    }
+    public override void ForceDrawCard(int draw = -1)
+    {        
+        //create attack vfx
+        VFXActionManager.Instance.ShowVFxXBycard(vfxId: VFXGameID.CardFly, amount: 1, desPos: _btnDeck.transform, delay: 0.25f, cb: OnCallbackProjectileHit);
+
+        void OnCallbackProjectileHit(VFXBaseObject _)
+        {
+            base.ForceDrawCard(draw);
         }
     }
     #endregion Turn Action

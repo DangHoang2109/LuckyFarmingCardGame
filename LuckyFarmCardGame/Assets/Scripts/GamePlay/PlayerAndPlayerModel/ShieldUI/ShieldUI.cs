@@ -22,10 +22,12 @@ public class ShieldUI : MonoBehaviour
             // Update text value using DOTween
             seq.Join(DOTween.To(() => currentCache, x => this._tmpValue.SetText($"{x}"), currentVal, durationValue));
             // Update image fill amount using DOTween
+            seq.OnComplete(() => { _tmpValue.gameObject.SetActive(currentVal > 0); });
         }
         else
         {
             this._tmpValue.SetText($"{_currentValue}");
+            _tmpValue.gameObject.SetActive(currentVal > 0);
         }
 
         return this;

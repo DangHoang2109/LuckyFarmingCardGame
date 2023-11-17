@@ -121,8 +121,7 @@ public class InGameCardEffectActivator_DrawCard : InGameBaseCardEffectActivator
     public override void ActiveEffectWhenPlaceToPallet()
     {
         base.ActiveEffectWhenPlaceToPallet();
-        InGameManager.Instance.OnTellControllerToDrawCards(1);
-
+        this._host?.ForceDrawCard(1);
     }
     public override void ActiveEffectWhenDestroyed()
     {
@@ -148,7 +147,7 @@ public class InGameCardEffectActivator_RevealTop : InGameBaseCardEffectActivator
     {
         base.ActiveEffectWhenPlaceToPallet();
         ShowingNotification();
-        InGameManager.Instance.OnTellControllerToRevealTopCard(this.GetReveal());
+        this._host?.RevealCard(GetReveal());
     }
     public override void ActiveEffectWhenDestroyed()
     {

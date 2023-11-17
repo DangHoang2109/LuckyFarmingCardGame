@@ -45,7 +45,9 @@ public class BaseCardItem : MonoBehaviour
         return this.OnShinyEffect(OnPullingAnimComplete);
         void OnPullingAnimComplete()
         {
-            Destroy(this.gameObject);
+            Transform tfDesOrb = InGamePlayerUpgradePalletAnim.Instance._tfTo;
+            VFXManager.Instance.ShowFX(id: VFXGameID.orbCardExp, amount: 1, _desTransform: tfDesOrb, _startTransform: this.transform, _pathType: PoolPathType.BASIC_CURVE, _onCompleteAllCb: DestroyMe);
+            HideMe();
         }
     }
     public BaseCardItem OnDestroyingEffect()
@@ -53,8 +55,16 @@ public class BaseCardItem : MonoBehaviour
         return this.OnDissolveEffect(OnDestroyAnimComplete);
         void OnDestroyAnimComplete()
         {
-            Destroy(this.gameObject);
+            DestroyMe();
         }
+    }
+    private void HideMe()
+    {
+        this.gameObject.SetActive(false);
+    }
+    private void DestroyMe()
+    {
+        Destroy(this.gameObject);
     }
     public BaseCardItem OnDissolveEffect(System.Action cb)
     {
@@ -81,7 +91,7 @@ public class BaseCardItem : MonoBehaviour
 
         void OnShinyComplete()
         {
-            Destroy(this.gameObject);
+            cb?.Invoke();
         }
     }
 }
