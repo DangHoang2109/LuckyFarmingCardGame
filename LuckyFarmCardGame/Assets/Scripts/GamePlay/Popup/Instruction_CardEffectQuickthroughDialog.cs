@@ -14,8 +14,10 @@ public class Instruction_CardEffectQuickthroughDialog : BaseDialog
     public RectTransform _tfPanel;
     #endregion  Prop on Editor
 
-    public override void OnShow(object data = null, UnityAction callback = null)
+
+    public override void OnShow(object data = null, UnityAction callback = null, bool isSkipAnimationShow = false)
     {
+        base.OnShow(data, callback, isSkipAnimationShow);
         base.OnShow(data, callback);
         ParseData();
     }

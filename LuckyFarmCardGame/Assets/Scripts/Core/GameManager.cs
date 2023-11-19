@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+//using Cosina.DataManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Events;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 public class GameManager : MonoSingleton<GameManager>
 {
@@ -15,10 +17,17 @@ public class GameManager : MonoSingleton<GameManager>
     private List<BaseDialog> baseDialogs;
     private Dictionary<string, BaseDialog> tempDialog;
 
-    private Dictionary<PopupSortingType, int> dicSortingNumbers;
     public event System.Action<BaseDialog> OnADialogSummoned;
-    public UnityAction onCompleteHideLoadScene;
-    
+    public event System.Action<BaseDialog> OnADialogClosed;
+
+    private void OnEnable()
+    {
+        //SaveManager.Instance.RegisterCallbackOnDataLoaded(() =>
+        //{
+        //    Debug.Log("Load Data DOne");
+        //    SaveManager.Instance.SaveDataInstantly();
+        //});
+    }
 
     public override void Init()
     {
@@ -27,34 +36,51 @@ public class GameManager : MonoSingleton<GameManager>
         this.tempDialog = new Dictionary<string, BaseDialog>();
         Screen.sleepTimeout = SleepTimeout.NeverSleep;
 
-        //sorting
-        this.dicSortingNumbers = new Dictionary<PopupSortingType, int>();
-        this.dicSortingNumbers.Add(PopupSortingType.BellowBottomBar, 0);
-        this.dicSortingNumbers.Add(PopupSortingType.CenterBottomAndTopBar, 0);
-        this.dicSortingNumbers.Add(PopupSortingType.OnTopBar, 0);
-
         Application.targetFrameRate = 60;
         // TODO! !!!!
         Application.runInBackground = true;
     }
-    #region DIALOG
-    public T OnShowDialog<T>(string path, object data = null, UnityAction callback = null) where T : BaseDialog
+
+    private void OnLoadDataDone()
     {
-        //FxHelper.Instance.PauseShowFxClick();
+    }
+    #region DIALOG
+    public T GetDialogImadiate<T>(string path) where T : BaseDialog
+    {
         if (!this.tempDialog.ContainsKey(path))
         {
             T target = TempDialogManager.Instance.GetDialog<T>(path);
             if (target == null)
             {
-                GameObject o = LoaderUtility.Instance.GetAsset<GameObject>(path);
-                if (o != null)
-                {
-                    target = ((GameObject)Instantiate(o, this.scene.dialog)).GetComponent<T>();
-                }
-                else
-                {
-                    Debug.LogError("CAN NOT LOAD DATA BY PATH: " + path);
-                }
+                Debug.LogError("CAN NOT LOAD DATA BY PATH: " + path);
+                return null;
+            }
+
+            if (target != null)
+            {
+                this.tempDialog.Add(path, target);
+
+                target.gameObject.SetActive(false);
+                return target;
+            }
+        }
+        else
+        {
+            BaseDialog dialog = this.tempDialog[path];
+            dialog.gameObject.SetActive(false);
+            return (T)dialog;
+        }
+        return null;
+    }
+    public T OnShowDialog<T>(string path, object data = null, UnityAction callback = null, bool isSkipAnimationShow = false) where T : BaseDialog
+    {
+        if (!this.tempDialog.ContainsKey(path))
+        {
+            T target = TempDialogManager.Instance.GetDialog<T>(path);
+            if (target == null)
+            {
+                Debug.LogError("CAN NOT LOAD DATA BY PATH: " + path);
+                return null;
             }
 
             if (target != null)
@@ -64,26 +90,41 @@ public class GameManager : MonoSingleton<GameManager>
                 target.transform.localScale = Vector3.one;
                 target.transform.localPosition = Vector3.zero;
                 target.transform.SetAsLastSibling();
-                target.OnShow(data, callback);
-                this.baseDialogs.Add(target);
+                target.OnShow(data, callback, isSkipAnimationShow);
+                if (!this.baseDialogs.Contains(target))
+                {
+                    this.baseDialogs.Add(target);
+                }
                 this.tempDialog.Add(path, target);
 
-                this.OnADialogSummoned?.Invoke(target);
+                //No, in here it must call Summon-ed, 
+                target.OnShowed += OnADialogSummoned;
+
+                //cũ của Khang
+                //this.OnADialogSummoned?.Invoke(target);
+
                 return target;
             }
-            
+
         }
         else
         {
             BaseDialog dialog = this.tempDialog[path];
+            if (dialog.gameObject.activeSelf)
+                return null;
+
             dialog.gameObject.SetActive(true);
             dialog.transform.localScale = Vector3.one;
             dialog.transform.localPosition = Vector3.zero;
             dialog.transform.SetAsLastSibling();
-            dialog.OnShow(data, callback);
-            this.baseDialogs.Add(dialog);
-            
-            this.OnADialogSummoned?.Invoke(dialog);
+            dialog.OnShow(data, callback, isSkipAnimationShow);
+            if (!this.baseDialogs.Contains(dialog))
+            {
+                this.baseDialogs.Add(dialog);
+            }
+
+            //this.OnADialogSummoned?.Invoke(dialog);
+            dialog.OnShowed += OnADialogSummoned;
             return (T)dialog;
         }
         return null;
@@ -97,15 +138,8 @@ public class GameManager : MonoSingleton<GameManager>
             T target = TempDialogManager.Instance.GetDialog<T>(path);
             if (target == null)
             {
-                GameObject o = LoaderUtility.Instance.GetAsset<GameObject>(path);
-                if (o != null)
-                {
-                    target = ((GameObject)Instantiate(o, this.scene.dialog)).GetComponent<T>();
-                }
-                else
-                {
-                    Debug.LogError("CAN NOT LOAD DATA BY PATH: " + path);
-                }
+                Debug.LogError("CAN NOT LOAD DATA BY PATH: " + path);
+                return null;
             }
 
             if (target != null)
@@ -121,11 +155,14 @@ public class GameManager : MonoSingleton<GameManager>
                 this.OnADialogSummoned?.Invoke(target);
                 return target;
             }
-            
+
         }
         else
         {
             BaseDialog dialog = this.tempDialog[path];
+            if (dialog.gameObject.activeSelf)
+                return null;
+
             dialog.gameObject.SetActive(true);
             dialog.transform.localScale = Vector3.one;
             dialog.transform.localPosition = Vector3.zero;
@@ -138,51 +175,14 @@ public class GameManager : MonoSingleton<GameManager>
         return null;
     }
 
-    private int GetDialogSortingNumber(PopupSortingType sortingType)
-    {
-        if (this.dicSortingNumbers != null)
-        {
-            if (this.dicSortingNumbers.ContainsKey(sortingType))
-            {
-                this.dicSortingNumbers[sortingType] += 1;
-                return this.dicSortingNumbers[sortingType];
-            }
-        }
-        return 0;
-    }
-
-    //public T OnShowDialogWithSorting<T>(string path, PopupSortingType sortingType,  object data = null, UnityAction callback = null) where T : BaseDialog
-    //{
-    //    BaseSortingDialog dialog = OnShowDialog<BaseSortingDialog>(path, data, callback);
-    //    if (dialog != null)
-    //    {
-    //        //dialog mở sau sẽ được sorting cao hơn
-    //        dialog.SetSortingOrder((int)sortingType + GetDialogSortingNumber(sortingType));
-    //        return (T)dialog;
-    //    }
-    //    return null;
-    //}
-
-    //public T InstantDialogWithSorting<T>(string path, PopupSortingType sortingType, object data = null, UnityAction callback = null) where T : BaseDialog
-    //{
-    //    BaseSortingDialog dialog = InstantDialog<BaseSortingDialog>(path, data, callback);
-    //    if (dialog != null)
-    //    {
-    //        //dialog mở sau sẽ được sorting cao hơn
-    //        dialog.SetSortingOrder((int)sortingType + GetDialogSortingNumber(sortingType));
-    //        return (T)dialog;
-    //    }
-    //    return null;
-    //}
-
     public void OnHideDialog(BaseDialog dialog)
     {
-        FxHelper.Instance.ResumeWaitShowFxClick();
         dialog.OnHide();
         if (this.baseDialogs.Contains(dialog))
         {
             this.baseDialogs.Remove(dialog);
         }
+        OnADialogClosed?.Invoke(dialog);
     }
 
     public void CloseDialog<T>() where T : BaseDialog
@@ -209,189 +209,70 @@ public class GameManager : MonoSingleton<GameManager>
         return false;
     }
 
+    public bool TryGetActiveDialog<T>(out T dialog) where T : BaseDialog
+    {
+        dialog = this.baseDialogs.Find(x => x is T && x.gameObject.activeInHierarchy) as T;
+        return dialog != null;
+    }
+
     public void CloseAllDialog()
+    {
+        List<BaseDialog> dialogs = new List<BaseDialog>(this.baseDialogs);
+
+        foreach (BaseDialog dialog in dialogs)
+        {
+            dialog.OnCloseDialog();
+        }
+    }
+
+    public BaseDialog GetActiveDialog()
     {
         foreach (BaseDialog dialog in this.baseDialogs)
         {
-            dialog.OnCloseDialog();
-
+            if (dialog.gameObject.activeInHierarchy)
+                return dialog;
         }
+        return null;
     }
-    #endregion
 
-    #region SCENE
-   
-    private BaseScene scene;
-    /// <summary>
-    /// callback if there is transition between scenes have started
-    /// </summary>
-    public event System.Action OnSceneChanging;
-    /// <summary>
-    /// callback when a new scene bound,
-    /// </summary>
-    public event System.Action<BaseScene> OnSceneBound;
-    public void setBaseScene(BaseScene scene)
+    [System.Obsolete("Use TempDialogManager.GetOnlineDialogs  ")]
+    public List<BaseDialog> GetActiveDialogs()
     {
-        this.scene = scene;
-        this.OnSceneBound?.Invoke(scene);
+        return this.baseDialogs;
     }
-    public BaseScene GetScene()
-    {
-        return this.scene;
-    }
-
-    public void OnLoadScene(string sceneName, object data = null, UnityAction callback = null)
-    {
-        LoadingManager.Instance.LoadScene(true, () =>
-        {
-            FxHelper.Instance.StopShowFxClick();
-
-            this.baseDialogs.Clear();
-            this.tempDialog.Clear();
-            this.scene?.OnClear();
-
-            // Debug.LogError("LOAD HOME: " + sceneName);
-            StartCoroutine(this.OnWaitingLoadScene(sceneName, callback));
-        });
-
-    }
-    private IEnumerator OnWaitingLoadScene(string sceneName, UnityAction callback = null)
-    {
-        yield return new WaitForEndOfFrame();
-        this.OnSceneChanging?.Invoke();
-        yield return new WaitForSeconds(0.2f);
-        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName);
-    
-        while (!asyncLoad.isDone)
-        {
-            LoadingManager.callbackProgress.Invoke(asyncLoad.progress);
-            yield return null;
-        }
-
-        yield return new WaitForEndOfFrame();
-        LoadingManager.callbackProgress.Invoke(asyncLoad.progress);
-        if (callback != null)
-        {
-            callback.Invoke();
-        }
-        LoadingManager.Instance.LoadScene(false, InvokeCallbackOncompleteHideLoadScene);
-        LoadingManager.Instance.ShowLoading(false);
-
-
-
-    }
-    public string GetCurrentScene()
-    {
-        return SceneManager.GetActiveScene().name;
-    }
-
-    public bool IsCurrentScene(string sceneName)
-    {
-        return this.GetCurrentScene().Equals(sceneName);
-    }
-
-    public void AssignCallbackOncompleteHideLoadScene(UnityAction callback)
-    {
-        onCompleteHideLoadScene -= callback;
-        onCompleteHideLoadScene += callback;
-    }
-    public void InvokeCallbackOncompleteHideLoadScene()
-    {
-        if (onCompleteHideLoadScene != null)
-        {
-            onCompleteHideLoadScene.Invoke();
-            onCompleteHideLoadScene = null;
-        }
-    }
-    #endregion
-
-    #region Network
-    public class NetworkCallback : UnityEvent<bool>
-    {
-
-    }
-    private NetworkCallback callbackNetwork;
-    private bool isInternet = false;
-    public bool CheckInternet => Application.internetReachability != NetworkReachability.NotReachable;
-
-    public void OpenGame()
-    {
-        try
-        {
-            this.isInternet = CheckInternet;
-            this.ChangeNetwork(this.isInternet);
-        }
-        catch (Exception e)
-        {
-            Debug.LogError(e);
-            Debug.LogException(e);
-        }
-        
-    }
-    
-    public void AddCallbackNetWork(UnityAction<bool> callback)
-    {
-        if (this.callbackNetwork == null)
-        {
-            this.callbackNetwork = new NetworkCallback();
-        }
-        this.callbackNetwork?.AddListener(callback);
-    }
-    public void RemoveCallbackNetwork(UnityAction<bool> callback)
-    {
-        if (this.callbackNetwork == null)
-        {
-            this.callbackNetwork = new NetworkCallback();
-        }
-        this.callbackNetwork?.RemoveListener(callback);
-    }
-
-    public void ChangeNetwork(bool isNetwork)
-    {
-        if (this.callbackNetwork == null)
-        {
-            this.callbackNetwork = new NetworkCallback();
-        }
-        this.callbackNetwork?.Invoke(isNetwork);
-    }
-    private float timeDelay = 0;
-    private void Check()
-    {
-        bool isConnect = CheckInternet;
-        if (isConnect != this.isInternet)
-        {
-            this.isInternet = isConnect;
-            this.ChangeNetwork(this.isInternet);
-        }
-
-    }
-    private void Update()
-    {
-        if (!this.isInternet)
-        {
-            this.timeDelay += Time.deltaTime;
-            if (timeDelay > 10.0f)
-            {
-                this.Check();
-                this.timeDelay = 0;
-            }
-        }
-    }
-    
 
     #endregion
 
-    public void LogMessage(string msg)
-    {
-        
-    }
 #if UNITY_EDITOR
     public void OnApplicationQuit()
     {
         isApplicationQuit = true;
     }
+
+
 #endif
 
+
+    /// <summary>
+    /// Trả về dialog CÒN TRÊN SCENE
+    /// HÀM SUPER NGUY HIỂM, hãy đảm bảo bạn muốn get dialog đang được show trên màn hình
+    /// NHẤT ĐỊNH CẦN KIỂM TRA NULL
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    public T GetDialogUnSafe<T>(string path) where T : BaseDialog
+    {
+        if (this.baseDialogs != null)
+        {
+            BaseDialog d = baseDialogs.Find(x => x is T);
+            if (d != null)
+            {
+                return d as T;
+            }
+        }
+        return null;
+        //return this.OnShowDialog<T>(path);
+    }
     public string GetCurrentDialogName()
     {
         if (this.baseDialogs != null && this.baseDialogs.Count > 0)
@@ -399,23 +280,34 @@ public class GameManager : MonoSingleton<GameManager>
 
         return null;
     }
-    public string GetCurrentDialogOrSceneName()
+    public bool IsInternet()
     {
-        string dName = this.GetCurrentDialogName();
-        if (string.IsNullOrEmpty(dName))
-        {
-            string sName = this.GetCurrentScene();
-            return sName;
-        }
-        else
-            return dName;
+        //if (Application.internetReachability == NetworkReachability.NotReachable)
+        //{
+        //    //TODO: Language
+        //    MessageBox.Instance.ShowMessageBox("No Internet", "Internet No Connecting, Pls try again").SetEvent(null);
+        //    return false;
+        //}
+        return true;
     }
-}
+    public bool CheckInternet => Application.internetReachability != NetworkReachability.NotReachable;
 
-public enum PopupSortingType
-{
-    //Để số lớn để sắp xếp các dialog (dialog mở sau sẽ được sorting cao hơn 1 bậc)
-    BellowBottomBar = 5,            //ở dưới bottom 
-    CenterBottomAndTopBar = 1500,   //ở giữa bottom and top bar
-    OnTopBar = 3000,                //ở trên cùng
+    private bool _oldInternetConnection = true;
+
+    public static System.Action<bool> _onChanceInternetConnection;
+    private void Update()
+    {
+        bool newInternetConnection = CheckInternet;
+        if (_oldInternetConnection != newInternetConnection)
+        {
+            _oldInternetConnection = newInternetConnection;
+            _onChanceInternetConnection?.Invoke(newInternetConnection);
+        }
+    }
+    public void AssignOnChangeInternetConnection(System.Action<bool> cb)
+    {
+        _onChanceInternetConnection -= cb;
+        _onChanceInternetConnection += cb;
+        cb?.Invoke(CheckInternet);
+    }
 }

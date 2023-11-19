@@ -224,27 +224,35 @@ public class CardGameController : MonoBehaviour
     public void OnRevealTopDeck(int amount)
     {
         List<InGame_CardDataModel> topCards = GetDeckTopCards(amount,isWillPopThatCardOut: false);
-        StartCoroutine(ieOnRevealcardsAndDestroy(topCards));
+        RevealCardsTopDeckDialog d = RevealCardsTopDeckDialog.ShowDialog();
+        d.ParseData(topCards, cbClose: OnRevealClosed);
 
-        IEnumerator ieOnRevealcardsAndDestroy(List<InGame_CardDataModel> topCards)
+        void OnRevealClosed()
         {
-            //List<BaseCardItem> cardRevealWhichWIllBeDestroy = new List<BaseCardItem>();
-
-            string topContent = "";
-            foreach (InGame_CardDataModel item in topCards)
-            {
-                topContent += $"{item._id} ";
-
-                BaseCardItem newCardItem = CreateCardItem(item._id, _tfDeckPanel);
-                yield return new WaitForSeconds(this.AnimationTimeConfig._timeWaitRevealTopDeck);
-                Destroy(newCardItem.gameObject);
-                yield return new WaitForEndOfFrame();
-            }
-
             InGameManager.Instance.Notificator?.DisableText();
             TellGameManagerICanContinueTurn();
-            Debug.Log($"CONTROLLER: Reveal {amount} top card {topContent}");
         }
+
+        //StartCoroutine(ieOnRevealcardsAndDestroy(topCards));
+        //IEnumerator ieOnRevealcardsAndDestroy(List<InGame_CardDataModel> topCards)
+        //{
+        //    //List<BaseCardItem> cardRevealWhichWIllBeDestroy = new List<BaseCardItem>();
+
+        //    string topContent = "";
+        //    foreach (InGame_CardDataModel item in topCards)
+        //    {
+        //        topContent += $"{item._id} ";
+
+        //        BaseCardItem newCardItem = CreateCardItem(item._id, _tfDeckPanel);
+        //        yield return new WaitForSeconds(this.AnimationTimeConfig._timeWaitRevealTopDeck);
+        //        Destroy(newCardItem.gameObject);
+        //        yield return new WaitForEndOfFrame();
+        //    }
+
+        //    InGameManager.Instance.Notificator?.DisableText();
+        //    TellGameManagerICanContinueTurn();
+        //    Debug.Log($"CONTROLLER: Reveal {amount} top card {topContent}");
+        //}
     }
     public void OnDrawACard()
     {
@@ -295,13 +303,17 @@ public class CardGameController : MonoBehaviour
 
         return CreateCardDataModel(topCardId);
     }
-    private List<InGame_CardDataModel> GetDeckTopCards(int amount,bool isWillPopThatCardOut)
+    public List<InGame_CardDataModel> GetDeckTopCards(int amount,bool isWillPopThatCardOut)
     {
         List<InGame_CardDataModel> top = new List<InGame_CardDataModel>();
         for (int i = 0; i < amount; i++)
         {
-            top.Add(GetDeckTopCard(isWillPopThatCardOut));
+            int topCardId = this._currentDeck?[i] ?? 0;
+            top.Add(CreateCardDataModel(topCardId));
         }
+        if (isWillPopThatCardOut)
+            _currentDeck.RemoveRange(0, amount);
+
         return top;
     }
     private void PutACardToPallet(InGame_CardDataModel card)

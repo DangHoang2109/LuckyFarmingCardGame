@@ -26,7 +26,7 @@ public class TempDialogManager : MonoSingleton<TempDialogManager>
     {
         if (prefab != null)
         {
-            var dialog = Instantiate(prefab, this.transform);
+            var dialog = Instantiate(prefab, this.panel);
             if (dialog != null)
             {
                 dialog.gameObject.name = dialog.name.Replace("(Clone)", "");

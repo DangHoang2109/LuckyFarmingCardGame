@@ -3,20 +3,27 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(CanvasGroup))]
 public class BaseDialog : MonoBehaviour
 {
     [Tooltip("should be at root object")]
-    public CanvasGroup canvasGroup;
+    [SerializeField]
+    protected CanvasGroup canvasGroup;
     protected object data;
-    public Transform panel;
+    [SerializeField]
+    protected Transform panel;
+    [SerializeField]
+    protected List<Image> backgrounds;
+
+
     protected float transitionTime = 0.2f;
 
     #region event
 
     public System.Action OnShowing;
-    public System.Action OnShowed;
+    public System.Action<BaseDialog> OnShowed;
     public System.Action OnClosing;
     public System.Action OnClosed;
     #endregion
@@ -30,14 +37,29 @@ public class BaseDialog : MonoBehaviour
     }
 #endif
 
-    public virtual void OnShow(object data = null, UnityAction callback = null)
+    public virtual void OnShow(object data = null, UnityAction callback = null, bool isSkipAnimationShow = false)
     {
         this.gameObject.SetActive(true);
+        this.UpdateBackground();
         this.data = data;
         this.callbackShow = callback;
-        this.AnimationShow();
-        
+
+        if (!isSkipAnimationShow)
+            this.AnimationShow();
+        else
+        {
+            this.panel.localScale = Vector3.one;
+            this.canvasGroup.alpha = 1;
+            OnCompleteShow();
+        }
+
         this.OnShowing?.Invoke();
+    }
+
+
+    protected virtual void UpdateBackground()
+    {
+
     }
     protected virtual void AnimationShow()
     {
@@ -54,6 +76,7 @@ public class BaseDialog : MonoBehaviour
             seq.Join(this.canvasGroup.DOFade(1, this.transitionTime));
         }
         //SoundManager.Instance.Play("snd_panel");
+
     }
     protected virtual void OnCompleteShow()
     {
@@ -63,8 +86,9 @@ public class BaseDialog : MonoBehaviour
             this.callbackShow = null;
             bk.Invoke();
         }
-        
-        this.OnShowed?.Invoke();
+
+
+        this.OnShowed?.Invoke(this);
     }
     public virtual void OnHide()
     {
@@ -82,9 +106,10 @@ public class BaseDialog : MonoBehaviour
     }
     protected virtual void OnCompleteHide()
     {
+        this.gameObject.SetActive(false);
+
         this.OnClosed?.Invoke();
         this.OnClosed = null;
-        this.gameObject.SetActive(false);
     }
     public virtual void OnCloseDialog()
     {

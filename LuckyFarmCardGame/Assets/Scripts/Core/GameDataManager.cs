@@ -180,8 +180,8 @@ public class GameDataManager : MonoSingleton<GameDataManager>
     }
     private bool IsAbleToFocus()
     {
-        if (GameManager.Instance.GetScene() == null || GameManager.Instance.GetScene().name == SceneName.LOADING)
-            return false;
+        //if (GameManager.Instance.GetScene() == null || GameManager.Instance.GetScene().name == SceneName.LOADING)
+        //    return false;
 
         if (LoadingManager.Instance.IsLoading)
             return false;
