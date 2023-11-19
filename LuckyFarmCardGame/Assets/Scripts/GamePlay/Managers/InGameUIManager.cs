@@ -4,13 +4,6 @@ using UnityEngine;
 
 public class InGameUIManager : MonoSingleton<InGameUIManager>
 {
-
-
-
-    public void OnClickDrawCard()
-    {
-        InGameManager.Instance.OnDrawCard();
-    }
     public void OnClickEndTurn()
     {
         //pull the pallet card

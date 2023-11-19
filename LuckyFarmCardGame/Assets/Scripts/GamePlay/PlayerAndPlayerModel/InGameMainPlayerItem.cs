@@ -103,13 +103,13 @@ public class InGameMainPlayerItem : InGameBasePlayerItem
         base.PullCardToBag(cardReceive);
         if (cardReceive != null && cardReceive.Count > 0)
         {
-            this.MainDataModel.AddCardsToPallet(cardReceive);
+            List < InGame_CardDataModelLevels > levelUp = this.MainDataModel.AddCardsToPallet(cardReceive);
+            ListingUpgradedCardsDialog d = ListingUpgradedCardsDialog.ShowDialog();
+            d.ParseData(levelUp, null);
         }
         //this.BagVisual?.RefreshPlayerBag(this.MainDataModel._dictionaryBags);
 
         _tmpCoinValue.SetText($"{(PlayerModel.CurrentCoinPoint).ToString("D2")}");
-
-        Debug.Log($"PLAYER {this.ID} bag: {this.MainDataModel._dictionaryBags.DebugDicCardInGame()}");
     }
     public override void ParseVisualBagUI()
     {

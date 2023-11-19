@@ -15,8 +15,9 @@ public class CardGameActionController : MonoSingleton<CardGameActionController>
     public bool IsVFXRunning => vfxActionManager?.IsRunning ?? false;
     public bool IsUpgradeCollectorRunning => collectUpgradeActionManager?.IsRunning ?? false;
 
-    public bool IsAnyRunning => IsVFXRunning || IsUpgradeCollectorRunning;
+    public bool IsAnyRunning => IsVFXRunning || IsUpgradeCollectorRunning || IsAnyPopupShowing;
 
+    public bool IsAnyPopupShowing => TempDialogManager.Instance.IsAnyDialogOnline();
     public void AddCallbackWhenFXComplete(System.Action cb)
     {
         DoNoFXRunning act = new DoNoFXRunning(this, cb);

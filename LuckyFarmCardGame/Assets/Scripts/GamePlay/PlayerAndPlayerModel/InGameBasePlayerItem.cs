@@ -468,12 +468,12 @@ public class BaseInGameMainPlayerDataModel : BaseInGamePlayerDataModel
     /// </summary>
     /// <param name="cards"></param>
     /// return level up cards
-    public List<InGame_CardDataModel> AddCardsToPallet(List<InGame_CardDataModel> cards)
+    public List<InGame_CardDataModelLevels> AddCardsToPallet(List<InGame_CardDataModel> cards)
     {
         _bag ??= new List<InGame_CardDataModelLevels>();
         this._dictionaryBags ??= new Dictionary<int, InGame_CardDataModelLevels>();
 
-        List<InGame_CardDataModel> levelUpIfHas = new List<InGame_CardDataModel>();
+        List<InGame_CardDataModelLevels> levelUpIfHas = new List<InGame_CardDataModelLevels>();
 
         if (cards != null && cards.Count > 0)
         {
@@ -491,7 +491,7 @@ public class BaseInGameMainPlayerDataModel : BaseInGamePlayerDataModel
 
                     cardInBag.AddACard(cardDataModel, out bool isLevelUp);
                     if (isLevelUp)
-                        levelUpIfHas.Add(cardDataModel);
+                        levelUpIfHas.Add(cardInBag);
                 }
                 else
                 {

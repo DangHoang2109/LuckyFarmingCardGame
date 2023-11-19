@@ -83,4 +83,6 @@ public class TempDialogManager : MonoSingleton<TempDialogManager>
 
         return result;
     }
+    public int AmountOnlineDialog() => GetOnlineDialogs()?.Count ?? 0;
+    public bool IsAnyDialogOnline() => AmountOnlineDialog() > 0;
 }

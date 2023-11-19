@@ -27,7 +27,6 @@ public class CardGameController : MonoBehaviour
     [Space(5f)]
 
     [SerializeField] protected CardAnimationItem _cardAnim;
-    [SerializeField] protected BaseCardItem _cardPrefab;
     [SerializeField] protected BaseCardCircleItem _cardCirclePrefab;
 
     [SerializeField] protected Transform _tfPalletPanel, _tfActEffectPanel, _tfDeckPanel;
@@ -39,7 +38,7 @@ public class CardGameController : MonoBehaviour
     //public InGameDiceRollingAnimator DiceAnimator => _diceAnimator;
 
     [Space(5f)]
-    public Button _btnDeckDraw;
+    public InGameDeckUI _uiDeckDraw;
 
     [Space(5f)]
     [SerializeField] protected InGameTurnNotification _notificator;
@@ -102,6 +101,9 @@ public class CardGameController : MonoBehaviour
         //get deck contain
         _deckConfig = deckConfig;
         RecreateTheDeck();
+
+        this._uiDeckDraw._onClickDraw -= this.OnDrawACard;
+        this._uiDeckDraw._onClickDraw += this.OnDrawACard;
     }
     #region Action with Deck
     protected virtual void RecreateTheDeck()
@@ -117,7 +119,7 @@ public class CardGameController : MonoBehaviour
                 }
             }
             _currentDeck.Shuffle();
-
+            _uiDeckDraw?.OnChangeCardAmount(_currentDeck.Count);
             ////test deck top
             //Debug.LogError("THE DECK CONTENT IS NOT RANDOM");
             //_currentDeck.Insert(0, 2);
@@ -134,8 +136,7 @@ public class CardGameController : MonoBehaviour
     }
     public void EnableDrawingCardFromDeck(bool isAllow)
     {
-        if(_btnDeckDraw != null)
-            this._btnDeckDraw.interactable = isAllow;
+        this._uiDeckDraw?.SetInterractable(isAllow);
     }
     #endregion Action with Deck
 
@@ -232,27 +233,6 @@ public class CardGameController : MonoBehaviour
             InGameManager.Instance.Notificator?.DisableText();
             TellGameManagerICanContinueTurn();
         }
-
-        //StartCoroutine(ieOnRevealcardsAndDestroy(topCards));
-        //IEnumerator ieOnRevealcardsAndDestroy(List<InGame_CardDataModel> topCards)
-        //{
-        //    //List<BaseCardItem> cardRevealWhichWIllBeDestroy = new List<BaseCardItem>();
-
-        //    string topContent = "";
-        //    foreach (InGame_CardDataModel item in topCards)
-        //    {
-        //        topContent += $"{item._id} ";
-
-        //        BaseCardItem newCardItem = CreateCardItem(item._id, _tfDeckPanel);
-        //        yield return new WaitForSeconds(this.AnimationTimeConfig._timeWaitRevealTopDeck);
-        //        Destroy(newCardItem.gameObject);
-        //        yield return new WaitForEndOfFrame();
-        //    }
-
-        //    InGameManager.Instance.Notificator?.DisableText();
-        //    TellGameManagerICanContinueTurn();
-        //    Debug.Log($"CONTROLLER: Reveal {amount} top card {topContent}");
-        //}
     }
     public void OnDrawACard()
     {
@@ -275,14 +255,6 @@ public class CardGameController : MonoBehaviour
 
         return new InGame_CardDataModel().SetHost(InGameManager.CurrentTurnPlayer).SetCardID(id, cardConfig).SetCurrentLevel(currentCardLevel);
     }
-    private BaseCardItem CreateCardItem(int cardID, Transform whereToSpawn)
-    {
-        BaseCardItem newCardItem = Instantiate(_cardPrefab, whereToSpawn);
-        newCardItem.transform.localPosition = Vector3.zero;
-        newCardItem.gameObject.SetActive(true);
-        newCardItem.ParseHost(InGameManager.CurrentTurnPlayer).ParseInfo(cardID);
-        return newCardItem;
-    }
     private BaseCardItem CreateCardItem(ref InGame_CardDataModel card)
     {
         BaseCardItem newCardItem = Instantiate(_cardCirclePrefab, _tfActEffectPanel);
@@ -299,7 +271,10 @@ public class CardGameController : MonoBehaviour
         int topCardId = this._currentDeck?[0] ?? 0;
 
         if (isWillPopThatCardOut)
+        {
             _currentDeck.RemoveAt(0);
+            _uiDeckDraw?.OnChangeCardAmount(_currentDeck.Count);
+        }
 
         return CreateCardDataModel(topCardId);
     }
@@ -312,7 +287,10 @@ public class CardGameController : MonoBehaviour
             top.Add(CreateCardDataModel(topCardId));
         }
         if (isWillPopThatCardOut)
+        {
             _currentDeck.RemoveRange(0, amount);
+            _uiDeckDraw?.OnChangeCardAmount(_currentDeck.Count);
+        }
 
         return top;
     }

@@ -25,6 +25,17 @@ public class InGame_CardDataModelLevels
             return _currentLevelConfig;
         }
     }
+    public InGameCardLevel PreviousLevelConfig
+    {
+        get
+        {
+            if (InGameCardLevelsConfigs.Instance.TryGetCardLevelConfig(this._cardID, this._currentLevel-1, out InGameCardLevel l))
+                return l;
+
+            Debug.LogError("NOT FOUND PREVIOUS LEVEL " + (_currentLevel - 1));
+            return null;
+        }
+    }
     public InGame_CardDataModelLevels()
     {
         _currentCard = 0;

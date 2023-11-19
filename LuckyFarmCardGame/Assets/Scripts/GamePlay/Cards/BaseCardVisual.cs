@@ -20,18 +20,27 @@ public class BaseCardVisual : MonoBehaviour
     public TextMeshProUGUI _tmpCoinPointValue;
     public GameObject _gCoinPoint;
 
-
+    private InGameCardConfig _cardConfig;
+    public InGameCardConfig CardConfig
+    {
+        get
+        {
+            if(_cardConfig == null)
+                _cardConfig = InGameCardConfigs.Instance.GetCardConfig(this._cardID);
+            return _cardConfig;
+        }
+    }
     public BaseCardVisual SetCardIDAndDisplayAllVisual(int cardID)
     {
         this._cardID = cardID;
 
-        InGameCardConfig cardConfig = InGameCardConfigs.Instance.GetCardConfig(cardID);
-        if(cardConfig!= null)
+        _cardConfig = InGameCardConfigs.Instance.GetCardConfig(cardID);
+        if(_cardConfig != null)
         {
-            this.DisplayArtwork(cardConfig._sprCardArtwork)
-                .DisplayEffect(cardConfig.SkillConfig?._sprCardEffect)
-                .DisplayBackground(cardConfig._sprCardBackground)
-                .DisplayCoinPOint(cardConfig._gamePointOfCard);
+            this.DisplayArtwork(_cardConfig._sprCardArtwork)
+                .DisplayEffect(_cardConfig.SkillConfig?._sprCardEffect)
+                .DisplayBackground(_cardConfig._sprCardBackground)
+                .DisplayCoinPOint(_cardConfig._gamePointOfCard);
         }
         return this;
     }
