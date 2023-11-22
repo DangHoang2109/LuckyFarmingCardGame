@@ -42,10 +42,6 @@ public class InGameEnemyConfigs : ScriptableObject
     #endregion Data Prop
 
     #region Getter
-    public InGameEnemyWaveConfig GetWaveConfig(int wave)
-    {
-        return _mapConfigs._configs[0]._waveConfigs.Find(x => x._wave == wave);
-    }
     #endregion Getter
 
 #if UNITY_EDITOR

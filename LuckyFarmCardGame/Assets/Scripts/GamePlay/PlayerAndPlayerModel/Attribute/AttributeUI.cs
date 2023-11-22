@@ -4,15 +4,24 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using DG.Tweening;
-public class ShieldUI : MonoBehaviour
+public class AttributeUI : MonoBehaviour
 {
+    public AttributeID _id;
+    public Image _imgIcon;
     public TextMeshProUGUI _tmpValue;
     private int _currentValue = 0;
 
-    public ShieldUI UpdateValue(int currentVal, bool isAnim = true, float durationValue = 1f)
+    public AttributeUI SetInfo(AttributeID id)
+    {
+        this._id = id;
+        this._imgIcon.sprite = AttributeConfigs.Instance.GetIcon(id);
+        return this;
+    }
+    public AttributeUI UpdateValue(int currentVal, bool isAnim = true, float durationValue = 1f)
     {
         int currentCache = _currentValue;
         this._currentValue = currentVal;
+        this.gameObject.SetActive((Mathf.Max(currentVal, _currentValue)) > 0);
 
         if (isAnim)
         {
@@ -22,12 +31,12 @@ public class ShieldUI : MonoBehaviour
             // Update text value using DOTween
             seq.Join(DOTween.To(() => currentCache, x => this._tmpValue.SetText($"{x}"), currentVal, durationValue));
             // Update image fill amount using DOTween
-            seq.OnComplete(() => { _tmpValue.gameObject.SetActive(currentVal > 0); });
+            seq.OnComplete(() => { this.gameObject.SetActive(currentVal > 0); });
         }
         else
         {
             this._tmpValue.SetText($"{_currentValue}");
-            _tmpValue.gameObject.SetActive(currentVal > 0);
+            this.gameObject.SetActive(currentVal > 0);
         }
 
         return this;

@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using System.Linq;
 using Spine;
 using UnityEditor.Experimental.GraphView;
+using System;
 
 public class InGameBasePlayerItem : MonoBehaviour
 {
@@ -12,7 +13,9 @@ public class InGameBasePlayerItem : MonoBehaviour
     public TMPro.TextMeshProUGUI _tmpCoinValue;
 
     public HPBarUI _hpBar;
-    public ShieldUI _shieldUI;
+
+    public PlayerAttributeUI _playerAttributePallet;
+    public AttributeUI ShieldUI => _playerAttributePallet?.GetItemSafe(AttributeID.SHIELD);
 
     #endregion Prop on editor
 
@@ -43,7 +46,7 @@ public class InGameBasePlayerItem : MonoBehaviour
             if (this.PlayerModel != null)
             {
                 this.PlayerModel.Shield = value;
-                this._shieldUI?.UpdateValue(this.PlayerModel.Shield);
+                this._playerAttributePallet?.AddAttribute(AttributeID.SHIELD, this.PlayerModel.Shield);
             }
         }
     }

@@ -186,7 +186,7 @@ public class InGameMainPlayerItem : InGameBasePlayerItem
     public override void AddShield(int shieldUnit = -1)
     {
         //create attack vfx
-        VFXActionManager.Instance.ShowVFxXBycard(vfxId: VFXGameID.DefendShield, amount: 1, desPos: _shieldUI.transform, delay: 0.25f, cb: OnCallbackProjectileHit);
+        VFXActionManager.Instance.ShowVFxXBycard(vfxId: VFXGameID.DefendShield, amount: 1, desPos: ShieldUI.transform, delay: 0.25f, cb: OnCallbackProjectileHit);
 
         void OnCallbackProjectileHit(VFXBaseObject _)
         {

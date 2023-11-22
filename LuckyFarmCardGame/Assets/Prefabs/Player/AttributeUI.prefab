@@ -148,7 +148,7 @@ GameObject:
   - component: {fileID: 6806817494401442602}
   - component: {fileID: 5669234343820593907}
   m_Layer: 5
-  m_Name: Shield
+  m_Name: AttributeUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -225,4 +225,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3bcf8fff882d20049aaf188324ae5db8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _id: 0
+  _imgIcon: {fileID: 6806817494401442602}
   _tmpValue: {fileID: 5123534267910040701}
