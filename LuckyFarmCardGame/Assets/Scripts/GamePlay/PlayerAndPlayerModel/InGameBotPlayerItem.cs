@@ -18,9 +18,9 @@ public class InGameBotPlayerItem : InGameBasePlayerItem
 
     protected InGameAI.AIExecutor _AIexecutor;
     protected InGameAI.AILooker _AIlooker;
-    protected InGameAI.AIDecider _AIdecider;
 
     protected Coroutine _ieThinkingPlan;
+
     #endregion Data
 
     #region Getter
@@ -34,18 +34,6 @@ public class InGameBotPlayerItem : InGameBasePlayerItem
             }
 
             return this._AIlooker;
-        }
-    }
-    public InGameAI.AIDecider Decider
-    {
-        get
-        {
-            if (this._AIdecider == null)
-            {
-                this._AIdecider = new InGameAI.AIDecider(this);
-            }
-
-            return this._AIdecider;
         }
     }
     public InGameAI.AIExecutor Executor
@@ -70,7 +58,6 @@ public class InGameBotPlayerItem : InGameBasePlayerItem
         //init my AI decider and executer
         _AIexecutor = new InGameAI.AIExecutor(this);
         _AIlooker = new InGameAI.AILooker(this);
-        _AIdecider = new InGameAI.AIDecider(this);
 
         return base.InitPlayerItSelf();
     }
@@ -118,15 +105,13 @@ public class InGameBotPlayerItem : InGameBasePlayerItem
     IEnumerator OnThinkingInTurn()
     {
         yield return new WaitForSeconds(0.25f);
-        Debug.Log("Bot player: MAKE ME ATTACKKKKKKK");
 
-        //InGameAI.LookingMessage collect = Looker?.Look();
-        //yield return new WaitForEndOfFrame();
-        InGameAI.DecidingMesssage decideMsg = Decider?.Decide(null);
+        InGameAI.LookingMessage collect = Looker?.Look();
+
         yield return new WaitForEndOfFrame();
-
-
-        Executor.SetDecision(decideMsg);
+        Executor.Decide(collect);
+        yield return new WaitForEndOfFrame();
+        Executor.SetDecision();
         yield return new WaitForEndOfFrame();
     }
 
@@ -150,7 +135,7 @@ public class InGameBotPlayerItem : InGameBasePlayerItem
             dmg = BaseDamagePerTurn; //replace with this host info
         Debug.Log("ENEMY: FUCK THE MAIN" + dmg);
 
-        InGameManager.Instance.OnPlayerAttacking(InGameManager.Instance.MainUserPlayer.ID, dmg);
+        InGameManager.Instance.OnPlayerAttacking(InGameManager.Instance.MainUserPlayer.SeatID, dmg);
         this._animator?.ShowAttack();
         base.AttackSingleUnit(dmg);
     }
@@ -166,6 +151,9 @@ public class InGameBotPlayerItem : InGameBasePlayerItem
     public override void Dead(Action cb)
     {
         base.Dead(cb);
+
+        this._AIexecutor = null;
+        this._AIlooker = null;
         //this._animator?.ShowDead(cb);
     }
     public override void ClearWhenDead()

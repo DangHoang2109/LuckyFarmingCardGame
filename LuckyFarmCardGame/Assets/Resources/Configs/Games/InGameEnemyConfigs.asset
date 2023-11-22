@@ -17,88 +17,187 @@ MonoBehaviour:
     - enemyID: 0
       enemyName: Mycolino
       enemyDescription: "Qu\xE1i c\xE2y c\u01A1 b\u1EA3n"
-      enemyBaseDamage: 4
-      enemyBaseMaxHP: 50
-      enemyEffectDes: 
+      enemyBaseMaxHP: 12
+      enemyEffectDes: Attack {damage} damage to player
       _animator: {fileID: 3454053281331012186, guid: dffc6b6d3bf25044c97a1b2da6b74116, type: 3}
     - enemyID: 1
-      enemyName: Illucia
-      enemyDescription: "Ph\xF9 th\u1EE7y tri\u1EC7u h\u1ED3i \u0111\u01B0\u1EE3c
-        01 Crystal Beetle"
-      enemyBaseDamage: 2
-      enemyBaseMaxHP: 120
-      enemyEffectDes: 
-      _animator: {fileID: 4178270343921277840, guid: d891e0ca39bcd28448d299608df8cb8c, type: 3}
-    - enemyID: 2
       enemyName: Beetle
       enemyDescription: "M\u1ED9t con creep si\xEAu y\u1EBFu nh\u01B0ng \u0111\u01B0\u1EE3c
         spawn b\u1EDFi Illucia"
-      enemyBaseDamage: 3
-      enemyBaseMaxHP: 40
-      enemyEffectDes: 
+      enemyBaseMaxHP: 10
+      enemyEffectDes: Attack {damage} damage to player
       _animator: {fileID: 5132455824953149453, guid: e2871ff5e512ee64cad255f9da90fa90, type: 3}
+    - enemyID: 2
+      enemyName: Illucia
+      enemyDescription: "Ph\xF9 th\u1EE7y tri\u1EC7u h\u1ED3i \u0111\u01B0\u1EE3c
+        01 Crystal Beetle"
+      enemyBaseMaxHP: 22
+      enemyEffectDes: Attack {damage} damage to player and spawn 01 Beetle
+      _animator: {fileID: 4178270343921277840, guid: d891e0ca39bcd28448d299608df8cb8c, type: 3}
     - enemyID: 3
-      enemyName: Pirate
+      enemyName: Gladiator
       enemyDescription: "Con n\xE0y c\xF3 khi\xEAn"
-      enemyBaseDamage: 5
-      enemyBaseMaxHP: 50
-      enemyEffectDes: 
+      enemyBaseMaxHP: 28
+      enemyEffectDes: Attack {damage} damage to player and create {shield} shield
       _animator: {fileID: 2427606093563321950, guid: 0c70d845ced1bc145b21df50fc896440, type: 3}
     - enemyID: 4
       enemyName: Leechie
       enemyDescription: "Con n\xE0y h\xFAt m\xE1u"
-      enemyBaseDamage: 4
-      enemyBaseMaxHP: 100
-      enemyEffectDes: 
+      enemyBaseMaxHP: 25
+      enemyEffectDes: Drain {damage} HP from player and increase {damage} HP
       _animator: {fileID: 9180666634123970954, guid: a5554e1e0dc7fee4abf2e0e079cbb2c0, type: 3}
     - enemyID: 5
       enemyName: Ergincrox
       enemyDescription: "Elite Boss W1, c\xF3 cu\u1ED3ng n\u1ED9 x2 damage trong
         l\u01B0\u1EE3t"
-      enemyBaseDamage: 9
-      enemyBaseMaxHP: 180
-      enemyEffectDes: 
+      enemyBaseMaxHP: 40
+      enemyEffectDes: Attack {damage} damage to player. 02 turn it will X2 the damage
+        once.
       _animator: {fileID: -5964719866328608844, guid: 2342125815d2b7c4180235d478d26be1, type: 3}
     - enemyID: 6
       enemyName: Minotaur
       enemyDescription: "Final Boss World 1, Spawn Mycolino v\xE0 c\xF3 khi\xEAn"
-      enemyBaseDamage: 10
-      enemyBaseMaxHP: 280
-      enemyEffectDes: 
+      enemyBaseMaxHP: 55
+      enemyEffectDes: Attack {damage} damage to player. Create {shield} shield. Spawn
+        {special_unit} Beetle each {special_interval} turns.
       _animator: {fileID: 5349720046968819121, guid: fa6a2aade403b074e84bf72ac90683b4, type: 3}
-  _waveConfigs:
-  - _wave: 0
-    _enemyInRound:
+    - enemyID: 7
+      enemyName: Slime
+      enemyDescription: 
+      enemyBaseMaxHP: 20
+      enemyEffectDes: Attack {damage} damage to player. When Slime die it splits
+        into two smaller slimes each with half of the original's current HP and damage.
+      _animator: {fileID: 0}
+    - enemyID: 8
+      enemyName: Toktik
+      enemyDescription: 
+      enemyBaseMaxHP: 25
+      enemyEffectDes: Attack {damage} damage to player. Toktik sets a {special_interval}-turn
+        countdown. Upon reaching zero it explodes dealing {special_unit} damage to
+        the player. If defeated before the countdown ends it deals no damage.
+      _animator: {fileID: 0}
+    - enemyID: 9
+      enemyName: Inferno Serpent
+      enemyDescription: 
+      enemyBaseMaxHP: 70
+      enemyEffectDes: Attacks {damage} to player and leaves an 'Ember Mark' that
+        increases damage taken by {special_unit} for the next {special_interval}
+        turns.
+      _animator: {fileID: 0}
+    - enemyID: 10
+      enemyName: Viper
+      enemyDescription: 
+      enemyBaseMaxHP: 28
+      enemyEffectDes: Attack {damage} damage to player. In addition to its normal
+        attack the Venomous Viper inflicts a poison status on the player dealing
+        {special_unit} damage at the end of each turn for the next {special_interval}
+        turns. The poison effect not stacks with multiple bites.
+      _animator: {fileID: 0}
+    - enemyID: 11
+      enemyName: Ghoul
+      enemyDescription: 
+      enemyBaseMaxHP: 30
+      enemyEffectDes: Attack {damage} damage to player. Becomes intangible every
+        {special_interval} turns reducing all damage taken by {special_unit} during
+        this round.
+      _animator: {fileID: 0}
+    - enemyID: 12
+      enemyName: Cyber Marauder
+      enemyDescription: 
+      enemyBaseMaxHP: 80
+      enemyEffectDes: Attack {damage} damage to player. Temporarily disabling {special_unit}
+        random card each turn.
+      _animator: {fileID: 0}
+  _statConfigs:
+    _configs:
+    - enemyID: 0
+      _skills:
+      - _skillID: 0
+        _statValue: 5
+        _statIntervall: 0
+        _statID: 0
+    - enemyID: 1
+      _skills:
+      - _skillID: 0
+        _statValue: 4
+        _statIntervall: 0
+        _statID: 0
     - enemyID: 2
-  - _wave: 1
-    _enemyInRound:
-    - enemyID: 0
-  - _wave: 2
-    _enemyInRound:
-    - enemyID: 0
-    - enemyID: 0
-  - _wave: 3
-    _enemyInRound:
-    - enemyID: 0
-    - enemyID: 1
-  - _wave: 4
-    _enemyInRound:
+      _skills:
+      - _skillID: 0
+        _statValue: 3
+        _statIntervall: 0
+        _statID: 0
+      - _skillID: 1
+        _statValue: 1
+        _statIntervall: 0
+        _statID: 1
     - enemyID: 3
-    - enemyID: 3
+      _skills:
+      - _skillID: 0
+        _statValue: 6
+        _statIntervall: 0
+        _statID: 0
+      - _skillID: 2
+        _statValue: 15
+        _statIntervall: 0
+        _statID: 0
     - enemyID: 4
-  - _wave: 5
-    _enemyInRound:
+      _skills:
+      - _skillID: 3
+        _statValue: 6
+        _statIntervall: 0
+        _statID: 0
     - enemyID: 5
-  - _wave: 6
-    _enemyInRound:
-    - enemyID: 3
-    - enemyID: 3
-    - enemyID: 1
-  - _wave: 7
-    _enemyInRound:
-    - enemyID: 4
-    - enemyID: 4
-    - enemyID: 4
-  - _wave: 8
-    _enemyInRound:
+      _skills:
+      - _skillID: 0
+        _statValue: 14
+        _statIntervall: 0
+        _statID: 0
+      - _skillID: 4
+        _statValue: 2
+        _statIntervall: 2
+        _statID: 0
     - enemyID: 6
+      _skills:
+      - _skillID: 0
+        _statValue: 28
+        _statIntervall: 0
+        _statID: 0
+      - _skillID: 2
+        _statValue: 25
+        _statIntervall: 0
+        _statID: 0
+      - _skillID: 1
+        _statValue: 2
+        _statIntervall: 2
+        _statID: 1
+  _mapConfigs:
+    _configs:
+    - _id: 0
+      _name: Peaceful Forest
+      _waveConfigs:
+      - _wave: 0
+        _enemyIDsInRound: 00000000
+      - _wave: 1
+        _enemyIDsInRound: 0100000000000000
+      - _wave: 2
+        _enemyIDsInRound: 010000000000000002000000
+      - _wave: 3
+        _enemyIDsInRound: 010000000000000002000000
+      - _wave: 4
+        _enemyIDsInRound: 0100000002000000
+      - _wave: 5
+        _enemyIDsInRound: 0300000000000000
+      - _wave: 6
+        _enemyIDsInRound: 0300000000000000
+      - _wave: 7
+        _enemyIDsInRound: 05000000
+      - _wave: 8
+        _enemyIDsInRound: 0300000000000000
+      - _wave: 9
+        _enemyIDsInRound: 010000000200000004000000
+      - _wave: 10
+        _enemyIDsInRound: 000000000100000004000000
+      - _wave: 11
+        _enemyIDsInRound: 06000000

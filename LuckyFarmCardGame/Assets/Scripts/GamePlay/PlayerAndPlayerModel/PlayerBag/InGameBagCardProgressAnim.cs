@@ -64,12 +64,12 @@ public class InGameBagCardProgressAnim : MonoBehaviour
 
         tf.position = _tfFrom.position; //new Vector3(-320, -40);
         //
-        seq.Join(tf.DOLocalMoveX(_tfTo.position.x, durationMove).SetEase(Ease.InBack).SetDelay(0.15f).OnComplete(() =>
+        seq.Join(tf.DOMoveX(_tfTo.position.x, durationMove).SetEase(Ease.InBack).SetDelay(0.15f).OnComplete(() =>
         {
             _readyForNext = true;
         }));
 
-        seq.Append(tf.DOLocalMoveY(_tfTo.position.y, duration + 0.2f));
+        seq.Append(tf.DOMoveY(_tfTo.position.y, duration + 0.2f));
 
         seq.Join(AnimateTextValue(this._newValue));
         seq.Join(AnimateProgress(this._targetFill));

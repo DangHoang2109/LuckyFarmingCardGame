@@ -1,0 +1,14 @@
+Enemy ID,Enemy Name,Enemy Damage,Enemy HP,Enemy Shield,Enemy Skill,Enemy Special Unit,Enemy Special Interval
+0,Mycolino,5,12,0,Attack {damage} damage to player,0,0
+1,Beetle,4,10,0,Attack {damage} damage to player,0,0
+2,Illucia,3,22,0,Attack {damage} damage to player and spawn 01 Beetle,1,0
+3,Gladiator,6,28,15,Attack {damage} damage to player and create {shield} shield,0,0
+4,Leechie,6,25,0,Drain {damage} HP from player and increase {damage} HP,0,0
+5,Ergincrox,14,40,0,Attack {damage} damage to player. 02 turn it will X2 the damage once.,2,2
+6,Minotaur,28,55,25,Attack {damage} damage to player. Create {shield} shield. Spawn {special_unit} Beetle each {special_interval} turns.,2,2
+7,Slime,6,20,0,Attack {damage} damage to player. When Slime die it splits into two smaller slimes each with half of the original's current HP and damage.,0,0
+8,Toktik,6,25,0,Attack {damage} damage to player. Toktik sets a {special_interval}-turn countdown. Upon reaching zero it explodes dealing {special_unit} damage to the player. If defeated before the countdown ends it deals no damage.,15,2
+9,Inferno Serpent,20,70,0,Attacks {damage} to player and leaves an 'Ember Mark' that increases damage taken by {special_unit} for the next {special_interval} turns.,0.2,2
+10,Viper,9,28,0,Attack {damage} damage to player. In addition to its normal attack the Venomous Viper inflicts a poison status on the player dealing {special_unit} damage at the end of each turn for the next {special_interval} turns. The poison effect not stacks with multiple bites.,3,3
+11,Ghoul,8,30,0,Attack {damage} damage to player. Becomes intangible every {special_interval} turns reducing all damage taken by {special_unit} during this round.,0.75,2
+12,Cyber Marauder,25,80,0,Attack {damage} damage to player. Temporarily disabling {special_unit} random card each turn.,1,0

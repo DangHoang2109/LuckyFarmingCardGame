@@ -6,7 +6,6 @@ public class TempDialogManager : MonoSingleton<TempDialogManager>
 {
     public List<string> pathDialogs;
     public Dictionary<string, BaseDialog> dialogRegisters = new Dictionary<string, BaseDialog>();
-    public Transform panel;
 
     public BaseDialog CreateDialog(string path)
     {
@@ -26,7 +25,7 @@ public class TempDialogManager : MonoSingleton<TempDialogManager>
     {
         if (prefab != null)
         {
-            var dialog = Instantiate(prefab, this.panel);
+            var dialog = Instantiate(prefab, this.transform);
             if (dialog != null)
             {
                 dialog.gameObject.name = dialog.name.Replace("(Clone)", "");
@@ -70,7 +69,7 @@ public class TempDialogManager : MonoSingleton<TempDialogManager>
         List<BaseDialog> result = new List<BaseDialog>();
 
         BaseDialog temp;
-        foreach (Transform child in this.panel)
+        foreach (Transform child in this.transform)
         {
             if (!child.gameObject.activeSelf)
                 continue;

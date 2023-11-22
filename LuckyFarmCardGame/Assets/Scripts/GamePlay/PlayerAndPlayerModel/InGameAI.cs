@@ -9,8 +9,10 @@ public class InGameAI
     /// </summary>
     public class AILooker
     {
-        public InGameBasePlayerItem _player;
-        public BaseInGamePlayerDataModel PlayerInfo => _player?.PlayerModel;
+        public InGameBotPlayerItem _enemyItem;
+        public BaseInGameEnemyDataModel EnemyModel => _enemyItem?.EnemyModel;
+        public InGameEnemyStatConfig EnemyStat => _enemyItem?.StatConfig;
+        public InGameEnemyInfoConfig EnemyInfo => _enemyItem?.InfoConfig;
 
         protected InGameManager _ingameManager;
         public InGameManager InGameManager
@@ -38,35 +40,17 @@ public class InGameAI
         {
 
         }
-        public AILooker(InGameBasePlayerItem p)
+        public AILooker(InGameBotPlayerItem p)
         {
-            this._player = p;
+            this._enemyItem = p;
         }
 
         public LookingMessage Look()
         {
             LookingMessage msg = new LookingMessage();
 
-            //lấy tỉ lệ conflict card tiếp theo
-            msg._conflictPalletPercent = InGameController.GetPalletConflictChance();
-            //lấy pallet hiện tại của bản thân
-            msg._myPalletCurrentCards = InGameController.GetCurrentPalletIDs();
-            msg._totalCoinGainFromThisPallet = InGameController.GetPalletTotalCoin();
-
-            msg._otherPlayerInfoList = InGameManager.GetOtherPlayerLookingInfos();
-            msg._otherPlayerInfoDic = new Dictionary<int, OtherPlayerLookingInfo>();
-            foreach (OtherPlayerLookingInfo info in msg._otherPlayerInfoList)
-            {
-                msg._otherPlayerInfoDic.Add(info._playerID, info);
-            }
-            //lấy card trên top deck
-            msg._topDeckCardEffectID = InGameController.GetTopDeckEffect();
-            msg._topDeckCardID = InGameController.GetTopDeckID();
-
-            //có conflict khum?
-            msg._willPalletConflictIfDraw = InGameController.GetResultPalletConflictIfThisCardJoin(msg._topDeckCardID);
-            //this info will be get when that action come 
-            msg._coinNeedToSpentIfPalletConflict = 0;
+            msg._mainPlayerInfo = InGameManager.GetMainPlayerLookingInfos();
+            msg._currentTotalAmountOfEnemy = InGameManager.EnemysAlive.Count;
             return msg;
         }
 
@@ -81,185 +65,65 @@ public class InGameAI
     public class LookingMessage
     {
         /// <summary>
-        /// Tỉ lệ lá tiếp theo gây ra pallet conflict
+        /// Tình trạng hiện tại của Main player
         /// </summary>
-        public float _conflictPalletPercent;
-
-        /// <summary>
-        /// Thông tin về card trên top nếu draw
-        /// </summary>
-        public int _topDeckCardID;
-        public InGameBaseCardEffectID _topDeckCardEffectID;
-
-        /// <summary>
-        /// Pallet có conflict ko nếu draw top card?
-        /// </summary>
-        public bool _willPalletConflictIfDraw;
-        public int _coinNeedToSpentIfPalletConflict;
-        /// <summary>
-        /// Tình trạng pallet hiện tại của bản thân
-        /// </summary>
-        public List<int> _myPalletCurrentCards;
-        public int _totalCoinGainFromThisPallet;
-        /// <summary>
-        /// Tình trạng hiện tại của các player khác
-        /// </summary>
-        public Dictionary<int, OtherPlayerLookingInfo> _otherPlayerInfoDic;
-
-        public List<OtherPlayerLookingInfo> _otherPlayerInfoList;
+        public OtherPlayerLookingInfo _mainPlayerInfo;
+        public int _currentTotalAmountOfEnemy;
     }
     public class OtherPlayerLookingInfo
     {
         public int _playerID;
-        public Dictionary<int, InGame_CardDataModelLevels> _bagDic;
-        public List<InGame_CardDataModelLevels> _bagList;
-        public int _totalCard;
-        public int _currentCoin;
     }
 
     /// <summary>
-    /// Class giúp AI đưa ra những quyết định dựa theo tình trạng bàn hiện tại, giao tiếp với các class khác qua DecidingMesssage
+    /// Quyết định và thực thi lượt
     /// </summary>
-    public class AIDecider
+    public class AIExecutor
     {
-        public InGameBasePlayerItem _player;
-        public BaseInGamePlayerDataModel PlayerInfo => _player?.PlayerModel;
+        protected InGameBotPlayerItem _enemyItem;
+        public BaseInGamePlayerDataModel PlayerInfo => _enemyItem?.PlayerModel;
+        public BaseInGameEnemyDataModel EnemyModel => _enemyItem?.EnemyModel;
+        public InGameEnemyStatConfig EnemyStat => _enemyItem?.StatConfig;
+        public InGameEnemyInfoConfig EnemyInfo => _enemyItem?.InfoConfig;
 
         protected LookingMessage _msg;
 
-        public AIDecider() { }
-        public AIDecider(InGameBasePlayerItem bot)
-        {
-            this._player = bot;
-        }
-
-        public DecidingMesssage Decide(LookingMessage _cMsg)
-        {
-            _msg = _cMsg;
-            DecidingMesssage dMsg = new DecidingMesssage();
-
-            dMsg._attacking = true;
-
-            //float randResult = 0;
-
-            //check nếu card tiếp theo gây ra conflict quá cao thì endturn
-            //randResult = GameUtils.Random;
-            //dMsg._endTurn = randResult <= _msg._conflictPalletPercent;
-            //if (dMsg._endTurn)
-            //    return dMsg;
-
-            //nếu lỡ bắt buộc draw, kết quả draw có gây conflict ko?
-            //dMsg._willPalletConflictIfDraw = !dMsg._endTurn && _msg._willPalletConflictIfDraw;
-            //dMsg._willSpentTheCoin = DecideToUseCoinIfWeAfford();
-
-            //nếu không endturn => BẮT BUỘC draw card tiếp theo
-            //nếu card tiếp theo có effect tương tác: pull card hoặc destroy card thì phải decide là tương tác với ai và card tương tác là card nào
-            //switch (_msg._topDeckCardEffectID)
-            //{
-            //    case InGameBaseCardEffectID.NONE_EFFECT:
-            //        dMsg._interactWithOther = false;
-            //        break;
-            //    case InGameBaseCardEffectID.DRAW_CARD:
-            //        dMsg._interactWithOther = false;
-            //        break;
-            //    case InGameBaseCardEffectID.REVEAL_TOP_DECK:
-            //        dMsg._interactWithOther = false;
-            //        break;
-            //    default:
-            //        break;
-            //}
-
-            return dMsg;
-
-            ///Nếu đủ coin thì có chi ra cứu pallet ko
-            //bool DecideToUseCoinIfWeAfford()
-            //{
-            //    //nếu conflict, có chi coin ko?
-            //    //nếu coin ko đủ cứu => ko chi
-            //    //nếu coin đủ => 
-            //    //2. Nếu ko có card trong goal, nhưng coin thu về từ pallet lớn hơn coin chi ra => cứu
-            //    //3. Nếu cả 2 card ko => random 10-20% cứu
-            //    //1.
-
-            //    //2.
-            //    float chanceToUseCoin = 0.1f;
-            //    if (GameUtils.Random <= chanceToUseCoin)
-            //        return true;
-
-            //    return false;
-            //}
-        }
-
-        public void EndTurn()
-        {
-            this._msg = null;
-        }
-    }
-    /// <summary>
-    /// Class message AI Decider return ra gửi cho Executor giúp nó thực thi theo ý nó từ những thông tin này
-    /// </summary>
-    public class DecidingMesssage
-    {
-        /// <summary>
-        /// Không draw nữa mà end turn luôn
-        /// </summary>
-        //public bool _endTurn;
-
-        public bool _attacking;
-        ///// <summary>
-        ///// nếu card tiếp theo có effect tương tác: pull card hoặc destroy card 
-        ///// phải decide là tương tác với ai và card tương tác là card nào
-        ///// </summary>
-        //public bool _interactWithOther;
-        //public int _playerIDInteractWith;
-        //public int _cardIDInteractWith;
-
-        ///// <summary>
-        ///// Pallet có conflict ko nếu draw top card?
-        ///// </summary>
-        //public bool _willPalletConflictIfDraw;
-        //public bool _willSpentTheCoin;
-    }
-
-    public class AIExecutor
-    {
-        protected InGameBotPlayerItem _player;
-        public BaseInGamePlayerDataModel PlayerInfo => _player?.PlayerModel;
-
-        protected DecidingMesssage _msg;
-
+        List<ExecutionAction> _allActions;
         Queue<ExecutionAction> _actions;
 
         public bool deQueue;
 
         public AIExecutor(InGameBotPlayerItem _player)
         {
-            this._player = _player;
+            this._enemyItem = _player;
             _actions = new Queue<ExecutionAction>();
             deQueue = false;
         }
-
-        public void SetDecision(DecidingMesssage _msg)
+        public void Decide(LookingMessage _cMsg)
         {
-            this._msg = _msg;
+            _msg = _cMsg;
+
+            if(this._allActions == null || _allActions.Count == 0)
+            {
+                List<ExecutionAction> actions = new List<ExecutionAction>();
+                foreach (var skillID in EnemyStat._skills)
+                {
+                    actions.Add(CreateAction(skillID, this._enemyItem, _msg));
+                }
+                actions.Add(new ExecuteEndTurn(this._enemyItem));
+                _allActions = actions;
+            }
+        }
+        public void SetDecision()
+        {
             try
             {
                 //chờ vài giây
-                _actions.Enqueue(new ExecuteThink(this._msg, _player, Random.Range(0.8f, 1.2f)));
-
-                _actions.Enqueue(new ExecuteAttackMainPlayer(this._msg, _player));
-
-                _actions.Enqueue(new ExecuteEndTurn(this._msg, _player));
-
-                //if (_msg._endTurn)
-                //{
-                //    //_actions.Enqueue(new ExecuteEndTurn(this._msg, _player));
-                //}
-                //else
-                //{
-                //    //Chờ vài giây
-                //    _actions.Enqueue(new ExecuteDrawCard(this._msg, _player));
-                //}
+                _actions.Enqueue(new ExecuteThink(_enemyItem, Random.Range(0.8f, 1.2f)));
+                foreach (var action in _allActions)
+                {
+                    this._actions.Enqueue(action);
+                }
             }
             catch (System.Exception e)
             {
@@ -274,34 +138,15 @@ public class InGameAI
 
             if (_actions.Peek().Preparing())
             {
-                _actions.Dequeue().Do();
+                ExecutionAction act = _actions.Dequeue();
+                if(act.IsCanDo())
+                    act.Do();
             }
         }
         public bool IsHasAction()
         {
             return this._actions.Count > 0;
         }
-
-
-        //public void CheckActionInterractCardIfNeed()
-        //{
-        //    //Chờ vài giây
-        //    //logic ở đây đang sai, khi card flip xong, callback gọi thì mới execute cái này
-        //    if (_msg._interactWithOther)
-        //    {
-        //        _actions.Enqueue(new ExecuteThink(this._msg, _player, _thinkTime: 3f));
-        //        _actions.Enqueue(new ExecuteChoseCard(this._msg, _player));
-        //    }
-        //}
-        //public void CheckActionSpentCoinIfNeed(int coinNeedSpending)
-        //{
-        //    //logic ở đây đang sai, khi dice roll xong, callback gọi thì mới execute cái này
-        //    if (_msg._willSpentTheCoin && PlayerInfo.IsCanUseGameCoin(coinNeedSpending))
-        //    {
-        //        _actions.Enqueue(new ExecuteThink(this._msg, _player, _thinkTime: 3f));
-        //        _actions.Enqueue(new ExecuteUseCoin(this._msg, _player));
-        //    }
-        //}
         public void EndTurn()
         {
             _msg = null;
@@ -311,21 +156,44 @@ public class InGameAI
     }
 
     #region Execution Action
-    protected abstract class ExecutionAction
+    public enum EnemySkillID
     {
-        protected DecidingMesssage _msg;
-
-        protected InGameBasePlayerItem _player;
-
-        protected float m_ThinkTime = 0;
+        [Type(typeof(ExecuteAttackMainPlayer))]
+        ATTACK_PLAYER = 0,
+        [Type(typeof(ExecuteSpawnFoes))]
+        SPAWNING_FOES = 1,
+        [Type(typeof(ExecuteCreateShield))]
+        CREATING_SHIELD = 2,
+        [Type(typeof(ExecuteSuckingDrainHP))]
+        DRAIN_PLAYER_HP = 3,
+        [Type(typeof(ExecuteMultiplierDamage))]
+        MULTIPLIER_DAMAGE = 4,
+    }
+    public abstract class ExecutionAction
+    {
+        protected InGameBotPlayerItem _bot;
+        protected LookingMessage _lMsg;
+        protected InGameEnemySkillConfig _skillConfig;
+        public float m_ThinkTime = 0;
 
         public ExecutionAction()
         { }
-        public ExecutionAction(DecidingMesssage _msg, InGameBasePlayerItem _player)
+        public ExecutionAction(InGameBotPlayerItem _player)
         {
-            this._msg = _msg;
-            this._player = _player;
+            this._bot = _player;
         }
+        public ExecutionAction(InGameEnemySkillConfig skillConfig,InGameBotPlayerItem _player)
+        {
+            this._bot = _player;
+            this._skillConfig = skillConfig;
+        }
+        /// <summary>
+        /// Cần clear lại thông tin gì đó
+        /// Gọi vào đầu lượt
+        /// </summary>
+        /// <returns></returns>
+        public virtual void Clear() {  }
+
         /// <summary>
         /// Thực thi action
         /// </summary>
@@ -336,18 +204,38 @@ public class InGameAI
         /// </summary>
         /// <returns></returns>
         public virtual bool Preparing() { return true; }
+
+        /// <summary>
+        /// Action này có thể thực thi hay ko?
+        /// </summary>
+        /// <returns></returns>
+        public virtual bool IsCanDo() { return !(this._bot?.IsStunning ?? false); }
+
+        public virtual void SetLookingMessage(LookingMessage msg)
+        {
+            this._lMsg = msg;
+        }
     }
 
-    protected class ExecuteThink : ExecutionAction
+    public class ExecuteThink : ExecutionAction
     {
-        public ExecuteThink(DecidingMesssage _msg, InGameBasePlayerItem _player) : base(_msg, _player)
+        public ExecuteThink(InGameBotPlayerItem _player) : base(_player)
         {
             m_ThinkTime = Random.Range(1.0f, 2.0f);
         }
 
-        public ExecuteThink(DecidingMesssage _msg, InGameBasePlayerItem _player, float _thinkTime) : base(_msg, _player)
+        public ExecuteThink(InGameBotPlayerItem _player, float _thinkTime) : base(_player)
         {
             m_ThinkTime = _thinkTime;
+        }
+        public override void Clear()
+        {
+            base.Clear();
+            m_ThinkTime = Random.Range(1.0f, 2.0f);
+        }
+        public override bool IsCanDo()
+        {
+            return true;
         }
         public override void Do() { }
         public override bool Preparing()
@@ -359,93 +247,143 @@ public class InGameAI
         }
     }
 
-    protected class ExecuteDrawCard : ExecutionAction
+    public class ExecuteEndTurn : ExecutionAction
     {
-        public ExecuteDrawCard(DecidingMesssage _msg, InGameBasePlayerItem _player) : base(_msg, _player)
-        {
-        }
+        public ExecuteEndTurn(InGameBotPlayerItem p) : base(p) { }
 
-        public ExecuteDrawCard(DecidingMesssage _msg, InGameBasePlayerItem _player, float _thinkTime) : base(_msg, _player)
-        {
-        }
-        public override void Do() 
-        {
-            InGameManager.Instance.OnDrawCard();
-        }
-        public override bool Preparing()
-        {
-            return true;
-        }
-    }
-
-    //protected class ExecuteChoseCard : ExecutionAction
-    //{
-    //    public ExecuteChoseCard(DecidingMesssage _msg, InGameBasePlayerItem _player) : base(_msg, _player)
-    //    {
-    //    }
-
-    //    public ExecuteChoseCard(DecidingMesssage _msg, InGameBasePlayerItem _player, float _thinkTime) : base(_msg, _player)
-    //    {
-    //    }
-    //    public override void Do()
-    //    {
-    //        InGameManager.Instance.OnBotClickChoseToggleBagUIItem(_msg._playerIDInteractWith, _msg._cardIDInteractWith);
-    //    }
-    //    public override bool Preparing()
-    //    {
-    //        return true;
-    //    }
-    //}
-
-    protected class ExecuteUseCoin : ExecutionAction
-    {
-        public ExecuteUseCoin(DecidingMesssage _msg, InGameBasePlayerItem _player) : base(_msg, _player)
-        {
-        }
-
-        public ExecuteUseCoin(DecidingMesssage _msg, InGameBasePlayerItem _player, float _thinkTime) : base(_msg, _player)
-        {
-        }
-        public override void Do()
-        {
-            InGameManager.Instance.OnUserDecideToUseGameCoin();
-        }
-        public override bool Preparing()
-        {
-            return true;
-        }
-    }
-
-    protected class ExecuteEndTurn : ExecutionAction
-    {
-        public ExecuteEndTurn(DecidingMesssage _msg, InGameBasePlayerItem _player) : base(_msg, _player)
-        {
-        }
-
-        public ExecuteEndTurn(DecidingMesssage _msg, InGameBasePlayerItem _player, float _thinkTime) : base(_msg, _player)
-        {
-        }
         public override void Do()
         {
             InGameManager.Instance.OnUserEndTurn();
         }
+        public override bool IsCanDo()
+        {
+            return true;
+        }
         public override bool Preparing()
         {
             return true;
         }
     }
-    protected class ExecuteAttackMainPlayer : ExecutionAction
+    public class ExecuteAttackMainPlayer : ExecutionAction
     {
-        public ExecuteAttackMainPlayer(DecidingMesssage _msg, InGameBasePlayerItem _player) : base(_msg, _player)
+        public ExecuteAttackMainPlayer(InGameEnemySkillConfig skillConfig, InGameBotPlayerItem _player) : base(skillConfig, _player)
         {
         }
-
-        public ExecuteAttackMainPlayer(DecidingMesssage _msg, InGameBasePlayerItem _player, float _thinkTime) : base(_msg, _player)
+        public ExecuteAttackMainPlayer(InGameBotPlayerItem p) : base(p) { }
+        public override void Do()
         {
+            Debug.Log("act skill: attack player");
+            this._bot.AttackSingleUnit(this._skillConfig.StatAsInt);
+        }
+        public override bool Preparing()
+        {
+            return true;
+        }
+    }
+    /// <summary>
+    /// Spawn creep
+    /// </summary>
+    public class ExecuteSpawnFoes : ExecutionAction
+    {
+        int countDown;
+        public ExecuteSpawnFoes(InGameEnemySkillConfig skillConfig, InGameBotPlayerItem _player) : base(skillConfig, _player)
+        {
+            this.countDown = skillConfig._statIntervall;
+        }
+        public ExecuteSpawnFoes(InGameBotPlayerItem p) : base(p) { }
+
+        public override bool IsCanDo()
+        {
+            return InGameManager.Instance.EnemysAlive.Count < CardGameController.MAX_ENEMY_ALLOW; //3 is max
         }
         public override void Do()
         {
-            this._player.AttackSingleUnit();
+            //trừ count down
+            if (countDown <= 0)
+            {
+                //spawn the foes corresponding
+                InGameManager.Instance.SpawnCreep(enemyID: this._skillConfig._statID, amount: this._skillConfig.StatAsInt, casterSeatID: _bot.SeatID, turnStunned: 1);
+                countDown = this._skillConfig._statIntervall;
+            }
+            else
+            {
+                countDown--;
+                Debug.Log($"UPDATE COUNT DOWN EFFECT {this._skillConfig._skillID} -{countDown}");
+            }
+        }
+        public override bool Preparing()
+        {
+            return true;
+        }
+    }
+    /// <summary>
+    /// Tạo khiên thủ
+    /// </summary>
+    public class ExecuteCreateShield : ExecutionAction
+    {
+        public ExecuteCreateShield(InGameEnemySkillConfig skillConfig, InGameBotPlayerItem _player) : base(skillConfig, _player)
+        {
+        }
+        public ExecuteCreateShield(InGameBotPlayerItem p) : base(p) { }
+
+        public override void Do()
+        {
+            Debug.Log("act skill: create shield");
+            this._bot.DefenseCreateShield(this._skillConfig.StatAsInt);
+        }
+        public override bool Preparing()
+        {
+            return true;
+        }
+    }
+    /// <summary>
+    /// Hút máu
+    /// </summary>
+    public class ExecuteSuckingDrainHP : ExecutionAction
+    {
+        public ExecuteSuckingDrainHP(InGameEnemySkillConfig skillConfig, InGameBotPlayerItem _player) : base(skillConfig, _player)
+        {
+        }
+        public ExecuteSuckingDrainHP(InGameBotPlayerItem p) : base(p) { }
+
+        public override void Do()
+        {
+            this._bot.AttackSingleUnit(this._skillConfig.StatAsInt);
+            this._bot.Heal(this._skillConfig.StatAsInt);
+        }
+        public override bool Preparing()
+        {
+            return true;
+        }
+    }
+    /// <summary>
+    /// Hút máu
+    /// </summary>
+    public class ExecuteMultiplierDamage : ExecutionAction
+    {
+        int countDown;
+
+        public ExecuteMultiplierDamage(InGameEnemySkillConfig skillConfig, InGameBotPlayerItem _player) : base(skillConfig, _player)
+        {
+            this.countDown = skillConfig._statIntervall;
+
+        }
+        public ExecuteMultiplierDamage(InGameBotPlayerItem p) : base(p) { }
+
+        public override void Do()
+        {
+            Debug.Log("act skill: multiplier damage");
+            //trừ count down
+            if (countDown <= 0)
+            {
+                this._bot.SetMultiplierDamage(this._skillConfig._statValue);
+                countDown = this._skillConfig._statIntervall;
+            }
+            else
+            {
+                countDown--;
+                Debug.Log($"UPDATE COUNT DOWN EFFECT {this._skillConfig._skillID} -{countDown}");
+            }
         }
         public override bool Preparing()
         {
@@ -453,5 +391,34 @@ public class InGameAI
         }
     }
     #endregion Execution Action
+
+    public static ExecutionAction CreateAction(InGameEnemySkillConfig skillConfig, InGameBotPlayerItem host, LookingMessage lMsg)
+    {
+        ExecutionAction action = null;
+        switch (skillConfig._skillID)
+        {
+            case EnemySkillID.ATTACK_PLAYER:
+                action = new ExecuteAttackMainPlayer(skillConfig,host);
+                break;
+            case EnemySkillID.SPAWNING_FOES:
+                action = new ExecuteSpawnFoes(skillConfig, host);
+                break;
+            case EnemySkillID.CREATING_SHIELD:
+                action = new ExecuteCreateShield(skillConfig, host);
+                break;
+            case EnemySkillID.DRAIN_PLAYER_HP:
+                action = new ExecuteSuckingDrainHP(skillConfig, host);
+                break;
+            case EnemySkillID.MULTIPLIER_DAMAGE:
+                action = new ExecuteMultiplierDamage(skillConfig, host);
+                break;
+            default:
+                Debug.Log("NOT DEFINE ENEMY SKILL " + skillConfig);
+                return null;
+        }
+
+        action?.SetLookingMessage(lMsg);
+        return action;
+    }
 }
 

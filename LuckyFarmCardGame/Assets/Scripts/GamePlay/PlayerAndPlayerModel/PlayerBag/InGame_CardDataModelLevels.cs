@@ -73,7 +73,7 @@ public class InGame_CardDataModelLevels
     }
     public bool CheckLevelUp()
     {
-        return this._currentCard > CurrentLevelConfig?._require;
+        return this._currentCard >= CurrentLevelConfig?._require;
     }
     public void LevelUp()
     {

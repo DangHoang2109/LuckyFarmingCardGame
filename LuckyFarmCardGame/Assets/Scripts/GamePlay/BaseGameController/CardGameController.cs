@@ -82,6 +82,8 @@ public class CardGameController : MonoBehaviour
     protected Coroutine _coroutineWaitDecidingUseGameCoin;
 
     protected bool _isMainUserTurn = false;
+
+    public static int MAX_ENEMY_ALLOW = 3;
     #endregion Data Prop
 
     #region Config

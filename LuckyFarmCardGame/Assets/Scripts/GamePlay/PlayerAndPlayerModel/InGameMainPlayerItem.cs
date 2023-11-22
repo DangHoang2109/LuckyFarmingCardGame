@@ -104,11 +104,12 @@ public class InGameMainPlayerItem : InGameBasePlayerItem
         if (cardReceive != null && cardReceive.Count > 0)
         {
             List < InGame_CardDataModelLevels > levelUp = this.MainDataModel.AddCardsToPallet(cardReceive);
-            ListingUpgradedCardsDialog d = ListingUpgradedCardsDialog.ShowDialog();
-            d.ParseData(levelUp, null);
+            if(levelUp!=null && levelUp.Count > 0)
+            {
+                ListingUpgradedCardsDialog d = ListingUpgradedCardsDialog.ShowDialog();
+                d.ParseData(levelUp, null);
+            }
         }
-        //this.BagVisual?.RefreshPlayerBag(this.MainDataModel._dictionaryBags);
-
         _tmpCoinValue.SetText($"{(PlayerModel.CurrentCoinPoint).ToString("D2")}");
     }
     public override void ParseVisualBagUI()
@@ -155,7 +156,7 @@ public class InGameMainPlayerItem : InGameBasePlayerItem
 
             void OnCallbackProjectileHit(VFXBaseObject _)
             {
-                InGameManager.Instance.OnPlayerAttacking(frontEnemy.ID, dmg);
+                InGameManager.Instance.OnPlayerAttacking(frontEnemy.SeatID, dmg);
                 base.AttackSingleUnit(dmg);
             }
             

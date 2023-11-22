@@ -22,7 +22,6 @@ public class InGameDeckUI : MonoBehaviour
     }
     public void OnClickDeck()
     {
-        Debug.LogError("DRAW");
         _onClickDraw?.Invoke();
     }
 }

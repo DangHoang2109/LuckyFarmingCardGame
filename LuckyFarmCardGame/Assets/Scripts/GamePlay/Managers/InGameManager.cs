@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -37,6 +38,11 @@ public class InGameManager : MonoSingleton<InGameManager>
 
     public List<int> idsMainPlayersAlive; //main player and his coop/pet
     public List<int> idsEnemysAlive; //Enemy currently active
+
+    /// <summary>
+    /// Contain map name, theme, wave ,enemy stat...
+    /// </summary>
+    protected InGameMapConfig _mapConfig;
     #endregion Data
 
     #region Getter
@@ -99,6 +105,10 @@ public class InGameManager : MonoSingleton<InGameManager>
 
     protected void InitGame()
     {
+        ///Get the map Config
+        int mapID = 0;
+        this._mapConfig = InGameEnemyConfigs.Instance._mapConfigs.GetMapConfig(mapID);
+
         int amountPlayerJoin = 1;//Random.Range(2, this._players.Count); //pulling this info fromn JoinGameData outside
         Debug.Log($"INGAME MANGE: Init {amountPlayerJoin} players");
         //Init player seat
@@ -130,7 +140,7 @@ public class InGameManager : MonoSingleton<InGameManager>
 
                     _players[i].SetAPlayerModel(main);
                     this._playersModels.Add(main);
-                    this.idsMainPlayersAlive.Add(main._id);
+                    this.idsMainPlayersAlive.Add(main._seatId);
                 }
             }
         }
@@ -139,7 +149,7 @@ public class InGameManager : MonoSingleton<InGameManager>
     protected void NewWaveAndSpawnEnemy()
     {
         //get wave config
-        InGameEnemyWaveConfig waveConfig = InGameEnemyConfigs.Instance.GetWaveConfig(this._enemyWaveIndex);
+        InGameEnemyWaveConfig waveConfig = _mapConfig.GetWaveConfig(this._enemyWaveIndex);
         if(waveConfig != null)
         {
             InitCreep(waveConfig);
@@ -149,30 +159,89 @@ public class InGameManager : MonoSingleton<InGameManager>
     {
         _playersModels ??= new List<BaseInGamePlayerDataModel>();
         idsEnemysAlive ??= new List<int>();
-        if (this._players != null && this._players.Count > 0)
+
+        for (int i = 0; i < waveConfig._enemyIDsInRound.Count; i++)
         {
-            int creepIndexMax = waveConfig.AmountEnemy + 1;
-            for (int i = 1; i < this._players.Count; i++)
+            int eID = waveConfig._enemyIDsInRound[i];
+            InGameEnemyStatConfig enemyStat = this._mapConfig.GetEnemyStat(enemyID: eID);
+            if(enemyStat != null)
             {
-                _players[i].gameObject.SetActive(i < creepIndexMax);
-                if (i >= creepIndexMax)
-                    continue;
+                InGameBasePlayerItem seat = this._players.Find(x => !x.IsPlaying);
+                if (seat == null)
+                    break;
+                seat.gameObject.SetActive(true);
+                int seatID = _players.IndexOf(seat);
+                BaseInGameEnemyDataModel enemyModel = new BaseInGameEnemyDataModel();
+                enemyModel.SetSeatID(id: seatID, isMain: false);
+                enemyModel.SetStatConfig(enemyStat);
+                enemyModel.StartGame();
 
-                int configIndex = i - 1;
-                InGameEnemyStatConfig enemyStat = waveConfig.GetEnemyStat(configIndex);
-                if(enemyStat != null)
-                {
-                    BaseInGameEnemyDataModel enemyModel = new BaseInGameEnemyDataModel();
-                    enemyModel.SetSeatID(id: i, isMain: false);
-                    enemyModel.SetStatConfig(enemyStat);
-                    enemyModel.StartGame();
-
-                    _players[i].SetAPlayerModel(enemyModel);
-                    this._playersModels.Add(enemyModel);
-                    idsEnemysAlive.Add(enemyModel._id);
-                }
-
+                seat.SetAPlayerModel(enemyModel);
+                this._playersModels.Add(enemyModel);
+                idsEnemysAlive.Add(enemyModel._seatId);
             }
+        }
+
+        //if (this._players != null && this._players.Count > 0)
+        //{
+        //    int creepIndexMax = waveConfig.AmountEnemy + 1;
+        //    for (int i = 1; i < this._players.Count; i++)
+        //    {
+        //        _players[i].gameObject.SetActive(i < creepIndexMax);
+        //        if (i >= creepIndexMax)
+        //            continue;
+
+        //        int configIndex = i - 1;
+        //        InGameEnemyStatConfig enemyStat = waveConfig.GetEnemyStat(configIndex);
+        //        if(enemyStat != null)
+        //        {
+        //            BaseInGameEnemyDataModel enemyModel = new BaseInGameEnemyDataModel();
+        //            enemyModel.SetSeatID(id: i, isMain: false);
+        //            enemyModel.SetStatConfig(enemyStat);
+        //            enemyModel.StartGame();
+
+        //            _players[i].SetAPlayerModel(enemyModel);
+        //            this._playersModels.Add(enemyModel);
+        //            idsEnemysAlive.Add(enemyModel._seatId);
+        //        }
+
+        //    }
+        //}
+    }
+    public void SpawnCreep(int enemyID, int amount, int casterSeatID, int turnStunned = 0)
+    {
+        InGameEnemyStatConfig enemyStat = this._mapConfig.GetEnemyStat(enemyID: enemyID);
+        if (enemyStat == null)
+            return;
+
+        for (int i = 1; i < this._players.Count; i++)
+        {
+            if (_players[i].IsPlaying)
+                continue;
+
+            int configIndex = i - 1;
+            if (enemyStat != null)
+            {
+                InGameBotPlayerItem seat = _players[i] as InGameBotPlayerItem;
+
+                seat.gameObject.SetActive(true);
+
+                BaseInGameEnemyDataModel enemyModel = new BaseInGameEnemyDataModel();
+                enemyModel.SetSeatID(id: i, isMain: false);
+                enemyModel.SetStatConfig(enemyStat);
+                enemyModel.StartGame();
+
+                seat.SetAPlayerModel(enemyModel);
+                this._playersModels.Add(enemyModel);
+                idsEnemysAlive.Add(enemyModel._seatId);
+
+                int turnStuntruly = casterSeatID >=i ? turnStunned - 1 : turnStunned; //Nếu vị trí của new enemy spawn ra ở phía trước caster thì bớt 1 turn stun để đều với enemy đứng phía sau
+                seat.SetStun(turnStuntruly);
+                amount--;
+            }
+
+            if (amount <= 0)
+                break;
         }
     }
     public void StartGame()
@@ -362,8 +431,8 @@ public class InGameManager : MonoSingleton<InGameManager>
     }
     public void OnCallbackPlayerDead(InGameBasePlayerItem dead)
     {
-        this.idsMainPlayersAlive.Remove(dead.ID);
-        this.idsEnemysAlive.Remove(dead.ID);
+        this.idsMainPlayersAlive.Remove(dead.SeatID);
+        this.idsEnemysAlive.Remove(dead.SeatID);
         dead.ClearWhenDead();
 
         //remove from the list -> move to remove when no enemy left
@@ -371,7 +440,7 @@ public class InGameManager : MonoSingleton<InGameManager>
     }
     private void RemoveCharacter(InGameBasePlayerItem dead)
     {
-        this._playersModels.RemoveAll(x => x._id == dead.ID);
+        this._playersModels.RemoveAll(x => x._seatId == dead.SeatID);
     }
     private void OnLogicEndTurn()
     {
@@ -389,18 +458,18 @@ public class InGameManager : MonoSingleton<InGameManager>
             {
                 //roll to next index, but caution enemy 1 may dead but enemy 2 still alive
                 //we can remove this do while when we apply the roll change enemy position system
-                this._turnIndex = InGameUtils.RollIndex(this._turnIndex, this._playersModels.Count);
-                Debug.Log($"ROLL TURN INDEX TO {this._turnIndex} in {this._playersModels.Count}");
+                this._turnIndex = InGameUtils.RollIndex(this._turnIndex, this._players.Count);
+                Debug.Log($"ROLL TURN INDEX TO {this._turnIndex} in {this._players.Count}");
                 while (!this._players[_turnIndex].IsActive())
                 {
-                    if (_turnIndex == this._playersModels.Count - 1)
+                    if (_turnIndex == this._players.Count - 1)
                     {
                         this.OnEndRound();
                         return;
                     }
 
-                    this._turnIndex = InGameUtils.RollIndex(this._turnIndex, this._playersModels.Count);
-                    Debug.Log($"ROLL TURN INDEX TO {this._turnIndex} in {this._playersModels.Count}");
+                    this._turnIndex = InGameUtils.RollIndex(this._turnIndex, this._players.Count);
+                    Debug.Log($"ROLL TURN INDEX TO {this._turnIndex} in {this._players.Count}");
                 }
 
                 //begin next user turn
@@ -499,54 +568,23 @@ public class InGameManager : MonoSingleton<InGameManager>
 
     public bool TryGetSeatItem(int id, out InGameBasePlayerItem item)
     {
-        item = this._players.Find(x => x.ID == id);
+        item = this._players.Find(x => x.SeatID == id);
         return item != null;
     }
 
     #region Bot Looker API Need
-    public List<InGameAI.OtherPlayerLookingInfo> GetOtherPlayerLookingInfos()
+    public InGameAI.OtherPlayerLookingInfo GetMainPlayerLookingInfos()
     {
-        List<InGameAI.OtherPlayerLookingInfo> res = new List<InGameAI.OtherPlayerLookingInfo>();
-        int currentTurnId = this.CurrentTurnPlayer.ID;
-
         //get info of the main player only
-        foreach (InGameBasePlayerItem playerItem in this._players)
+        InGameMainPlayerItem main = this.MainUserPlayer;
+        if (!main.IsPlaying)
+            return null;
+        BaseInGameMainPlayerDataModel model = main.MainDataModel;
+        InGameAI.OtherPlayerLookingInfo info = new InGameAI.OtherPlayerLookingInfo()
         {
-            if(playerItem is InGameMainPlayerItem main)
-            {
-                if (!main.IsPlaying || main.ID == currentTurnId)
-                    continue;
-
-                BaseInGameMainPlayerDataModel model = main.MainDataModel;
-                InGameAI.OtherPlayerLookingInfo info = new InGameAI.OtherPlayerLookingInfo()
-                {
-                    _playerID = model._id,
-                    _currentCoin = model.CurrentCoinPoint,
-                    _totalCard = model.AmountCardInBag,
-                    _bagList = model._bag,
-                    _bagDic = model._dictionaryBags
-                };
-                res.Add(info);
-            }
-        }
-
-        //foreach (InGameBasePlayerItem playerItem in this._players)
-        //{
-        //    if (!playerItem.IsPlaying || playerItem.ID == currentTurnId)
-        //        continue;
-
-        //    BaseInGamePlayerDataModel model = playerItem.PlayerModel;
-        //    InGameAI.OtherPlayerLookingInfo info = new InGameAI.OtherPlayerLookingInfo()
-        //    {
-        //        _playerID = model._id,
-        //        _currentCoin = model.CurrentCoinPoint,
-        //        _totalCard = model.AmountCardInBag,
-        //        _bagList = model._bag,
-        //        _bagDic = model._dictionaryBags
-        //    };
-        //    res.Add(info);
-        //}
-            return res;
+            _playerID = model._seatId,
+        };
+        return info;
     }
     #endregion Bot Looker API Need
 }

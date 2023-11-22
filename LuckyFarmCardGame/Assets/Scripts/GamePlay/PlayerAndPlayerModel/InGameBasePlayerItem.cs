@@ -55,11 +55,21 @@ public class InGameBasePlayerItem : MonoBehaviour
     protected BaseInGamePlayerDataModel _playerModel;
     public BaseInGamePlayerDataModel PlayerModel => _playerModel;
 
-    public int ID => this.PlayerModel?._id ?? -1;
-    public bool IsMainPlayer => ID == 0;
+    public int SeatID => this.PlayerModel?._seatId ?? -1;
+    public bool IsMainPlayer => SeatID == 0;
 
     //in effect card
     protected List<int> CardBeingChose; protected int _amountCardToBeChoseInEffect; protected System.Action<int, List<int>> _onCompleteBeingChoseInEffect;
+
+
+    #region InGame skill involve Data : Curse, Stun, Burn, Poision....
+    public int AmountTurnStunned { get; set; }
+    public bool IsStunning => AmountTurnStunned > 0;
+    /// <summary>
+    /// 1f is 100% -> normal state
+    /// </summary>
+    public float MultiplierDamage { get; set; }  
+    #endregion InGame skill involve Data
 
     #endregion Data
 
@@ -77,6 +87,7 @@ public class InGameBasePlayerItem : MonoBehaviour
     }
     public virtual InGameBasePlayerItem InitPlayerItSelf()
     {
+        ClearStun();
         return this;
     }
     public virtual void ParseVisualBagUI()
@@ -90,6 +101,9 @@ public class InGameBasePlayerItem : MonoBehaviour
     }
     public virtual void EndTurn()
     {
+        this.AmountTurnStunned--;
+        if (AmountTurnStunned <= 0) 
+            ClearStun();
     }
     public virtual void ContinueTurn()
     {
@@ -132,7 +146,7 @@ public class InGameBasePlayerItem : MonoBehaviour
 
         if (CardBeingChose.Count == _amountCardToBeChoseInEffect)
         {
-            _onCompleteBeingChoseInEffect?.Invoke(this.ID, new List<int>(CardBeingChose));
+            _onCompleteBeingChoseInEffect?.Invoke(this.SeatID, new List<int>(CardBeingChose));
 
             this.CardBeingChose.Clear();
             this._amountCardToBeChoseInEffect = 0;
@@ -163,7 +177,7 @@ public class InGameBasePlayerItem : MonoBehaviour
 
         if (CardBeingChose.Count == _amountCardToBeChoseInEffect)
         {
-            _onCompleteBeingChoseInEffect?.Invoke(this.ID, new List<int>(CardBeingChose));
+            _onCompleteBeingChoseInEffect?.Invoke(this.SeatID, new List<int>(CardBeingChose));
 
             this.CardBeingChose.Clear();
             this._amountCardToBeChoseInEffect = 0;
@@ -199,7 +213,7 @@ public class InGameBasePlayerItem : MonoBehaviour
         this.CurrentHP -= dmg;
         if (isDead())
         {
-            InGameManager.Instance.OnAPlayerDie(this.ID);
+            InGameManager.Instance.OnAPlayerDie(this.SeatID);
         }
     }
     public virtual void AddHP(int heal)
@@ -236,14 +250,14 @@ public class InGameBasePlayerItem : MonoBehaviour
     {
         if (heal <= 0)
             heal = 1; //replace with this host info
-        InGameManager.Instance.OnPlayerHeal(this.ID, heal);
+        InGameManager.Instance.OnPlayerHeal(this.SeatID, heal);
         InGameManager.Instance.OnTellControllerContinueTurn();
     }
     public virtual void DefenseCreateShield(int shieldUnit = -1)
     {
         if (shieldUnit <= 0)
             shieldUnit = 1; //replace with this host info
-        InGameManager.Instance.OnPlayerDefense(this.ID, shieldUnit);
+        InGameManager.Instance.OnPlayerDefense(this.SeatID, shieldUnit);
         InGameManager.Instance.OnTellControllerContinueTurn();
     }
     public virtual void RevealCard(int reveal = -1)
@@ -258,15 +272,7 @@ public class InGameBasePlayerItem : MonoBehaviour
             draw = 1; //replace with this host info
         InGameManager.Instance.OnTellControllerToDrawCards(draw);
     }
-    public virtual void Dead(System.Action cb)
-    {
-        Debug.Log("DEAD");
-    }
-    public virtual void ClearWhenDead()
-    {
-        this.gameObject.SetActive(false);
-        this._playerModel = null;
-    }
+
     #endregion Turn Action
 
     public virtual bool isDead()
@@ -280,13 +286,37 @@ public class InGameBasePlayerItem : MonoBehaviour
     public virtual void CustomUpdate()
     {
     }
-    
+    public virtual void Dead(System.Action cb)
+    {
+        Debug.Log("DEAD");
+    }
+    public virtual void ClearWhenDead()
+    {
+        this.gameObject.SetActive(false);
+        this._playerModel = null;
+        ClearStun();
+    }
+    public virtual void ClearStun()
+    {
+        this.AmountTurnStunned = 0;
+    }
+    #region Skill & Card Affect
+    public virtual void SetStun(int amountTurnStunnning)
+    {
+        this.AmountTurnStunned = amountTurnStunnning;
+    }
+    public virtual void SetMultiplierDamage(float damageMultiplier)
+    {
+        this.MultiplierDamage = damageMultiplier;
+    }
+
+    #endregion 
 
 }
 
 public class BaseInGamePlayerDataModel
 {
-    public int _id;
+    public int _seatId;
     public bool _isMainPlayer;
     protected int _currentCoinPoint = 0;
     public int CurrentCoinPoint
@@ -316,7 +346,7 @@ public class BaseInGamePlayerDataModel
     }
     public BaseInGamePlayerDataModel SetSeatID(int id, bool isMain)
     {
-        this._id = id;
+        this._seatId = id;
         this._isMainPlayer = isMain;
         return this;
     }
@@ -521,7 +551,6 @@ public class BaseInGameEnemyDataModel : BaseInGamePlayerDataModel
     {
         _statConfig = config;
         this.SetHP(config.MaxHP);
-        this.SetBaseStat(config.Damage, config.Shield, config.Heal);
         return this;
     }
 }

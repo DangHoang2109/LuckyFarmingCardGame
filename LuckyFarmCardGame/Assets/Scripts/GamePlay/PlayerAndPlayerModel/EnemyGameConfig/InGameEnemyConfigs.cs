@@ -1,8 +1,10 @@
-﻿using Spine.Unity;
+﻿using Sirenix.OdinInspector;
+using Spine.Unity;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static InGameAI;
 
 /// <summary>
 /// Config:
@@ -30,15 +32,19 @@ public class InGameEnemyConfigs : ScriptableObject
     #endregion Singleton
 
     #region Data Prop
+    [TabGroup("Info")]
     public InGameEnemyInfoConfigs _infoConfigs;
-    public List<InGameEnemyWaveConfig> _waveConfigs;
+    [TabGroup("Stat")]
+    public InGameEnemyStatConfigs _statConfigs;
+    [TabGroup("Map")]
+    public InGameMapConfigs _mapConfigs;
 
     #endregion Data Prop
 
     #region Getter
     public InGameEnemyWaveConfig GetWaveConfig(int wave)
     {
-        return _waveConfigs.Find(x => x._wave == wave);
+        return _mapConfigs._configs[0]._waveConfigs.Find(x => x._wave == wave);
     }
     #endregion Getter
 
@@ -46,35 +52,88 @@ public class InGameEnemyConfigs : ScriptableObject
     #region VALIDATE
     private void OnValidate()
     {
-        for (int i = 0; i < _waveConfigs.Count; i++)
+        for (int i = 0; i < _mapConfigs._configs.Count; i++)
         {
-            InGameEnemyWaveConfig wave = _waveConfigs[i];
-            wave._wave = i;
+            for (int j = 0; j < _mapConfigs._configs[i]._waveConfigs.Count; j++)
+            {
+                InGameEnemyWaveConfig wave = _mapConfigs._configs[i]._waveConfigs[j];
+                wave._wave = j;
+            }
         }
     }
     #endregion VALIDATE
 #endif
 }
+
+#region Map and Stage
+[System.Serializable]
+public class InGameMapConfigs
+{
+    public List<InGameMapConfig> _configs;
+    public InGameMapConfig GetMapConfig(int mapID) => _configs.Find(x=>x._id == mapID);
+}
+[System.Serializable]
+public class InGameMapConfig
+{
+    public int _id;
+    public string _name;
+    public List<InGameEnemyWaveConfig> _waveConfigs;
+
+    public InGameEnemyWaveConfig GetWaveConfig(int wave)
+    {
+        return _waveConfigs.Find(x => x._wave == wave);
+    }
+    public InGameEnemyStatConfig GetEnemyStat(int enemyID)
+    {
+        InGameEnemyStatConfig stat = InGameEnemyStatConfigs.Instance.GetStatOfEnemy(enemyID);
+        if(stat == null)
+        {
+            Debug.LogError("NO STAT CONFIG WITH IF " + enemyID);
+        }
+        return stat;
+    }
+}
 [System.Serializable]
 public class InGameEnemyWaveConfig
 {
     public int _wave; //số round
-    public List<InGameEnemyStatConfig> _enemyInRound; //số enemy trong ROUND NÀY
+    public List<int> _enemyIDsInRound; //số enemy trong ROUND NÀY
 
-    public int AmountEnemy => _enemyInRound.Count;
+    public int AmountEnemy => _enemyIDsInRound.Count;
     public InGameEnemyStatConfig GetEnemyStat(int index)
     {
-        if(index >= 0 && index < _enemyInRound.Count)
+        if (index >= 0 && index < _enemyIDsInRound.Count)
         {
-            return _enemyInRound[index];
+            int enemyID = _enemyIDsInRound[index];
+            InGameEnemyStatConfig stat = InGameEnemyStatConfigs.Instance.GetStatOfEnemy(enemyID);
+            return stat;
         }
         Debug.LogError("OUT OF CONFIG");
         return null;
     }
 }
+#endregion Map and Stage
+
+#region Stats and Level of Enemy
+[System.Serializable]
+public class InGameEnemyStatConfigs
+{
+    /// <summary>
+    /// THis should be change to the contain of many InGameEnemyStatConfig for enemy of many level
+    /// </summar
+    [TableList]
+    public List<InGameEnemyStatConfig> _configs;
+    public static InGameEnemyStatConfigs Instance => InGameEnemyConfigs.Instance._statConfigs;
+
+    public InGameEnemyStatConfig GetStatOfEnemy(int enemyID)
+    {
+        return _configs.Find(x => x.enemyID == enemyID);
+    }
+}
 [System.Serializable]
 public class InGameEnemyStatConfig
 {
+    [TableColumnWidth(50, Resizable = true)]
     public int enemyID;
     [NonSerialized]
     private InGameEnemyInfoConfig _info;
@@ -88,13 +147,28 @@ public class InGameEnemyStatConfig
         }
     }
 
-    public int Damage => this.Info?.enemyBaseDamage ?? 0;
-    public int Shield => this.Info?.enemybaseShield ?? 0;
-    public int Heal => this.Info?.enemybaseHeal ?? 0;
+    [Header("SKILL")]
+    [TableList]
+    public List<InGameEnemySkillConfig> _skills;
 
     public int MaxHP => this.Info?.enemyBaseMaxHP ?? 0 ;
     public string EffectDes => this.Info?.enemyEffectDes;
 }
+
+[System.Serializable]
+public class InGameEnemySkillConfig
+{
+    //[TableColumnWidth(20, Resizable = false)]
+    public EnemySkillID _skillID;
+    public float _statValue; //Damage, Heal, Shield, Amount Foes Spawn...
+    public int _statIntervall; //How many turn cast this, if do it every turn, let it 0
+    public int _statID; //ID Does to spawn
+
+    public int StatAsInt => (int)_statValue;
+}
+#endregion
+
+
 #region Enemy Info
 [System.Serializable]
 public class InGameEnemyInfoConfigs
@@ -116,7 +190,6 @@ public class InGameEnemyInfoConfig
 
     [Header("STAT BASE")]
     [Space(10f)]
-    public int enemyBaseDamage, enemybaseShield, enemybaseHeal;
     public int enemyBaseMaxHP;
     public string enemyEffectDes;
 
