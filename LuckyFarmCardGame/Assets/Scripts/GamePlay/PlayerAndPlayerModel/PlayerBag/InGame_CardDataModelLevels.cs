@@ -25,6 +25,18 @@ public class InGame_CardDataModelLevels
             return _currentLevelConfig;
         }
     }
+    protected InGameCardConfig _cardConfig;
+    public InGameCardConfig CardConfig
+    {
+        get
+        {
+            if (_cardConfig == null)
+            {
+                _cardConfig = InGameCardConfigs.Instance.GetCardConfig(this._cardID);
+            }
+            return _cardConfig;
+        }
+    }
     public InGameCardLevel PreviousLevelConfig
     {
         get
@@ -36,6 +48,18 @@ public class InGame_CardDataModelLevels
             return null;
         }
     }
+    /// <summary>
+    /// This will not use to activate effect
+    /// Just use to sync query the card stat
+    /// </summary>
+    public InGameBaseCardEffectActivator CardEffectActivator { get; set; }
+
+    public float CurrentStat => CardEffectActivator?.GetStat() ?? 0;
+    /// <summary>
+    /// We only have this value if the card has level up atleast 1 time
+    /// </summary>
+    private float _cacheOldStat;
+    public float CacheOldStat => _cacheOldStat;
     public InGame_CardDataModelLevels()
     {
         _currentCard = 0;
@@ -57,6 +81,7 @@ public class InGame_CardDataModelLevels
         this._cardID = palletCard._id;
         this._currentCard = startingCard;
         this._currentLevel = 1;
+        this.CardEffectActivator = palletCard.EffectActivator;
     }
     public InGame_CardDataModelLevels AddACard(InGame_CardDataModel palletCard, out bool isLevelUp, int amount = 1)
     {
@@ -83,5 +108,7 @@ public class InGame_CardDataModelLevels
         this._currentCard = Mathf.Clamp(this._currentCard - (CurrentLevelConfig?._require ?? 0), 0, int.MaxValue);
         this._currentLevel += 1;
 
+        _cacheOldStat = this.CurrentStat;
+        CardEffectActivator?.UpdateCardLevel(_currentLevel);
     }
 }

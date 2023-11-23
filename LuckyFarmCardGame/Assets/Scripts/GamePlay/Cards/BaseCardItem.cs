@@ -128,7 +128,7 @@ public class InGame_CardDataModel : ICloneable
     public InGame_CardDataModel SetCardID(int id, InGameCardConfig cardConfig)
     {
         this._id = id;
-        this._effect = InGameUtils.GetActivatorEffectID(this._id);
+        this._effect = cardConfig._skillID;
         this._coinPoint = cardConfig?._gamePointOfCard ?? 0;
 
         CreateEffectActivator();
@@ -153,16 +153,7 @@ public class InGame_CardDataModel : ICloneable
     #region These function should in cardItem
     protected void CreateEffectActivator()
     {
-        try
-        {
-            this._effectActivator = System.Activator.CreateInstance(EnumUtility.GetStringType(this._effect)) as InGameBaseCardEffectActivator;
-            this.EffectActivator?.SetIDAndHost(this._id,this._host);
-        }
-        catch (Exception e)
-        {
-            Debug.LogError(e.StackTrace);
-            throw;
-        }
+        this._effectActivator = InGameUtils.CreateCardEffectActivator(skillID: this._effect, cardID: this._id, host: this._host);
     }
     public void OnDrawedFromDeck()
     {

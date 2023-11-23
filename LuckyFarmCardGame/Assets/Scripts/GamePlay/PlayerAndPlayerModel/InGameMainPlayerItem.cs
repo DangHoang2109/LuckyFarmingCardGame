@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -95,8 +95,8 @@ public class InGameMainPlayerItem : InGameBasePlayerItem
         {
             return card._currentLevel;
         }
-        Debug.LogError("NOT FOUND CARD " + cardID);
-        return 0;
+        //Debug.LogError("NOT FOUND CARD " + cardID);
+        return 1; //nếu chưa có thu về bao giờ thì card ở default level là 1
     }
     public override void PullCardToBag(List<InGame_CardDataModel> cardReceive)
     {

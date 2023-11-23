@@ -654,9 +654,18 @@ public static class InGameUtils
         UnityEngine.Debug.Log(debug);
         return debug;
     }
-    public static InGameBaseCardEffectID GetActivatorEffectID(int cardID)
+    public static InGameBaseCardEffectActivator CreateCardEffectActivator(InGameBaseCardEffectID skillID,int cardID, InGameBasePlayerItem host)
     {
-
-        return (InGameBaseCardEffectID)cardID;
+        try
+        {
+            InGameBaseCardEffectActivator _effectActivator = Activator.CreateInstance(EnumUtility.GetStringType(skillID)) as InGameBaseCardEffectActivator;
+            _effectActivator?.SetIDAndHost(cardID, host);
+            return _effectActivator;
+        }
+        catch (Exception e)
+        {
+            Debug.LogError(e.StackTrace);
+            throw;
+        }
     }
 }

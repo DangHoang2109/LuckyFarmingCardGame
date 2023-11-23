@@ -66,6 +66,9 @@ public class InGameBaseCardEffectActivator
     {
         this._cardLevel = cardLevel;
     }
+    public virtual float GetStat() { return 0f; }
+    public virtual int GetStatAsInt() => ((int)GetStat());
+
 }
 public enum InGameBaseCardEffectID
 {
@@ -147,7 +150,7 @@ public class InGameCardEffectActivator_RevealTop : InGameBaseCardEffectActivator
     {
         base.ActiveEffectWhenPlaceToPallet();
         ShowingNotification();
-        this._host?.RevealCard(GetReveal());
+        this._host?.RevealCard(GetStatAsInt());
     }
     public override void ActiveEffectWhenDestroyed()
     {
@@ -161,8 +164,10 @@ public class InGameCardEffectActivator_RevealTop : InGameBaseCardEffectActivator
     {
         base.ShowingNotification();
     }
-    public int GetReveal() => ((int)this.CurrentLevelConfig?._stat);
-
+    public override float GetStat()
+    {
+        return this.CurrentLevelConfig._stat;
+    }
 }
 public class InGameCardEffectActivator_AttackSingleUnit : InGameBaseCardEffectActivator
 {
@@ -176,7 +181,7 @@ public class InGameCardEffectActivator_AttackSingleUnit : InGameBaseCardEffectAc
     {
         base.ActiveEffectWhenPlaceToPallet();
         ShowingNotification();
-        this._host?.AttackSingleUnit(GetDamage());
+        this._host?.AttackSingleUnit(GetStatAsInt());
     }
     public override void ActiveEffectWhenDestroyed()
     {
@@ -190,7 +195,10 @@ public class InGameCardEffectActivator_AttackSingleUnit : InGameBaseCardEffectAc
     {
         base.ShowingNotification();
     }
-    public int GetDamage() => ((int)this.CurrentLevelConfig?._stat * _host?.BaseDamagePerTurn) ?? 0;
+    public override float GetStat()
+    {
+        return this.CurrentLevelConfig._stat * _host.BaseDamagePerTurn;
+    }
 }
 
 public class InGameCardEffectActivator_AttackAllUnit : InGameBaseCardEffectActivator
@@ -205,7 +213,7 @@ public class InGameCardEffectActivator_AttackAllUnit : InGameBaseCardEffectActiv
     {
         base.ActiveEffectWhenPlaceToPallet();
         ShowingNotification();
-        this._host?.AttackAllUnit(GetDamage());
+        this._host?.AttackAllUnit(GetStatAsInt());
     }
     public override void ActiveEffectWhenDestroyed()
     {
@@ -219,7 +227,7 @@ public class InGameCardEffectActivator_AttackAllUnit : InGameBaseCardEffectActiv
     {
         base.ShowingNotification();
     }
-    public int GetDamage() => ((int)this.CurrentLevelConfig?._stat * _host?.BaseDamagePerTurn) ?? 0;
+    public override float GetStat() => ((int)this.CurrentLevelConfig?._stat * _host?.BaseDamagePerTurn) ?? 0;
 }
 public class InGameCardEffectActivator_Defense : InGameBaseCardEffectActivator
 {
@@ -233,7 +241,7 @@ public class InGameCardEffectActivator_Defense : InGameBaseCardEffectActivator
     {
         base.ActiveEffectWhenPlaceToPallet();
         ShowingNotification();
-        this._host?.DefenseCreateShield(this.GetShield());
+        this._host?.DefenseCreateShield(this.GetStatAsInt());
     }
     public override void ActiveEffectWhenDestroyed()
     {
@@ -247,7 +255,7 @@ public class InGameCardEffectActivator_Defense : InGameBaseCardEffectActivator
     {
         base.ShowingNotification();
     }
-    public int GetShield() => ((int)(this.CurrentLevelConfig?._stat * _host?.BaseShieldPerAdd));
+    public override float GetStat() => ((int)(this.CurrentLevelConfig?._stat * _host?.BaseShieldPerAdd));
 }
 public class InGameCardEffectActivator_Heal : InGameBaseCardEffectActivator
 {
@@ -261,7 +269,7 @@ public class InGameCardEffectActivator_Heal : InGameBaseCardEffectActivator
     {
         base.ActiveEffectWhenPlaceToPallet();
         ShowingNotification();
-        this._host?.Heal(this.GetHeal());
+        this._host?.Heal(this.GetStatAsInt());
     }
     public override void ActiveEffectWhenDestroyed()
     {
@@ -275,5 +283,5 @@ public class InGameCardEffectActivator_Heal : InGameBaseCardEffectActivator
     {
         base.ShowingNotification();
     }
-    public int GetHeal() => ((int)(this.CurrentLevelConfig?._stat * _host?.BaseHPPerHeal));
+    public override float GetStat() => ((int)(this.CurrentLevelConfig?._stat * _host?.BaseHPPerHeal));
 }

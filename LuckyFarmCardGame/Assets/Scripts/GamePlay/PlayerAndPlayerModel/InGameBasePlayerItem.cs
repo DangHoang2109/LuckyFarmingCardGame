@@ -476,17 +476,17 @@ public class BaseInGameMainPlayerDataModel : BaseInGamePlayerDataModel
     public override BaseInGamePlayerDataModel StartGame()
     {
         //setting up the dic with full of user monster card, starting at level 1
-        var _deckConfig = InGameDeckConfigs.Instance.GetStandardDeck();
-        if(_deckConfig != null)
-        {
-            foreach (var item in _deckConfig._deckContain)
-            {
-                InGame_CardDataModelLevels c = new InGame_CardDataModelLevels(id: item._cardID);
-                this._bag.Add(c);
-                this._dictionaryBags.Add(c._cardID, c);
-            }
-        }
-        this._bag.DebugListCardInGame();
+        //var _deckConfig = InGameDeckConfigs.Instance.GetStandardDeck();
+        //if(_deckConfig != null)
+        //{
+        //    foreach (var item in _deckConfig._deckContain)
+        //    {
+        //        InGame_CardDataModelLevels c = new InGame_CardDataModelLevels(id: item._cardID);
+        //        this._bag.Add(c);
+        //        this._dictionaryBags.Add(c._cardID, c);
+        //    }
+        //}
+        //this._bag.DebugListCardInGame();
         return this;
     }
     public bool TryGetCardInBag(int id, out InGame_CardDataModelLevels card)
@@ -534,7 +534,7 @@ public class BaseInGameMainPlayerDataModel : BaseInGamePlayerDataModel
 
                     old = 0;
                     newValue = 1;
-                    currentGoal = cardInBag.CurrentGoal;
+                    currentGoal = c.CurrentGoal;
                 }
 
                 this._currentCoinPoint += cardDataModel._coinPoint;
