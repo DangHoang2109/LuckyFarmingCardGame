@@ -8,6 +8,7 @@ public class CardUpgradedInfoUIItem : CardPopupUIItem
     public void ParseData(InGame_CardDataModelLevels cardModelLevels)
     {
         ParseData(cardModelLevels._cardID);
+        //_tmpCardDescription.text = cardModelLevels.
     }
     public override void ParseData(int cardID)
     {

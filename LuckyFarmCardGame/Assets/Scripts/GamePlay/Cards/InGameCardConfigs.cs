@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using Sirenix.OdinInspector;
 [CreateAssetMenu(menuName = "Configs/InGameCardConfigs", fileName = "InGameCardConfigs")]
 public class InGameCardConfigs : ScriptableObject
 {
@@ -23,8 +23,12 @@ public class InGameCardConfigs : ScriptableObject
     #endregion Singleton
 
     #region Data Prop
+    [TabGroup("Card Info")]
+    [TableList]
     public List<InGameCardConfig> _configs;
+    [TabGroup("Skill Info")]
     public InGameCardEffectConfigs _skillConfigs;
+    [TabGroup("Card Level Upgrade")]
     public InGameCardLevelsConfigs _levelsConfigs;
     #endregion Data Prop
 
@@ -58,20 +62,21 @@ public class InGameCardConfigs : ScriptableObject
 [System.Serializable]
 public class InGameCardConfig
 {
-    public int _cardID;
-    public string _cardName;
-    public string _cardDescription;
+
+    [TabGroup("General")] public int _cardID;
+    [TabGroup("General")] public string _cardName;
+    [TabGroup("General")] [TextArea] public string _cardDescription;
     [Space(5f)]
-    public int _gamePointOfCard;
-    [Space(5f)]
+    [TabGroup("General")] public int _gamePointOfCard;
+
+    [TabGroup("Skill")]
     public InGameBaseCardEffectID _skillID;
     public InGameCardEffectConfig SkillConfig => InGameCardEffectConfigs.Instance.GetSkillConfig(this._skillID);
 
     public InGameCardLevelsConfig LevelsConfig => InGameCardLevelsConfigs.Instance.GetCardLevelsConfig(this._cardID);
 
-    [Space(5f)]
-    public Sprite _sprCardArtwork;
-    public Sprite _sprCardBackground;
+    [TabGroup("Art")] public Sprite _sprCardArtwork;
+    [TabGroup("Art")] public Sprite _sprCardBackground;
 
 
 }
