@@ -179,25 +179,37 @@ MonoBehaviour:
       _waveConfigs:
       - _wave: 0
         _enemyIDsInRound: 00000000
+        _isBonusStage: 0
       - _wave: 1
         _enemyIDsInRound: 0100000000000000
+        _isBonusStage: 0
       - _wave: 2
-        _enemyIDsInRound: 010000000000000002000000
+        _enemyIDsInRound: 
+        _isBonusStage: 1
       - _wave: 3
         _enemyIDsInRound: 010000000000000002000000
+        _isBonusStage: 0
       - _wave: 4
         _enemyIDsInRound: 0100000002000000
+        _isBonusStage: 0
       - _wave: 5
-        _enemyIDsInRound: 0300000000000000
+        _enemyIDsInRound: 
+        _isBonusStage: 1
       - _wave: 6
         _enemyIDsInRound: 0300000000000000
+        _isBonusStage: 0
       - _wave: 7
         _enemyIDsInRound: 05000000
+        _isBonusStage: 0
       - _wave: 8
-        _enemyIDsInRound: 0300000000000000
+        _enemyIDsInRound: 
+        _isBonusStage: 1
       - _wave: 9
         _enemyIDsInRound: 010000000200000004000000
+        _isBonusStage: 0
       - _wave: 10
         _enemyIDsInRound: 000000000100000004000000
+        _isBonusStage: 0
       - _wave: 11
         _enemyIDsInRound: 06000000
+        _isBonusStage: 0

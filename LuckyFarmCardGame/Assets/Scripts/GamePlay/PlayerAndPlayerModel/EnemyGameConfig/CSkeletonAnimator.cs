@@ -7,12 +7,6 @@ using UnityEngine;
 
 public class CSkeletonAnimator : MonoBehaviour
 {
-    //[ContextMenu("test")]
-    //public void Test()
-    //{
-    //    skeletonGraphic.Skeleton.SetSkin("Crystal"); //Đổi skin
-    //    skeletonGraphic.AnimationState.SetAnimation(trackIndex: 0, "AttackA", loop: true);
-    //}
     protected SkeletonGraphic skeletonGraphic;
     protected SkeletonGraphic SkeletonGraphic
     {
@@ -44,6 +38,7 @@ public class CSkeletonAnimator : MonoBehaviour
     public void ShowAttack()
     {
         ShowAnimation(state: AnimationState.ATTACK_ANIM);
+        CAnimation?.AddAnimation(trackIndex: 0, animationName: AnimationState.IDLE_ANIM, loop: true, delay: 0);
     }
     public void ShowAttacked(bool isDead, Action cb)
     {
@@ -51,6 +46,8 @@ public class CSkeletonAnimator : MonoBehaviour
         if(isDead) {
             ShowDead(cb: cb);
         }
+        else
+            CAnimation?.AddAnimation(trackIndex: 0, animationName: AnimationState.IDLE_ANIM, loop: true, delay: 0);
     }
     public void ShowAttackedCrit()
     {
@@ -79,13 +76,6 @@ public class CSkeletonAnimator : MonoBehaviour
             Debug.Log("Start Dead");
         }
     }
-}
-public static class AnimationState
-{
-    public const string APPEAR_ANIM = "Appear";
-    public const string IDLE_ANIM = "Idle";
-    public const string ATTACK_ANIM = "AttackA";
-    public const string HURT_ANIM = "HurtA";
-    public const string HURT_CRIT_ANIM = "HurtCritical";
-    public const string DIE_ANIM = "Die";
+
+
 }

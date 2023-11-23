@@ -13,7 +13,7 @@ public class CardGameController : MonoBehaviour
     //Khi user draw ra 1 card đã có trên pallet
     public System.Action _onPalletConflict;
     //Khi dice đã roll và có thể bị destroy hay ko, invoke dice result và có bị destroy pallet ko
-    public System.Action<int,int,bool> _onDiceShowedResult;
+    public System.Action<int, int, bool> _onDiceShowedResult;
     //Pallet conflict after: roll dice nhưng bị destroy
     public System.Action _onPalletDestroyed;
     //Pallet conflict after: roll dice và thắng roll
@@ -31,6 +31,9 @@ public class CardGameController : MonoBehaviour
 
     [SerializeField] protected Transform _tfPalletPanel, _tfActEffectPanel, _tfDeckPanel;
     [Space(5f)]
+    [SerializeField] protected ShrineItem _gShrineBonusStage;
+
+    [Space(5f)]
     [SerializeField] protected GameObject _gLightningAnimator;
     [SerializeField] public InGamePlayerUpgradePalletAnim _upgradeCollectorAnim;
     //[Space(5f)]
@@ -47,7 +50,7 @@ public class CardGameController : MonoBehaviour
     protected InGameCardConfigs _ingameCardConfigs;
     public InGameCardConfigs IngameCardConfigs
     {
-        get 
+        get
         {
             if (_ingameCardConfigs == null)
                 _ingameCardConfigs = InGameCardConfigs.Instance;
@@ -168,14 +171,13 @@ public class CardGameController : MonoBehaviour
         _onRuleMakeUserPullCard -= cb;
         _onRuleMakeUserPullCard += cb;
     }
-    public void AddCallback_DiceResultShowed(System.Action<int,int,bool> cb)
+    public void AddCallback_DiceResultShowed(System.Action<int, int, bool> cb)
     {
         _onDiceShowedResult -= cb;
         _onDiceShowedResult += cb;
     }
 
     #endregion Callback Adding
-
 
     #region Turn Action
     public void BeginTurn(bool isMainUserTurn)
@@ -226,7 +228,7 @@ public class CardGameController : MonoBehaviour
     #region Draw and Interacting with Pallet
     public void OnRevealTopDeck(int amount)
     {
-        List<InGame_CardDataModel> topCards = GetDeckTopCards(amount,isWillPopThatCardOut: false);
+        List<InGame_CardDataModel> topCards = GetDeckTopCards(amount, isWillPopThatCardOut: false);
         RevealCardsTopDeckDialog d = RevealCardsTopDeckDialog.ShowDialog();
         d.ParseData(topCards, cbClose: OnRevealClosed);
 
@@ -251,7 +253,7 @@ public class CardGameController : MonoBehaviour
     }
 
     private InGame_CardDataModel CreateCardDataModel(int id)
-    {        
+    {
         InGameCardConfig cardConfig = IngameCardConfigs?.GetCardConfig(id);
         int currentCardLevel = this.InGameManager?.MainUserPlayer?.GetCardLevel(id) ?? 0;
 
@@ -262,7 +264,7 @@ public class CardGameController : MonoBehaviour
         BaseCardItem newCardItem = Instantiate(_cardCirclePrefab, _tfActEffectPanel);
         newCardItem.transform.localPosition = Vector3.zero;
         newCardItem.gameObject.SetActive(true);
-        newCardItem.ParseHost(InGameManager.CurrentTurnPlayer).ParseInfo(card._id); 
+        newCardItem.ParseHost(InGameManager.CurrentTurnPlayer).ParseInfo(card._id);
         card.SetCardItemContainer(newCardItem);
         return newCardItem;
     }
@@ -280,7 +282,7 @@ public class CardGameController : MonoBehaviour
 
         return CreateCardDataModel(topCardId);
     }
-    public List<InGame_CardDataModel> GetDeckTopCards(int amount,bool isWillPopThatCardOut)
+    public List<InGame_CardDataModel> GetDeckTopCards(int amount, bool isWillPopThatCardOut)
     {
         List<InGame_CardDataModel> top = new List<InGame_CardDataModel>();
         for (int i = 0; i < amount; i++)
@@ -380,7 +382,7 @@ public class CardGameController : MonoBehaviour
             Debug.Log($"CONTROLER: Dice anim complete, star coroutine waiting for {timeWaitForDeciding} sec");
 
             _onDiceShowedResult?.Invoke(_currentTurnDiceResult, pointNeeding, willDestroy);
-            if (willDestroy && InGameManager.CurrentTurnPlayerModel.IsCanUseGameCoin(pointNeeding* _coinForEachDicePoint))
+            if (willDestroy && InGameManager.CurrentTurnPlayerModel.IsCanUseGameCoin(pointNeeding * _coinForEachDicePoint))
                 this._coroutineWaitDecidingUseGameCoin = StartCoroutine(ieWaitPlayerDecideToUseCoin(timeWaitForDeciding));
             else
                 OnFinalCheckDiceResultWithPallet();
@@ -488,11 +490,11 @@ public class CardGameController : MonoBehaviour
     public float GetPalletConflictChance()
     {
         //đếm số card có cùng id với pallet hiện tại, lấy số lượng đó chia cho amount deck hiện tại
-        if (this._cardsOnPallet.Count == 0) 
+        if (this._cardsOnPallet.Count == 0)
             return 0f;
 
         this.CheckDeck();
-        int amountCardCauseConflict = this._currentDeck.Where(x => _cardsOnPallet.Find((c)=> c._id == x) != null).Count();
+        int amountCardCauseConflict = this._currentDeck.Where(x => _cardsOnPallet.Find((c) => c._id == x) != null).Count();
         return amountCardCauseConflict / DeckCardAmount;
     }
     public List<int> GetCurrentPalletIDs()
@@ -535,6 +537,22 @@ public class CardGameController : MonoBehaviour
         return this.CardsOnPallet.Find(x => x._id == cardID) != null;
     }
     #endregion Bot Looker API Need
+
+    #region Shrine And Layout Of Game
+    public void GoShrineBonus()
+    {
+        this._gShrineBonusStage.gameObject.SetActive(true);
+        this._tfPalletPanel.gameObject.SetActive(false);
+        _gShrineBonusStage.Show();
+    }
+    public void QuitShrineBonus()
+    {
+        _gShrineBonusStage.Hide(() => {
+            this._gShrineBonusStage.gameObject.SetActive(false);
+            this._tfPalletPanel.gameObject.SetActive(true);
+        });
+    }
+    #endregion Shrine And Layout Of Game
 }
 
 [System.Serializable]

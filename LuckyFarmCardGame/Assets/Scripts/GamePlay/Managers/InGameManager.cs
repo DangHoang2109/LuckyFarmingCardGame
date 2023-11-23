@@ -152,7 +152,20 @@ public class InGameManager : MonoSingleton<InGameManager>
         InGameEnemyWaveConfig waveConfig = _mapConfig.GetWaveConfig(this._enemyWaveIndex);
         if(waveConfig != null)
         {
-            InitCreep(waveConfig);
+            if (waveConfig.IsBonusStage)
+            {
+                //hide enemy seat
+                for (int i = 1; i < this._players.Count; i++)
+                {
+                    _players[i].gameObject.SetActive(false);
+                }
+
+                this.GameController?.GoShrineBonus();
+            }
+            else
+            {
+                InitCreep(waveConfig);
+            }
         }
     }
     protected void InitCreep(InGameEnemyWaveConfig waveConfig)
@@ -181,32 +194,6 @@ public class InGameManager : MonoSingleton<InGameManager>
                 idsEnemysAlive.Add(enemyModel._seatId);
             }
         }
-
-        //if (this._players != null && this._players.Count > 0)
-        //{
-        //    int creepIndexMax = waveConfig.AmountEnemy + 1;
-        //    for (int i = 1; i < this._players.Count; i++)
-        //    {
-        //        _players[i].gameObject.SetActive(i < creepIndexMax);
-        //        if (i >= creepIndexMax)
-        //            continue;
-
-        //        int configIndex = i - 1;
-        //        InGameEnemyStatConfig enemyStat = waveConfig.GetEnemyStat(configIndex);
-        //        if(enemyStat != null)
-        //        {
-        //            BaseInGameEnemyDataModel enemyModel = new BaseInGameEnemyDataModel();
-        //            enemyModel.SetSeatID(id: i, isMain: false);
-        //            enemyModel.SetStatConfig(enemyStat);
-        //            enemyModel.StartGame();
-
-        //            _players[i].SetAPlayerModel(enemyModel);
-        //            this._playersModels.Add(enemyModel);
-        //            idsEnemysAlive.Add(enemyModel._seatId);
-        //        }
-
-        //    }
-        //}
     }
     public void SpawnCreep(int enemyID, int amount, int casterSeatID, int turnStunned = 0)
     {
@@ -280,6 +267,13 @@ public class InGameManager : MonoSingleton<InGameManager>
         }
         //begin new round
         OnBeginRound();
+    }
+    public void EndRoundBonus()
+    {
+        this.GameController?.QuitShrineBonus();
+
+        _enemyWaveIndex++;
+        NewWaveAndSpawnEnemy();
     }
     #endregion Round Action
 

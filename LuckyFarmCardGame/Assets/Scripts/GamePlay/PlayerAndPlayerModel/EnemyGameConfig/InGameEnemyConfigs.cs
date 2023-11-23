@@ -96,6 +96,8 @@ public class InGameEnemyWaveConfig
     public List<int> _enemyIDsInRound; //số enemy trong ROUND NÀY
 
     public int AmountEnemy => _enemyIDsInRound.Count;
+    public bool _isBonusStage = false; 
+    public bool IsBonusStage => _isBonusStage;
     public InGameEnemyStatConfig GetEnemyStat(int index)
     {
         if (index >= 0 && index < _enemyIDsInRound.Count)

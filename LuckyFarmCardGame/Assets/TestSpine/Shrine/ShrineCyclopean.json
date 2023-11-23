@@ -1,0 +1,168 @@
+{
+"skeleton": {
+	"hash": "QEgRQKUN3y2U/1XvnjjTBc7+EBI",
+	"spine": "3.8.99",
+	"x": -240.13,
+	"y": -131.08,
+	"width": 481,
+	"height": 359.06,
+	"images": "./images/",
+	"audio": ""
+},
+"bones": [
+	{ "name": "root" },
+	{ "name": "Altar", "parent": "root", "x": -1.85, "y": -62.31 },
+	{ "name": "Shadow", "parent": "root", "x": -0.85, "y": -37.21 }
+],
+"slots": [
+	{ "name": "Shadow", "bone": "Shadow", "attachment": "Shadow" },
+	{ "name": "Altar", "bone": "Altar", "attachment": "Altar" },
+	{ "name": "Light1", "bone": "Altar", "attachment": "Light1" },
+	{ "name": "Light2", "bone": "Altar", "color": "ffffff00", "attachment": "Light2" },
+	{ "name": "Light3", "bone": "Altar", "color": "ffffff00", "attachment": "Light3" },
+	{ "name": "Light4", "bone": "Altar", "color": "ffffff00", "attachment": "Light4" },
+	{ "name": "Light5", "bone": "Altar", "color": "ffffff00", "attachment": "Light5" },
+	{ "name": "Light6", "bone": "Altar", "color": "ffffff00", "attachment": "Light6" },
+	{ "name": "Light7", "bone": "Altar", "color": "ffffff00", "attachment": "Light7" },
+	{ "name": "Light8", "bone": "Altar", "color": "ffffff00", "attachment": "Light8" }
+],
+"skins": [
+	{
+		"name": "default",
+		"attachments": {
+			"Altar": {
+				"Altar": { "x": 0.26, "y": 139.3, "width": 414, "height": 302 }
+			},
+			"Light1": {
+				"Light1": { "x": -161.36, "y": 91.42, "width": 28, "height": 15 }
+			},
+			"Light2": {
+				"Light2": { "x": -89.55, "y": 92.42, "width": 5, "height": 8 }
+			},
+			"Light3": {
+				"Light3": { "x": -78.22, "y": 92.42, "width": 4, "height": 8 }
+			},
+			"Light4": {
+				"Light4": { "x": -66.55, "y": 92.42, "width": 5, "height": 8 }
+			},
+			"Light5": {
+				"Light5": { "x": -0.72, "y": 95.82, "width": 57, "height": 29 }
+			},
+			"Light6": {
+				"Light6": { "x": 43.64, "y": 91.42, "width": 28, "height": 15 }
+			},
+			"Light7": {
+				"Light7": { "x": 168.44, "y": 92.42, "width": 5, "height": 8 }
+			},
+			"Light8": {
+				"Light8": { "x": 179.78, "y": 92.42, "width": 4, "height": 8 }
+			},
+			"Shadow": {
+				"Shadow": { "x": 1.22, "y": -15.36, "width": 481, "height": 157 }
+			}
+		}
+	}
+],
+"animations": {
+	"Disappear": {
+		"slots": {
+			"Altar": {
+				"color": [
+					{ "time": 0.1667, "color": "ffffffff" },
+					{ "time": 0.3333, "color": "0a0a0dff" },
+					{ "time": 0.5, "color": "0a0a0d00" }
+				]
+			},
+			"Light1": {
+				"color": [
+					{ "color": "ffffffff" },
+					{ "time": 0.1667, "color": "ffffff00" }
+				]
+			},
+			"Shadow": {
+				"color": [
+					{ "time": 0.3333, "color": "ffffffff" },
+					{ "time": 0.5, "color": "ffffff00" }
+				]
+			}
+		},
+		"bones": {
+			"root": {
+				"scale": [
+					{ "time": 0.1667 },
+					{ "time": 0.3333, "x": 1.05, "y": 1.05 },
+					{ "time": 0.5, "x": 0.5, "y": 0.5 }
+				]
+			}
+		}
+	},
+	"Idle": {
+		"slots": {
+			"Light1": {
+				"color": [
+					{ "color": "ffffffff" },
+					{ "time": 0.6667, "color": "ffffff00", "curve": "stepped" },
+					{ "time": 2.1667, "color": "ffffff00" },
+					{ "time": 2.3, "color": "ffffffff" }
+				]
+			},
+			"Light2": {
+				"color": [
+					{ "time": 0.1667, "color": "ffffff00" },
+					{ "time": 0.2333, "color": "ffffffff", "curve": "stepped" },
+					{ "time": 0.8333, "color": "ffffffff" },
+					{ "time": 1, "color": "ffffff00" }
+				]
+			},
+			"Light3": {
+				"color": [
+					{ "time": 0.2, "color": "ffffff00" },
+					{ "time": 0.2667, "color": "ffffffff", "curve": "stepped" },
+					{ "time": 0.8667, "color": "ffffffff" },
+					{ "time": 1.0333, "color": "ffffff00" }
+				]
+			},
+			"Light4": {
+				"color": [
+					{ "time": 0.2333, "color": "ffffff00" },
+					{ "time": 0.3, "color": "ffffffff", "curve": "stepped" },
+					{ "time": 0.9, "color": "ffffffff" },
+					{ "time": 1.0667, "color": "ffffff00" }
+				]
+			},
+			"Light5": {
+				"color": [
+					{ "time": 0.6667, "color": "ffffff00" },
+					{ "time": 0.8333, "color": "ffffffff", "curve": "stepped" },
+					{ "time": 1.3333, "color": "ffffffff" },
+					{ "time": 1.6667, "color": "ffffff00" }
+				]
+			},
+			"Light6": {
+				"color": [
+					{ "time": 1.5, "color": "ffffff00" },
+					{ "time": 1.6, "color": "ffffffff", "curve": "stepped" },
+					{ "time": 1.8333, "color": "ffffffff" },
+					{ "time": 1.9333, "color": "ffffff00" }
+				]
+			},
+			"Light7": {
+				"color": [
+					{ "time": 2, "color": "ffffff00" },
+					{ "time": 2.0667, "color": "ffffffff", "curve": "stepped" },
+					{ "time": 2.3, "color": "ffffffff" },
+					{ "time": 2.3667, "color": "ffffff00" }
+				]
+			},
+			"Light8": {
+				"color": [
+					{ "time": 2.0667, "color": "ffffff00" },
+					{ "time": 2.1333, "color": "ffffffff", "curve": "stepped" },
+					{ "time": 2.3667, "color": "ffffffff" },
+					{ "time": 2.4333, "color": "ffffff00" }
+				]
+			}
+		}
+	}
+}
+}

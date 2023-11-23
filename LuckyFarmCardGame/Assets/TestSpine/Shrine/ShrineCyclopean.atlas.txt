@@ -1,0 +1,76 @@
+
+ShrineCyclopean.png
+size: 512,512
+format: RGBA4444
+filter: Linear,Linear
+repeat: none
+Altar
+  rotate: false
+  xy: 2, 2
+  size: 414, 302
+  orig: 414, 302
+  offset: 0, 0
+  index: -1
+Light1
+  rotate: true
+  xy: 485, 435
+  size: 28, 15
+  orig: 28, 15
+  offset: 0, 0
+  index: -1
+Light6
+  rotate: true
+  xy: 485, 435
+  size: 28, 15
+  orig: 28, 15
+  offset: 0, 0
+  index: -1
+Light2
+  rotate: false
+  xy: 485, 425
+  size: 5, 8
+  orig: 5, 8
+  offset: 0, 0
+  index: -1
+Light4
+  rotate: false
+  xy: 485, 425
+  size: 5, 8
+  orig: 5, 8
+  offset: 0, 0
+  index: -1
+Light7
+  rotate: false
+  xy: 485, 425
+  size: 5, 8
+  orig: 5, 8
+  offset: 0, 0
+  index: -1
+Light3
+  rotate: false
+  xy: 485, 415
+  size: 4, 8
+  orig: 4, 8
+  offset: 0, 0
+  index: -1
+Light8
+  rotate: false
+  xy: 485, 415
+  size: 4, 8
+  orig: 4, 8
+  offset: 0, 0
+  index: -1
+Light5
+  rotate: true
+  xy: 418, 247
+  size: 57, 29
+  orig: 57, 29
+  offset: 0, 0
+  index: -1
+Shadow
+  rotate: false
+  xy: 2, 306
+  size: 481, 157
+  orig: 481, 157
+  offset: 0, 0
+  index: -1
