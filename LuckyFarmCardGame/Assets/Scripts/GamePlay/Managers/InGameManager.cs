@@ -408,6 +408,20 @@ public class InGameManager : MonoSingleton<InGameManager>
             healReceive.AddHP(heal);
         }
     }
+    public void OnPlayerHealFullHP(int idHealReceiver)
+    {
+        if (TryGetSeatItem(idHealReceiver, out InGameBasePlayerItem healReceive))
+        {
+            healReceive.RecoverFullHP();
+        }
+    }
+    public void OnPlayerIncreaseMaxHP(int idHealReceiver, int hpAdd)
+    {
+        if (TryGetSeatItem(idHealReceiver, out InGameBasePlayerItem healReceive))
+        {
+            healReceive.IncreaseMaxHP(hpAdd, isAddToCurrentToo: true);
+        }
+    }
     public void OnPlayerDefense(int idDefenseder, int def)
     {
         if (TryGetSeatItem(idDefenseder, out InGameBasePlayerItem defenseder))

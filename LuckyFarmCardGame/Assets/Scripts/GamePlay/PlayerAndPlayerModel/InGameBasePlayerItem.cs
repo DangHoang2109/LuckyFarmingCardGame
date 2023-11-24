@@ -35,6 +35,22 @@ public class InGameBasePlayerItem : MonoBehaviour
             }
         }
     }
+    public virtual int MaxHP
+    {
+        get
+        {
+            return this.PlayerModel?.MaxHP ?? 0;
+        }
+        set
+        {
+            if (this.PlayerModel != null)
+            {
+                this.PlayerModel.MaxHP = value;
+                this._hpBar.SetMaxValue(this.PlayerModel.MaxHP, isSetCurrentToMax: false);
+                this._hpBar.UpdateValue(this.PlayerModel.CurrentHP);
+            }
+        }
+    }
     public virtual int CurrentShield
     {
         get
@@ -222,6 +238,18 @@ public class InGameBasePlayerItem : MonoBehaviour
     public virtual void AddHP(int heal)
     {
         this.CurrentHP += heal;
+    }
+    public virtual void RecoverFullHP()
+    {
+        this.CurrentHP = this.PlayerModel.MaxHP;
+    }
+    public virtual void IncreaseMaxHP(int add, bool isAddToCurrentToo)
+    {
+        this.PlayerModel.MaxHP += add;
+        if (isAddToCurrentToo)
+        {
+            AddHP(add);
+        }
     }
     public virtual void AddShield(int shieldUnit = -1)
     {

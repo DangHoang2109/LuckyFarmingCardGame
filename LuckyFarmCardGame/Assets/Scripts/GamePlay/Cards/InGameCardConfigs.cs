@@ -37,6 +37,10 @@ public class InGameCardConfigs : ScriptableObject
     {
         return _configs.Find(x => x._cardID == id);
     }
+    //public InGameCardConfig GetRandomBonusCardConfig(bool notAllowOwning)
+    //{
+    //    return _configs.Find(x => x._cardID == id);
+    //}
     #endregion Getter
 
 #if UNITY_EDITOR
