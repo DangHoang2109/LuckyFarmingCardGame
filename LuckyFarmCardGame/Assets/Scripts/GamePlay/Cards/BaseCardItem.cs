@@ -103,6 +103,7 @@ public class InGame_CardDataModel : ICloneable
     public int _id;
     public InGameBaseCardEffectID _effect;
     public int _coinPoint;
+    public int _amount = 1;
 
     protected InGameBaseCardEffectActivator _effectActivator;
     public InGameBaseCardEffectActivator EffectActivator => _effectActivator;

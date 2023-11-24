@@ -184,7 +184,7 @@ MonoBehaviour:
         _enemyIDsInRound: 0100000000000000
         _isBonusStage: 0
       - _wave: 2
-        _enemyIDsInRound: 
+        _enemyIDsInRound: 000000000a000000
         _isBonusStage: 1
       - _wave: 3
         _enemyIDsInRound: 010000000000000002000000
@@ -193,7 +193,7 @@ MonoBehaviour:
         _enemyIDsInRound: 0100000002000000
         _isBonusStage: 0
       - _wave: 5
-        _enemyIDsInRound: 
+        _enemyIDsInRound: feffffffffffffff
         _isBonusStage: 1
       - _wave: 6
         _enemyIDsInRound: 0300000000000000
@@ -202,7 +202,7 @@ MonoBehaviour:
         _enemyIDsInRound: 05000000
         _isBonusStage: 0
       - _wave: 8
-        _enemyIDsInRound: 
+        _enemyIDsInRound: feffffffffffffff
         _isBonusStage: 1
       - _wave: 9
         _enemyIDsInRound: 010000000200000004000000

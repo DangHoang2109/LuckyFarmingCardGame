@@ -37,10 +37,10 @@ public class InGameCardConfigs : ScriptableObject
     {
         return _configs.Find(x => x._cardID == id);
     }
-    //public InGameCardConfig GetRandomBonusCardConfig(bool notAllowOwning)
-    //{
-    //    return _configs.Find(x => x._cardID == id);
-    //}
+    public List<InGameCardConfig> GetAllBonusCardConfigs()
+    {
+        return new List<InGameCardConfig>(_configs.FindAll(x => x._isBonusTier));
+    }
     #endregion Getter
 
 #if UNITY_EDITOR
@@ -66,15 +66,15 @@ public class InGameCardConfigs : ScriptableObject
 [System.Serializable]
 public class InGameCardConfig
 {
-
     [TabGroup("General")] public int _cardID;
     [TabGroup("General")] public string _cardName;
     [TabGroup("General")] [TextArea] public string _cardDescription;
     [Space(5f)]
     [TabGroup("General")] public int _gamePointOfCard;
 
-    [TabGroup("Skill")]
+    [TabGroup("Skill And Tier")]
     public InGameBaseCardEffectID _skillID;
+    public bool _isBonusTier;
     public InGameCardEffectConfig SkillConfig => InGameCardEffectConfigs.Instance.GetSkillConfig(this._skillID);
 
     public InGameCardLevelsConfig LevelsConfig => InGameCardLevelsConfigs.Instance.GetCardLevelsConfig(this._cardID);

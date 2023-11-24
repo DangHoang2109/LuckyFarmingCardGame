@@ -104,7 +104,7 @@ public class CardGameController : MonoBehaviour
         _cardsOnPallet = new List<InGame_CardDataModel>();
 
         //get deck contain
-        _deckConfig = deckConfig;
+        _deckConfig = new InGameDeckConfig(deckConfig);
         RecreateTheDeck();
 
         this._uiDeckDraw._onClickDraw -= this.OnDrawACard;
@@ -252,7 +252,7 @@ public class CardGameController : MonoBehaviour
         PutACardToPallet(topDeckCard);
     }
 
-    private InGame_CardDataModel CreateCardDataModel(int id)
+    public InGame_CardDataModel CreateCardDataModel(int id)
     {
         InGameCardConfig cardConfig = IngameCardConfigs?.GetCardConfig(id);
         int currentCardLevel = this.InGameManager?.MainUserPlayer?.GetCardLevel(id) ?? 0;
@@ -297,6 +297,39 @@ public class CardGameController : MonoBehaviour
         }
 
         return top;
+    }
+    public void AddCardToDeck(int cardID, int amount)
+    {
+        CheckDeck();
+
+        for (int i = 0; i < amount - 1; i++)
+        {
+            _currentDeck.Insert(index: Random.Range(0, _currentDeck.Count), cardID);
+        }
+        //có ít nhất 1 card sẽ được add trong vòng 8 card đổ lại để user thấy được gợi nhớ (~ avg 1 turn draw 4 card)
+        _currentDeck.Insert(index: Random.Range(2, 8), cardID);
+
+        //add vào deck config để hết deck thì recreate vẫn có
+        this._deckConfig.AddNewCard(cardID, amount);
+    }
+    public bool IsOwningThisCardIDInDeck(int cardID)
+    {
+        return this._deckConfig.IsContain(cardID);
+    }
+    public List<InGame_CardDataModelWithAmount> GetAllCardDeckContain()
+    {
+        return this._deckConfig._deckContain;
+    }
+    public List<InGame_CardDataModelWithAmount> GetAllCardBonusDeckContain()
+    {
+        List < InGame_CardDataModelWithAmount > allContain = this._deckConfig._deckContain;
+        List<InGame_CardDataModelWithAmount> res = new List<InGame_CardDataModelWithAmount>();
+        foreach (var item in allContain)
+        {
+            if (InGameCardConfigs.Instance.GetCardConfig(item._cardID)?._isBonusTier ?? false)
+                res.Add(item);   
+        }
+        return res;
     }
     private void PutACardToPallet(InGame_CardDataModel card)
     {
@@ -543,7 +576,12 @@ public class CardGameController : MonoBehaviour
     {
         this._gShrineBonusStage.gameObject.SetActive(true);
         this._tfPalletPanel.gameObject.SetActive(false);
-        _gShrineBonusStage.Show();
+        _gShrineBonusStage.Show(OnCompleteShowShrine);
+
+        void OnCompleteShowShrine()
+        {
+            InGameManager.OnCompleteShowShrine();
+        }
     }
     public void QuitShrineBonus()
     {

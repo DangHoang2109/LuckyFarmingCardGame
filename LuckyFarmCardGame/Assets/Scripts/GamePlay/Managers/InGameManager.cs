@@ -43,6 +43,7 @@ public class InGameManager : MonoSingleton<InGameManager>
     /// Contain map name, theme, wave ,enemy stat...
     /// </summary>
     protected InGameMapConfig _mapConfig;
+    public InGameEnemyWaveConfig CurrentWaveConfig { get; set; }
     #endregion Data
 
     #region Getter
@@ -114,7 +115,7 @@ public class InGameManager : MonoSingleton<InGameManager>
         //Init player seat
         InitPlayers(amountPlayerJoin);
         //inti enemy wave 0;
-        NewWaveAndSpawnEnemy();
+        NewStage();
     }
 
     protected void InitPlayers(int amountPlayerJoin)
@@ -146,13 +147,13 @@ public class InGameManager : MonoSingleton<InGameManager>
         }
     }
 
-    protected void NewWaveAndSpawnEnemy()
+    protected void NewStage()
     {
         //get wave config
-        InGameEnemyWaveConfig waveConfig = _mapConfig.GetWaveConfig(this._enemyWaveIndex);
-        if(waveConfig != null)
+        CurrentWaveConfig = _mapConfig.GetWaveConfig(this._enemyWaveIndex);
+        if(CurrentWaveConfig != null)
         {
-            if (waveConfig.IsBonusStage)
+            if (CurrentWaveConfig.IsBonusStage)
             {
                 //hide enemy seat
                 for (int i = 1; i < this._players.Count; i++)
@@ -164,8 +165,16 @@ public class InGameManager : MonoSingleton<InGameManager>
             }
             else
             {
-                InitCreep(waveConfig);
+                InitCreep(CurrentWaveConfig);
             }
+        }
+    }
+    public void OnCompleteShowShrine()
+    {
+        List<BonusStageEffectAct> acts = BonusStageConfigs.Instance.GenerateBonusStageActivator(CurrentWaveConfig._enemyIDsInRound);
+        if(acts != null && acts.Count == 2)
+        {
+            PickingBonusDialog.OnShow().ParseData(acts, EndRoundBonus);
         }
     }
     protected void InitCreep(InGameEnemyWaveConfig waveConfig)
@@ -248,7 +257,7 @@ public class InGameManager : MonoSingleton<InGameManager>
             this._playersModels.RemoveAll(x => x.IsDead());
 
             _enemyWaveIndex++;
-            NewWaveAndSpawnEnemy();
+            NewStage();
         }
 
         //bgein turn, luôn là từ player
@@ -273,7 +282,7 @@ public class InGameManager : MonoSingleton<InGameManager>
         this.GameController?.QuitShrineBonus();
 
         _enemyWaveIndex++;
-        NewWaveAndSpawnEnemy();
+        NewStage();
     }
     #endregion Round Action
 
@@ -446,10 +455,45 @@ public class InGameManager : MonoSingleton<InGameManager>
         //remove from the list -> move to remove when no enemy left
         //RemoveCharacter(dead);
     }
-    private void RemoveCharacter(InGameBasePlayerItem dead)
+
+
+    public bool IsOwningThisCardIDInDeck(int cardID)
     {
-        this._playersModels.RemoveAll(x => x._seatId == dead.SeatID);
+        return this.GameController.IsOwningThisCardIDInDeck(cardID);
     }
+    public List<int> GetAllCardOwning()
+    {
+        List < InGame_CardDataModelWithAmount > owning = this.GameController.GetAllCardDeckContain();
+        List<int> ints = new List<int>();
+        foreach (var item in owning)
+        {
+            ints.Add(item._cardID);
+        }
+        return ints;
+    }
+    public List<int> GetAllCardBonusOwning()
+    {
+        List<InGame_CardDataModelWithAmount> owning = this.GameController.GetAllCardBonusDeckContain();
+        List<int> ints = new List<int>();
+        foreach (var item in owning)
+        {
+            ints.Add(item._cardID);
+        }
+        return ints;
+    }
+    public void OnPlayerAddNewCard(int cardID, int amount)
+    {
+        GameController.AddCardToDeck(cardID, amount);
+    }
+    public void OnPlayerAddCardPoint(int cardID, int amount)
+    {
+        List<InGame_CardDataModel> cardModel = new List<InGame_CardDataModel>();
+        InGame_CardDataModel c = this.GameController.CreateCardDataModel(cardID);
+        c._amount = amount;
+        cardModel.Add(c);
+        MainUserPlayer.PullCardToBag(cardModel);
+    }
+
     private void OnLogicEndTurn()
     {
         CardGameActionController.Instance.AddCallbackWhenFXComplete(cb: () =>

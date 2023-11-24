@@ -547,7 +547,7 @@ public class BaseInGameMainPlayerDataModel : BaseInGamePlayerDataModel
                 if (_dictionaryBags.TryGetValue(cardDataModel._id, out InGame_CardDataModelLevels cardInBag))
                 {
                     old = cardInBag._currentCard;
-                    newValue = old + 1;
+                    newValue = old + cardDataModel._amount;
                     currentGoal = cardInBag.CurrentGoal;
 
                     cardInBag.AddACard(cardDataModel, out bool isLevelUp);
@@ -561,7 +561,7 @@ public class BaseInGameMainPlayerDataModel : BaseInGamePlayerDataModel
                     this._dictionaryBags.Add(c._cardID, c);
 
                     old = 0;
-                    newValue = 1;
+                    newValue = cardDataModel._amount;
                     currentGoal = c.CurrentGoal;
                 }
 
@@ -572,6 +572,12 @@ public class BaseInGameMainPlayerDataModel : BaseInGamePlayerDataModel
             }
         }
         return levelUpIfHas;
+    }
+
+    public bool IsOwningThisCardID(int cardID)
+    {
+        this._dictionaryBags ??= new Dictionary<int, InGame_CardDataModelLevels>();
+        return this._dictionaryBags.ContainsKey(cardID);
     }
 }
 public class BaseInGameEnemyDataModel : BaseInGamePlayerDataModel

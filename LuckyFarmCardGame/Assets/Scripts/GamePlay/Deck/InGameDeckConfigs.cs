@@ -59,4 +59,16 @@ public class InGameDeckConfig
         this._id = d._id;
         this._deckContain = new List<InGame_CardDataModelWithAmount>(d._deckContain);
     }
+
+    public void AddNewCard(int cardID, int amount)
+    {
+        _deckContain ??= new List<InGame_CardDataModelWithAmount>();
+        InGame_CardDataModelWithAmount c = new InGame_CardDataModelWithAmount() { _cardID = cardID, _amountCard = amount };
+        this._deckContain.Add(c);
+    }
+    public bool IsContain(int cardID)
+    {
+        _deckContain ??= new List<InGame_CardDataModelWithAmount>();
+        return this._deckContain.Find(x => x._cardID == cardID) != null;
+    }
 }
