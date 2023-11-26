@@ -18,6 +18,16 @@ public class VFXActionManager : DoActionManager
         }
         this.RunningAction();
     }
+    public void ShowMultiVFxXByCard(int vfxId, int amount, List<Transform> desPoss, float delay, System.Action<VFXBaseObject> cbOnFirst)
+    {
+        List<VFXProjectile> vfxObjs = VFXManager.Instance.GetObjects<VFXProjectile>(vfxId, amount);
+        if (vfxObjs != null && vfxObjs.Count > 0)
+        {
+            DoShowCardMultipleVFX act = new DoShowCardMultipleVFX(vfxObjs, desPoss, delay, cbOnFirst);
+            this.AddAction(act);
+        }
+        this.RunningAction();
+    }
 }
 public class DoShowCardVFX : IDoAction
 {
@@ -48,9 +58,51 @@ public class DoShowCardVFX : IDoAction
             _vfxObj.transform.localPosition = Vector3.zero;
             _vfxObj.gameObject.SetActive(true);
             _vfxObj.AppendAnimation(this.cb);
-            _vfxObj.DoAnimation(_desPos: this._desPos, delay:this._delay);
+            _vfxObj.DoAnimation(_desPos: this._desPos, delay: this._delay);
         }
 
         yield return new WaitUntil(() => _vfxObj.isReadyForNext);
     }
+}
+
+public class DoShowCardMultipleVFX : IDoAction
+{
+    private List<VFXProjectile> _vfxObj;
+    private List<Transform> _desPos;
+    public float _delay;
+    public System.Action<VFXBaseObject> cbOnFirst;
+    public DoShowCardMultipleVFX() : base()
+    {
+    }
+    public DoShowCardMultipleVFX(int id) : base(id)
+    { }
+    public DoShowCardMultipleVFX(List<VFXProjectile> vfxObj, List<Transform> desPos, float delay, System.Action<VFXBaseObject> cb) : base()
+    {
+        this._vfxObj = vfxObj;
+
+        if (_vfxObj != null)
+            _vfxObj.ForEach(x => x.gameObject.SetActive(false));
+
+        this._desPos = desPos;
+        this._delay = delay;
+        this.cbOnFirst = cb;
+    }
+    public override IEnumerator DoAction()
+    {
+        if (_vfxObj != null)
+        {
+            for (int i = 0; i < _vfxObj.Count; i++)
+            {
+                VFXProjectile item = _vfxObj[i];
+
+                item.transform.localPosition = Vector3.zero;
+                item.gameObject.SetActive(true);
+                if(i == 0)
+                    item.AppendAnimation(this.cbOnFirst);
+                item.DoAnimation(_desPos: this._desPos[i], delay: this._delay);
+            }
+        }
+        yield return new WaitUntil(() => AllReady());
+    }
+    private bool AllReady() => _vfxObj.TrueForAll(x => x.isReadyForNext);
 }

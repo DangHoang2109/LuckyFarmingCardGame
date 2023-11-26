@@ -14,16 +14,15 @@ public class Instruction_CardEffectQuickthroughItem : MonoBehaviour
     public void ParseCard(InGameCardConfig config)
     {
         InGameBaseCardEffectID _id = config._skillID;
-        InGameCardEffectConfig cardConfig = InGameCardEffectConfigs.Instance.GetSkillConfig(_id);
-        if(cardConfig!= null)
+        if(config != null)
         {
             if(_imgIconEffect != null)
             {
-                _imgIconEffect.sprite = cardConfig._sprCardEffect;
+                _imgIconEffect.sprite = config._sprCardEffect;
             }
             if (_tmpCardEffectDescription != null)
             {
-                _tmpCardEffectDescription.text = cardConfig._cardEffectDescription;
+                _tmpCardEffectDescription.text = config.GetBaseLevelDescription();
             }
             if (_imgIconCard != null)
             {

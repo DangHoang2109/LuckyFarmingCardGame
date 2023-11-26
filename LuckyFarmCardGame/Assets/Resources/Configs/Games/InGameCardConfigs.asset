@@ -16,69 +16,153 @@ MonoBehaviour:
   - _cardID: 0
     _cardName: Sword
     _cardDescription: "Attack 01 front enemy {0}x\r player damage.\r"
+    _cardSkillDescription: "Attack 01 front enemy {0} damage.\r"
     _gamePointOfCard: 3
     _skillID: 3
+    _sprCardEffect: {fileID: 21300000, guid: 9955f68ccecc8d8458ba8992bf7a638f, type: 3}
+    _isBonusTier: 0
     _sprCardArtwork: {fileID: 21300000, guid: 3fe56e0fc35f39e4ab9b36bf0f96fdbb, type: 3}
     _sprCardBackground: {fileID: 21300000, guid: a535a86e198a9674f866f07c0283c31c, type: 3}
   - _cardID: 1
     _cardName: Crossbow
     _cardDescription: "Attack all enemies {0}x player\r damage"
+    _cardSkillDescription: "Attack all enemies {0}\r damage"
     _gamePointOfCard: 4
     _skillID: 4
+    _sprCardEffect: {fileID: 21300000, guid: 9955f68ccecc8d8458ba8992bf7a638f, type: 3}
+    _isBonusTier: 0
     _sprCardArtwork: {fileID: 21300000, guid: fe348f85808c3f54e9b0f2cb7bc7ae48, type: 3}
     _sprCardBackground: {fileID: 21300000, guid: a535a86e198a9674f866f07c0283c31c, type: 3}
   - _cardID: 2
     _cardName: Bucklet
     _cardDescription: "Create shield {0}x player\r defense point.\r"
+    _cardSkillDescription: "Create {0} shield point.\r"
     _gamePointOfCard: 4
     _skillID: 5
+    _sprCardEffect: {fileID: 21300000, guid: eaba1188c22e6874f9debbef0da7f449, type: 3}
+    _isBonusTier: 0
     _sprCardArtwork: {fileID: 21300000, guid: 2d2601f2a99512640bc06ada1855bac3, type: 3}
     _sprCardBackground: {fileID: 21300000, guid: a535a86e198a9674f866f07c0283c31c, type: 3}
   - _cardID: 3
     _cardName: Pill
     _cardDescription: Heal {0}x player heal point
+    _cardSkillDescription: Heal {0} HP
     _gamePointOfCard: 1
     _skillID: 0
+    _sprCardEffect: {fileID: 21300000, guid: 74b85af84e84515499ec3c33dc72b950, type: 3}
+    _isBonusTier: 0
     _sprCardArtwork: {fileID: 21300000, guid: d694da8a96e1c8944b4d21e2036b4d6e, type: 3}
     _sprCardBackground: {fileID: 21300000, guid: a535a86e198a9674f866f07c0283c31c, type: 3}
   - _cardID: 4
     _cardName: MagicEye
     _cardDescription: Look up {0} top card on deck.
+    _cardSkillDescription: Look up {0} top card on deck.
     _gamePointOfCard: 1
     _skillID: 2
+    _sprCardEffect: {fileID: 21300000, guid: ff1cf923ce40aad41940f9df2efbb8a8, type: 3}
+    _isBonusTier: 0
     _sprCardArtwork: {fileID: 21300000, guid: 5d2770dbc7510524cbcffebd80c47818, type: 3}
     _sprCardBackground: {fileID: 21300000, guid: a535a86e198a9674f866f07c0283c31c, type: 3}
   - _cardID: 5
     _cardName: Chain
     _cardDescription: "Force to draw one more card\r and attack front enemy {0}x\r
       player damage.\r"
+    _cardSkillDescription: "Force to draw one more card\r and attack front enemy
+      {0} damage.\r"
     _gamePointOfCard: 2
     _skillID: 1
+    _sprCardEffect: {fileID: 21300000, guid: 1c10f27e8a36b2747afd88630bbfa676, type: 3}
+    _isBonusTier: 0
     _sprCardArtwork: {fileID: 21300000, guid: 24ec04a0a610cda498e1a0339854b969, type: 3}
     _sprCardBackground: {fileID: 21300000, guid: a535a86e198a9674f866f07c0283c31c, type: 3}
-  _skillConfigs:
-    _configs:
-    - _skillID: 6
-      _sprCardEffect: {fileID: 0}
-      _cardEffectDescription: This card have no effect
-    - _skillID: 1
-      _sprCardEffect: {fileID: 21300000, guid: 1c10f27e8a36b2747afd88630bbfa676, type: 3}
-      _cardEffectDescription: One more card will be drawn
-    - _skillID: 2
-      _sprCardEffect: {fileID: 21300000, guid: ff1cf923ce40aad41940f9df2efbb8a8, type: 3}
-      _cardEffectDescription: '{0} top card(s) of deck will be reveal'
-    - _skillID: 0
-      _sprCardEffect: {fileID: 21300000, guid: 74b85af84e84515499ec3c33dc72b950, type: 3}
-      _cardEffectDescription: Heal the player {0} HP
-    - _skillID: 3
-      _sprCardEffect: {fileID: 21300000, guid: 84b2163fd7d530243b791dbb5e3da74f, type: 3}
-      _cardEffectDescription: Attack the front enemy {0} damage(s)
-    - _skillID: 4
-      _sprCardEffect: {fileID: 21300000, guid: 84b2163fd7d530243b791dbb5e3da74f, type: 3}
-      _cardEffectDescription: Attack all enemy {0} damage(s)
-    - _skillID: 5
-      _sprCardEffect: {fileID: 21300000, guid: eaba1188c22e6874f9debbef0da7f449, type: 3}
-      _cardEffectDescription: Create {0} shield(s)
+  - _cardID: 6
+    _cardName: Vampire Fang
+    _cardDescription: Drain {0}x player heal point from the front enemy and heal
+      the player for the same amount.
+    _cardSkillDescription: Drain {0} HP from the front enemy and heal the player
+      for the same amount.
+    _gamePointOfCard: 4
+    _skillID: 6
+    _sprCardEffect: {fileID: 21300000, guid: 50cab2eb3c0c0f844a16a605b70533ce, type: 3}
+    _isBonusTier: 1
+    _sprCardArtwork: {fileID: 21300000, guid: 74b0da4234a0b98469423c9d6ca1e74c, type: 3}
+    _sprCardBackground: {fileID: 21300000, guid: a535a86e198a9674f866f07c0283c31c, type: 3}
+  - _cardID: 7
+    _cardName: Axe Shield
+    _cardDescription: Reduce damage taken by 50% for one turn and deal {0}x player
+      damage to the front enemy.
+    _cardSkillDescription: Reduce damage taken by 50% for one turn and deal {0} damage
+      to the front enemy.
+    _gamePointOfCard: 4
+    _skillID: 7
+    _sprCardEffect: {fileID: 21300000, guid: 9955f68ccecc8d8458ba8992bf7a638f, type: 3}
+    _isBonusTier: 1
+    _sprCardArtwork: {fileID: 21300000, guid: e91bbd87f54a21b4eb3a52a4ed5fabb2, type: 3}
+    _sprCardBackground: {fileID: 21300000, guid: a535a86e198a9674f866f07c0283c31c, type: 3}
+  - _cardID: 8
+    _cardName: Thunderstrike
+    _cardDescription: Deal {0}x player damage to all enemies and stun the front enemy
+      for one turn.
+    _cardSkillDescription: Deal {0} damage to all enemies and stun the front enemy
+      for one turn.
+    _gamePointOfCard: 4
+    _skillID: 8
+    _sprCardEffect: {fileID: 21300000, guid: 6b1d9a75d06f576418ef7d12e0cc6fb7, type: 3}
+    _isBonusTier: 1
+    _sprCardArtwork: {fileID: 21300000, guid: 7aa07fa82d16d2946adc658585af70ae, type: 3}
+    _sprCardBackground: {fileID: 21300000, guid: a535a86e198a9674f866f07c0283c31c, type: 3}
+  - _cardID: 10
+    _cardName: Berserker Brew
+    _cardDescription: Increase player's damage by {0}% for the next three turns.
+      This Effect can be stacked
+    _cardSkillDescription: Increase player's damage by {0}% for the next three turns.
+      This Effect can be stacked
+    _gamePointOfCard: 4
+    _skillID: 10
+    _sprCardEffect: {fileID: 0}
+    _isBonusTier: 1
+    _sprCardArtwork: {fileID: 21300000, guid: ea2773c2b519e2946bb2d5b904526e0e, type: 3}
+    _sprCardBackground: {fileID: 21300000, guid: a535a86e198a9674f866f07c0283c31c, type: 3}
+  - _cardID: 11
+    _cardName: Guardian Spirit
+    _cardDescription: Grants invulnerability for {0} turn.
+    _cardSkillDescription: Grants invulnerability for {0} turn.
+    _gamePointOfCard: 6
+    _skillID: 11
+    _sprCardEffect: {fileID: 0}
+    _isBonusTier: 1
+    _sprCardArtwork: {fileID: 21300000, guid: 65c45ebc30c1d7046b887a0095b08086, type: 3}
+    _sprCardBackground: {fileID: 21300000, guid: a535a86e198a9674f866f07c0283c31c, type: 3}
+  - _cardID: 14
+    _cardName: Mana Burst
+    _cardDescription: X{0} the effect of the next card played.
+    _cardSkillDescription: 
+    _gamePointOfCard: 5
+    _skillID: 14
+    _sprCardEffect: {fileID: 0}
+    _isBonusTier: 1
+    _sprCardArtwork: {fileID: 21300000, guid: 789b0e9015a7c8548a7be5001510227a, type: 3}
+    _sprCardBackground: {fileID: 21300000, guid: a535a86e198a9674f866f07c0283c31c, type: 3}
+  - _cardID: 15
+    _cardName: Shadow Cloak
+    _cardDescription: Reduce damage taken by {0}% for the next 3 turns.
+    _cardSkillDescription: Reduce damage taken by {0}% for the next 3 turns.
+    _gamePointOfCard: 5
+    _skillID: 15
+    _sprCardEffect: {fileID: 0}
+    _isBonusTier: 1
+    _sprCardArtwork: {fileID: 21300000, guid: 3e57a96c0f682cc439010d13a711285a, type: 3}
+    _sprCardBackground: {fileID: 21300000, guid: a535a86e198a9674f866f07c0283c31c, type: 3}
+  - _cardID: 17
+    _cardName: Time Machine
+    _cardDescription: Reorder the top {0} cards of your deck.
+    _cardSkillDescription: Reorder the top {0} cards of your deck.
+    _gamePointOfCard: 5
+    _skillID: 17
+    _sprCardEffect: {fileID: 0}
+    _isBonusTier: 1
+    _sprCardArtwork: {fileID: 21300000, guid: dbab325365a97434598b4a5b729c7630, type: 3}
+    _sprCardBackground: {fileID: 21300000, guid: a535a86e198a9674f866f07c0283c31c, type: 3}
   _levelsConfigs:
     _configs:
     - _ID: 0

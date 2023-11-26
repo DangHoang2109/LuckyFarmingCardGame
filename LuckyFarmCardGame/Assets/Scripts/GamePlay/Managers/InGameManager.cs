@@ -528,8 +528,6 @@ public class InGameManager : MonoSingleton<InGameManager>
                 OnBeginTurn();
             }
         });
-
-        
     }
     /// <summary>
     /// Bật UI chọn card, simulate hành động click chọn của bot
@@ -595,11 +593,20 @@ public class InGameManager : MonoSingleton<InGameManager>
     #endregion End game behavior
 
     #region Card activator behavior
+
+    private bool _isPushActionContinueTurn = false;
     public void OnTellControllerContinueTurn()
     {
-        this.GameController?.ContinueTurn();
-        CurrentTurnPlayer?.ContinueTurn();
-
+        if(!_isPushActionContinueTurn)
+        {
+            CardGameActionController.Instance.AddCallbackWhenFXComplete(cb: () =>
+            {
+                this.GameController?.ContinueTurn();
+                CurrentTurnPlayer?.ContinueTurn();
+                _isPushActionContinueTurn = false;
+            });
+            _isPushActionContinueTurn = true;
+        }
     }
     public void OnTellControllerToRollDice()
     {

@@ -11,7 +11,7 @@ public class CardUpgradedInfoUIItem : CardPopupUIItem
 
         _tmpCardLevel.SetText($"Level {(cardModelLevels?.CurrentLevelConfig?._level ?? 0)}");
 
-        string des = cardModelLevels?.CardConfig?.SkillConfig?._cardEffectDescription;
+        string des = cardModelLevels?.CardConfig?._cardDescription;
         if (!string.IsNullOrEmpty(des))
         {
             string statUp = $"{cardModelLevels?.CacheOldStat} -> {cardModelLevels?.CurrentStat}";

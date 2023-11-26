@@ -29,7 +29,7 @@ public class PickingBonusCardItem : MonoBehaviour
         {
             _cardVisual.SetCardIDAndDisplayAllVisual(act.ID);
             InGameCardConfig _cardConfig = InGameCardConfigs.Instance.GetCardConfig(act.ID);
-            this._tmpPerkDescription.text = _cardConfig._cardDescription;
+            this._tmpPerkDescription.SetText(_cardConfig.GetBaseLevelDescription());
         }
         else
         {

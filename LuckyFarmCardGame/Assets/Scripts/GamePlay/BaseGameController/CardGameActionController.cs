@@ -90,7 +90,6 @@ public class DoNoFXRunning : IDoAction
     public override IEnumerator DoAction()
     {
         yield return new WaitUntil(() => !_controller.IsAnyRunning);
-        Debug.Log("No more wuning " + _controller.IsAnyRunning);
         _cb?.Invoke();
     }
 }

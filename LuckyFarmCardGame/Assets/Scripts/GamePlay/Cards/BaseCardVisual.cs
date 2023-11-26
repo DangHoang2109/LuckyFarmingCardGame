@@ -38,7 +38,7 @@ public class BaseCardVisual : MonoBehaviour
         if(_cardConfig != null)
         {
             this.DisplayArtwork(_cardConfig._sprCardArtwork)
-                .DisplayEffect(_cardConfig.SkillConfig?._sprCardEffect)
+                .DisplayEffect(_cardConfig._sprCardEffect)
                 .DisplayBackground(_cardConfig._sprCardBackground)
                 .DisplayCoinPOint(_cardConfig._gamePointOfCard);
         }
@@ -62,7 +62,7 @@ public class BaseCardVisual : MonoBehaviour
     {
         if (_imgEffectIcon != null)
         {
-            _imgEffectIcon.gameObject.SetActive(spr != null);
+            //_imgEffectIcon.gameObject.SetActive(spr != null);
             this._imgEffectIcon.sprite = spr;
         }
         return this;

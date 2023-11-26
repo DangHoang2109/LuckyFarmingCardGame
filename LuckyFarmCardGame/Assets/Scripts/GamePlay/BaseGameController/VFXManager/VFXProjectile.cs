@@ -34,9 +34,15 @@ public class VFXProjectile : VFXBaseObject
     {
         Sequence seq = DOTween.Sequence();
 
+        // Calculate the direction vector from the image to the target position
+        Vector2 direction = _desPos.transform.position - this.transform.position;
+            //(_desPos as RectTransform).anchoredPosition - (this.transform as RectTransform).anchoredPosition;
+        // Calculate the angle
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90f;
+        this.transform.rotation = Quaternion.Euler(0, 0, angle);
         seq.Join(this.transform.DOScale(1, 0.3f).SetDelay(delay).SetEase(Ease.OutBack));
-        seq.Join(itemRect.DOMove(_desPos.position, _moveDuration).SetDelay(delay).SetEase(Ease.InCirc).OnStart(()=> { isReadyForNext = true; }));
-        
+        seq.Join(itemRect.DOMove(_desPos.position, _moveDuration).SetDelay(delay).SetEase(Ease.InCirc));
+        //.OnStart(()=> { isReadyForNext = true; })
         seq.OnComplete(() =>
         {
             isReadyForNext = true;

@@ -1572,7 +1572,7 @@ MonoBehaviour:
   _cardVisual: {fileID: 5112591649241737503}
   _gPerk: {fileID: 0}
   _perkIcon: {fileID: 0}
-  _tmpPerkDescription: {fileID: 0}
+  _tmpPerkDescription: {fileID: 7428745001494594601}
 --- !u!1 &595920815133932276
 GameObject:
   m_ObjectHideFlags: 0
@@ -2203,7 +2203,7 @@ RectTransform:
   - {fileID: 8521300909186133214}
   - {fileID: 4574220215594289442}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -2341,10 +2341,10 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
+  m_fontSize: 35
   m_fontSizeBase: 36
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
@@ -2377,7 +2377,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 5, y: 5, z: 5, w: 5}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -2880,6 +2880,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 595920814206095122}
     m_Modifications:
     - target: {fileID: 647129161755604830, guid: 4e9be4ef7bc1dd142a78749234978269, type: 3}
@@ -2975,6 +2976,12 @@ PrefabInstance:
       value: CardBasePopupIItem
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 647129161755604830, guid: 4e9be4ef7bc1dd142a78749234978269, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3328714574181722542}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4e9be4ef7bc1dd142a78749234978269, type: 3}
 --- !u!224 &53535607166807828 stripped
 RectTransform:

@@ -29,7 +29,9 @@ public class CardGameController : MonoBehaviour
     [SerializeField] protected CardAnimationItem _cardAnim;
     [SerializeField] protected BaseCardCircleItem _cardCirclePrefab;
 
-    [SerializeField] protected Transform _tfPalletPanel, _tfActEffectPanel, _tfDeckPanel;
+    [SerializeField] protected Transform _tfActEffectPanel, _tfDeckPanel;
+    [SerializeField] protected CardPointPalletUI _palletUI;
+
     [Space(5f)]
     [SerializeField] protected ShrineItem _gShrineBonusStage;
 
@@ -141,6 +143,7 @@ public class CardGameController : MonoBehaviour
     }
     public void EnableDrawingCardFromDeck(bool isAllow)
     {
+        Debug.Log("Deck Button: Set deck " + isAllow);
         this._uiDeckDraw?.SetInterractable(isAllow);
     }
     #endregion Action with Deck
@@ -371,7 +374,7 @@ public class CardGameController : MonoBehaviour
             _cardsOnPallet.Add(card);
 
             //Let it move to pallet
-            cardItem.transform.SetParent(this._tfPalletPanel);
+            _palletUI.AppendItem(cardItem);
             _onCardPutToPallet?.Invoke(card._id);
 
             yield return new WaitForEndOfFrame(); //this.AnimationTimeConfig._timeACardStayOnActiveEffectPanel
@@ -504,6 +507,7 @@ public class CardGameController : MonoBehaviour
     {
         this._cardsOnPallet ??= new List<InGame_CardDataModel>();
         this._cardsOnPallet.Clear();
+        _palletUI.ClearPallet();
     }
     private int RollADice()
     {
@@ -575,7 +579,7 @@ public class CardGameController : MonoBehaviour
     public void GoShrineBonus()
     {
         this._gShrineBonusStage.gameObject.SetActive(true);
-        this._tfPalletPanel.gameObject.SetActive(false);
+        this._palletUI.Turn(false);
         _gShrineBonusStage.Show(OnCompleteShowShrine);
 
         void OnCompleteShowShrine()
@@ -587,7 +591,7 @@ public class CardGameController : MonoBehaviour
     {
         _gShrineBonusStage.Hide(() => {
             this._gShrineBonusStage.gameObject.SetActive(false);
-            this._tfPalletPanel.gameObject.SetActive(true);
+            this._palletUI.Turn(true);
         });
     }
     #endregion Shrine And Layout Of Game

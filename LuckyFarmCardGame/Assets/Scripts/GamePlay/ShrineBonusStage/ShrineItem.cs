@@ -16,6 +16,7 @@ public class ShrineItem : MonoBehaviour
     private IEnumerator ShowUp(System.Action cb = null)
     {
         yield return new WaitForEndOfFrame();
+        _animator.gameObject.SetActive(true);
         _canvasGroup.alpha = 0f;
         this.transform.localScale = new Vector3(0.5f, 0.5f);
         Sequence seq = DOTween.Sequence();
@@ -31,6 +32,7 @@ public class ShrineItem : MonoBehaviour
 
     public void Hide(System.Action cb = null)
     {
+        cb += ()=> _animator.gameObject.SetActive(false);
         this._animator.ShowAnimationWithCallback(state: AnimationState.DISAPPEAR, cb: cb);
     }
 }

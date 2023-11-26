@@ -26,8 +26,8 @@ public class InGameCardConfigs : ScriptableObject
     [TabGroup("Card Info")]
     [TableList]
     public List<InGameCardConfig> _configs;
-    [TabGroup("Skill Info")]
-    public InGameCardEffectConfigs _skillConfigs;
+    //[TabGroup("Skill Info")]
+    //public InGameCardEffectConfigs _skillConfigs;
     [TabGroup("Card Level Upgrade")]
     public InGameCardLevelsConfigs _levelsConfigs;
     #endregion Data Prop
@@ -68,66 +68,85 @@ public class InGameCardConfig
 {
     [TabGroup("General")] public int _cardID;
     [TabGroup("General")] public string _cardName;
-    [TabGroup("General")] [TextArea] public string _cardDescription;
+    [TabGroup("General")] [TextArea] public string _cardDescription; //show as "1x player damage"
+    [TabGroup("General")] [TextArea] public string _cardSkillDescription; //translate the 1x player damage to damage
+
     [Space(5f)]
     [TabGroup("General")] public int _gamePointOfCard;
 
     [TabGroup("Skill And Tier")]
     public InGameBaseCardEffectID _skillID;
+    [TabGroup("Skill And Tier")]
+    public Sprite _sprCardEffect;
+    [TabGroup("Skill And Tier")]
     public bool _isBonusTier;
-    public InGameCardEffectConfig SkillConfig => InGameCardEffectConfigs.Instance.GetSkillConfig(this._skillID);
+    //public InGameCardEffectConfig SkillConfig => InGameCardEffectConfigs.Instance.GetSkillConfig(this._skillID);
 
     public InGameCardLevelsConfig LevelsConfig => InGameCardLevelsConfigs.Instance.GetCardLevelsConfig(this._cardID);
 
     [TabGroup("Art")] public Sprite _sprCardArtwork;
     [TabGroup("Art")] public Sprite _sprCardBackground;
 
-
+    /// <summary>
+    /// Take the card description,
+    /// Player stat will be describe as 1x player damage/stat
+    /// </summary>
+    /// <returns></returns>
+    public string GetBaseLevelDescription()
+    {
+        if(InGameCardLevelsConfigs.Instance.TryGetCardLevelConfig(this._cardID, level: 1, out InGameCardLevel lvConfig))
+        {
+            return string.Format(this._cardDescription, $"{lvConfig._stat}x");
+        }
+        return this._cardDescription;
+    }
 }
 
 #region Card Effect
 
-[System.Serializable]
-public class InGameCardEffectConfigs
-{
+//[System.Serializable]
+//public class InGameCardEffectConfigs
+//{
 
-    #region Singleton
-    private static InGameCardEffectConfigs _instance;
+//    #region Singleton
+//    private static InGameCardEffectConfigs _instance;
 
-    public static InGameCardEffectConfigs Instance
-    {
-        get
-        {
-            if (_instance == null)
-            {
-                _instance = InGameCardConfigs.Instance._skillConfigs;
-            }
-            return _instance;
-        }
-    }
+//    public static InGameCardEffectConfigs Instance
+//    {
+//        get
+//        {
+//            if (_instance == null)
+//            {
+//                _instance = InGameCardConfigs.Instance._skillConfigs;
+//            }
+//            return _instance;
+//        }
+//    }
 
-    #endregion Singleton
+//    #endregion Singleton
 
-    #region Data Prop
-    public List<InGameCardEffectConfig> _configs;
-    #endregion Data Prop
+//    #region Data Prop
+//    public List<InGameCardEffectConfig> _configs;
+//    #endregion Data Prop
 
-    #region Getter
-    public InGameCardEffectConfig GetSkillConfig(InGameBaseCardEffectID id)
-    {
-        return _configs.Find(x => x._skillID == id);
-    }
-    #endregion Getter
-}
-[System.Serializable]
-public class InGameCardEffectConfig
-{
-    public InGameBaseCardEffectID _skillID;
+//    #region Getter
+//    public InGameCardEffectConfig GetSkillConfig(InGameBaseCardEffectID id)
+//    {
+//        return _configs.Find(x => x._skillID == id);
+//    }
+//    #endregion Getter
+//}
+//[System.Serializable]
+//public class InGameCardEffectConfig
+//{
+//    public InGameBaseCardEffectID _skillID;
 
-    [Space(5f)]
-    public Sprite _sprCardEffect;
-    public string _cardEffectDescription;
-}
+//    [Space(5f)]
+//    public Sprite _sprCardEffect;
+//    public string _cardEffectDescription;
+
+
+//}
 #endregion Card Effect
 
 #region Card Level ups

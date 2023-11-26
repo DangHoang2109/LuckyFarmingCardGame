@@ -169,13 +169,15 @@ public class InGameMainPlayerItem : InGameBasePlayerItem
 
         if (InGameManager.Instance.IsHaveEnemy)
         {
-
             List<InGameBasePlayerItem> EnemysAlive = InGameManager.Instance.EnemysAlive;
-            for (int i = 0; i < EnemysAlive.Count; i++)
+            List<Transform> enemyPos = new List<Transform>();
+            foreach (var item in EnemysAlive)
             {
-                //create attack vfx
-                VFXActionManager.Instance.ShowVFxXBycard(vfxId: VFXGameID.AttackSword, amount: 1, desPos: EnemysAlive[i].transform, delay: 0.25f, cb: (i==0 ? OnCallbackProjectileHit : null));
+                enemyPos.Add(item.transform);
             }
+            //create attack vfx
+            VFXActionManager.Instance.ShowMultiVFxXByCard(vfxId: VFXGameID.AttackSword, amount: EnemysAlive.Count, desPoss: enemyPos, delay: 0.25f, cbOnFirst: OnCallbackProjectileHit);
+
             void OnCallbackProjectileHit(VFXBaseObject _)
             {
                 InGameManager.Instance.OnPlayerAttackingAllUnit(isEnemySide: true, dmg);

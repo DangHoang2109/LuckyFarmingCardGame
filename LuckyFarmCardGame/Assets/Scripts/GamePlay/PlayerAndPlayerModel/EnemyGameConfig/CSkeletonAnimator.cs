@@ -55,25 +55,17 @@ public class CSkeletonAnimator : MonoBehaviour
     }
     public void ShowDead(Action cb)
     {
-        CAnimation.Start += OnSpineAnimationStart;
         CAnimation.Complete += OnSpineAnimationEnd;
 
         CAnimation.AddAnimation(0, AnimationState.DIE_ANIM, false, delay:0);
         void OnSpineAnimationEnd(TrackEntry trackEntry) //, Spine.Event e
         {
-            Debug.Log("Join Callback " + trackEntry.Animation.Name);
-
             //Spine.Animation dieAnimation = SkeletonGraphic.SkeletonData.FindAnimation(AnimationState.DIE_ANIM);
             if (trackEntry.Animation.Name.Equals(AnimationState.DIE_ANIM))
             {
                 cb?.Invoke();
-                Debug.Log("Complete Dead");
             }
 
-        }
-        void OnSpineAnimationStart(TrackEntry trackEntry)
-        {
-            Debug.Log("Start Dead");
         }
     }
 

@@ -133,8 +133,6 @@ public class InGameBotPlayerItem : InGameBasePlayerItem
     {
         if (dmg <= 0)
             dmg = BaseDamagePerTurn; //replace with this host info
-        Debug.Log("ENEMY: FUCK THE MAIN" + dmg);
-
         InGameManager.Instance.OnPlayerAttacking(InGameManager.Instance.MainUserPlayer.SeatID, dmg);
         this._animator?.ShowAttack();
         base.AttackSingleUnit(dmg);
@@ -143,7 +141,6 @@ public class InGameBotPlayerItem : InGameBasePlayerItem
     {
         if (dmg <= 0)
             dmg = this.BaseDamagePerTurn; //replace with this host info
-        Debug.Log("ENEMY: FUCK THE MAIN" + dmg);
         this._animator?.ShowAttack();
         InGameManager.Instance.OnPlayerAttackingAllUnit(isEnemySide: false, dmg);
         base.AttackAllUnit(dmg);
