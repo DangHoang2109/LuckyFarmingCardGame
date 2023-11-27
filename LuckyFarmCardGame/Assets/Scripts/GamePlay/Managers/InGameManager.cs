@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using Unity.VisualScripting;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 /// <summary>
@@ -232,13 +233,24 @@ public class InGameManager : MonoSingleton<InGameManager>
                 idsEnemysAlive.Add(enemyModel._seatId);
 
                 int turnStuntruly = casterSeatID >=i ? turnStunned - 1 : turnStunned; //Nếu vị trí của new enemy spawn ra ở phía trước caster thì bớt 1 turn stun để đều với enemy đứng phía sau
-                seat.SetStun(turnStuntruly);
+                SetStun(seat, turnStuntruly);
                 amount--;
             }
 
             if (amount <= 0)
                 break;
         }
+    }
+    public void SetStun(int isWhoStunned, int turnStunned = 1)
+    {
+        if (TryGetSeatItem(isWhoStunned, out InGameBasePlayerItem attacked))
+        {
+            SetStun(attacked, turnStunned);
+        }
+    }
+    public void SetStun(InGameBasePlayerItem seat, int turnStunned = 1)
+    {
+        seat.SetStun(turnStunned);
     }
     public void StartGame()
     {
@@ -380,11 +392,6 @@ public class InGameManager : MonoSingleton<InGameManager>
             attacked.Attacked(damage, this.OnCallbackPlayerDead);
             //create animation
         }
-        else
-        {
-            //hết enemy
-        }
-
     }
     /// <summary>
     /// Tấn công toàn bộ đối thủ

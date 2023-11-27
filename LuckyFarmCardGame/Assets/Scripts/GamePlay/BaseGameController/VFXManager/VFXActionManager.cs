@@ -28,6 +28,16 @@ public class VFXActionManager : DoActionManager
         }
         this.RunningAction();
     }
+    public void ShowFromToVFxXByCard(int vfxId, int amount, Transform startPos, Transform desPos, float delay, System.Action<VFXBaseObject> cb)
+    {
+        List<VFXProjectile> vfxObjs = VFXManager.Instance.GetObjects<VFXProjectile>(vfxId, amount);
+        if (vfxObjs != null && vfxObjs.Count > 0)
+        {
+            DoShowCardFromToVFX act = new DoShowCardFromToVFX(vfxObjs[0], startPos, desPos, delay, cb);
+            this.AddAction(act);
+        }
+        this.RunningAction();
+    }
 }
 public class DoShowCardVFX : IDoAction
 {
@@ -61,6 +71,42 @@ public class DoShowCardVFX : IDoAction
             _vfxObj.DoAnimation(_desPos: this._desPos, delay: this._delay);
         }
 
+        yield return new WaitUntil(() => _vfxObj.isReadyForNext);
+    }
+}
+
+public class DoShowCardFromToVFX : IDoAction
+{
+    private VFXProjectile _vfxObj;
+    private Transform _startPos, _desPos;
+    public float _delay;
+    public System.Action<VFXBaseObject> cb;
+    public DoShowCardFromToVFX() : base()
+    {
+    }
+    public DoShowCardFromToVFX(int id) : base(id)
+    { }
+    public DoShowCardFromToVFX(VFXProjectile vfxObj, Transform startPos, Transform desPos, float delay, System.Action<VFXBaseObject> cb) : base()
+    {
+        this._vfxObj = vfxObj;
+
+        if (_vfxObj != null)
+            _vfxObj.gameObject.SetActive(false);
+
+        this._startPos = desPos;
+        this._desPos = desPos;
+        this._delay = delay;
+        this.cb = cb;
+    }
+    public override IEnumerator DoAction()
+    {
+        if (_vfxObj != null)
+        {
+            _vfxObj.transform.localPosition = Vector3.zero;
+            _vfxObj.gameObject.SetActive(true);
+            _vfxObj.AppendAnimation(this.cb);
+            _vfxObj.DoAnimationFromStartPoint(_startPos,_desPos: this._desPos, delay: this._delay);
+        }
         yield return new WaitUntil(() => _vfxObj.isReadyForNext);
     }
 }

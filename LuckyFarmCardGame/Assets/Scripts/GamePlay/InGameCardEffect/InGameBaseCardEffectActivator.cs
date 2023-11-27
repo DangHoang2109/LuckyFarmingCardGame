@@ -34,7 +34,7 @@ public class InGameBaseCardEffectActivator
             return _currentLevelConfig;
         }
     }
-    public InGameBasePlayerItem _host;
+    public InGameMainPlayerItem _host;
 
     public virtual void ActiveEffectWhenDrawed()
     {
@@ -60,7 +60,7 @@ public class InGameBaseCardEffectActivator
     public virtual void SetIDAndHost(int id,InGameBasePlayerItem host)
     {
         this._cardID = id;
-        this._host = host;
+        this._host = host as InGameMainPlayerItem;
     }
     public virtual void UpdateCardLevel(int cardLevel)
     {
@@ -317,8 +317,8 @@ public class InGameCardEffectActivator_DrainHP : InGameBaseCardEffectActivator
     public override void ActiveEffectWhenPlaceToPallet()
     {
         base.ActiveEffectWhenPlaceToPallet();
-        InGameManager.Instance.OnTellControllerContinueTurn();
-
+        ShowingNotification();
+        this._host?.DrainHP(this.GetStatAsInt());
     }
     public override void ActiveEffectWhenDestroyed()
     {
@@ -327,9 +327,6 @@ public class InGameCardEffectActivator_DrainHP : InGameBaseCardEffectActivator
     public override void ActiveEffectWhenPulledToBag()
     {
         base.ActiveEffectWhenPulledToBag();
-    }
-    public override void ShowingNotification()
-    {
     }
 }
 public class InGameCardEffectActivator_ReduceDmgNAttackSingle : InGameBaseCardEffectActivator
@@ -369,8 +366,8 @@ public class InGameCardEffectActivator_AttackAllNStunFront : InGameBaseCardEffec
     public override void ActiveEffectWhenPlaceToPallet()
     {
         base.ActiveEffectWhenPlaceToPallet();
-        InGameManager.Instance.OnTellControllerContinueTurn();
-
+        ShowingNotification();
+        this._host?.AttackAllUnitAndStunFront(GetStatAsInt(), 1);
     }
     public override void ActiveEffectWhenDestroyed()
     {
@@ -395,8 +392,7 @@ public class InGameCardEffectActivator_MultiplierDamage : InGameBaseCardEffectAc
     public override void ActiveEffectWhenPlaceToPallet()
     {
         base.ActiveEffectWhenPlaceToPallet();
-        InGameManager.Instance.OnTellControllerContinueTurn();
-
+        this._host?.SetMultiplierDamage(this.GetStat());
     }
     public override void ActiveEffectWhenDestroyed()
     {
@@ -421,8 +417,7 @@ public class InGameCardEffectActivator_Invulnerable : InGameBaseCardEffectActiva
     public override void ActiveEffectWhenPlaceToPallet()
     {
         base.ActiveEffectWhenPlaceToPallet();
-        InGameManager.Instance.OnTellControllerContinueTurn();
-
+        this._host?.SetVulnerable(this.GetStatAsInt());
     }
     public override void ActiveEffectWhenDestroyed()
     {

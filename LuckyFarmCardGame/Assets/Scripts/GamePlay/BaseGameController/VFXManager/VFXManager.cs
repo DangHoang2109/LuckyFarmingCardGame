@@ -47,6 +47,12 @@ public class VFXManager : MonoSingleton<VFXManager>
     private System.Action onCompletePerItemCb;
     private System.Action onCompleteAllCallback;
 
+#if UNITY_EDITOR
+    private void OnValidate()
+    {
+        this.boosterPfs = new List<VFXTypePool>(GetComponentsInChildren<VFXTypePool>());
+    }
+#endif
 
     protected override void Awake()
     {
@@ -231,5 +237,10 @@ public static class VFXGameID
     public const int DefendShield = 2;
     public const int HealFlower = 3;
     public const int CardFly = 4;
+    public const int orbHPRed = 5;
+    public const int BuffGreen = 6;
+    public const int FireCircle = 7;
+    public const int BuffBlue = 8;
+    public const int SwordBlue = 9;
 
 }

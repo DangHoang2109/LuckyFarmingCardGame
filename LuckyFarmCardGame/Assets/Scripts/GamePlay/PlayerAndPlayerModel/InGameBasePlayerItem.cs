@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -87,7 +87,12 @@ public class InGameBasePlayerItem : MonoBehaviour
     /// <summary>
     /// 1f is 100% -> normal state
     /// </summary>
-    public float MultiplierDamage { get; set; }  
+    public float MultiplierDamage { get; set; }
+    /// <summary>
+    /// Số turn miễn đụng
+    /// </summary>
+    public int AmountTurnInvulnerable { get; set; }
+
     #endregion InGame skill involve Data
 
     #endregion Data
@@ -303,6 +308,13 @@ public class InGameBasePlayerItem : MonoBehaviour
             draw = 1; //replace with this host info
         InGameManager.Instance.OnTellControllerToDrawCards(draw);
     }
+    public virtual void DrainHP(int stat = -1)
+    {
+        if (stat <= 0)
+            stat = 1; //replace with this host info
+        AttackSingleUnit(stat);
+        Heal(stat);
+    }
 
     #endregion Turn Action
 
@@ -335,12 +347,17 @@ public class InGameBasePlayerItem : MonoBehaviour
     public virtual void SetStun(int amountTurnStunnning)
     {
         this.AmountTurnStunned = amountTurnStunnning;
+        this._playerAttributePallet?.AddAttribute(AttributeID.STUN, this.AmountTurnStunned);
     }
     public virtual void SetMultiplierDamage(float damageMultiplier)
     {
         this.MultiplierDamage = damageMultiplier;
     }
-
+    public virtual void SetVulnerable(int amountTurn)
+    {
+        this.AmountTurnInvulnerable = amountTurn;
+        this._playerAttributePallet?.AddAttribute(AttributeID.INVULNERABLE, this.AmountTurnInvulnerable);
+    }
     #endregion 
 
 }

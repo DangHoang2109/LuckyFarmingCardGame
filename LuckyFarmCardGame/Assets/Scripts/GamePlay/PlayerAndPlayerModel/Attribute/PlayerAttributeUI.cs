@@ -11,6 +11,8 @@ public class PlayerAttributeUI : MonoBehaviour
     public AttributeUI _prefab;
     public List<AttributeUI> _items;
     public Dictionary<AttributeID, AttributeUI> _dicItem;
+
+    public Transform Panel => _tfPanel;
     public bool TryGetItem(AttributeID id, out AttributeUI item)
     {
         _items ??= new List<AttributeUI>();

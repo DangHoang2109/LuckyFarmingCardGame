@@ -51,4 +51,25 @@ public class VFXProjectile : VFXBaseObject
 
         return seq;
     }
+
+    public Sequence DoAnimationFromStartPoint(Transform _startPos, Transform _desPos, float delay = 0, float _moveDuration = 0.5F)
+    {
+        Sequence seq = DOTween.Sequence();
+        
+        // Calculate the angle
+        seq.Join(
+            this.transform.DOScale(1, 0.3f)
+            .OnStart(() => this.transform.position = _startPos.position)
+            .SetDelay(delay)
+            .SetEase(Ease.OutBack));
+        seq.Join(itemRect.DOMove(_desPos.position, _moveDuration).SetDelay(delay).SetEase(Ease.InCirc));
+        seq.OnComplete(() =>
+        {
+            isReadyForNext = true;
+            onCompleteAnime?.Invoke(this);
+        });
+
+        return seq;
+    }
+    
 }

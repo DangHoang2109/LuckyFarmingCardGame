@@ -51,4 +51,5 @@ public enum AttributeID
     NONE = -1,
     SHIELD = 0,
     STUN = 1,
+    INVULNERABLE = 2,
 }

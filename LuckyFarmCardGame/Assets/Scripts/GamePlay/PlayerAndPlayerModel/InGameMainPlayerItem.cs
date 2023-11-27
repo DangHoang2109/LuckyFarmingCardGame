@@ -159,7 +159,6 @@ public class InGameMainPlayerItem : InGameBasePlayerItem
                 InGameManager.Instance.OnPlayerAttacking(frontEnemy.SeatID, dmg);
                 base.AttackSingleUnit(dmg);
             }
-            
         }
     }
     public override void AttackAllUnit(int dmg = -1)
@@ -223,6 +222,79 @@ public class InGameMainPlayerItem : InGameBasePlayerItem
         void OnCallbackProjectileHit(VFXBaseObject _)
         {
             base.ForceDrawCard(draw);
+        }
+    }
+    public override void DrainHP(int stat = -1)
+    {
+        if (stat <= 0)
+            stat = BaseDamagePerTurn; //replace with this host info
+
+        InGameBasePlayerItem frontEnemy = InGameManager.Instance.FrontEnemy;
+        if (frontEnemy != null)
+        {
+            //create attack vfx
+            VFXActionManager.Instance.ShowFromToVFxXByCard(vfxId: VFXGameID.orbHPRed, amount: 1, startPos: frontEnemy.transform, desPos: _hpBar.transform, delay: 0.25f, cb: OnCallbackProjectileHit);
+
+            void OnCallbackProjectileHit(VFXBaseObject _)
+            {
+                InGameManager.Instance.OnPlayerAttacking(frontEnemy.SeatID, stat);
+                Heal(stat);
+            }
+        }
+    }
+
+    public void AttackAllUnitAndStunFront(int dmg, int turnStun)
+    {
+        if (dmg <= 0)
+            dmg = BaseDamagePerTurn;
+        if (turnStun <= 0)
+            turnStun = 1;
+
+        if (InGameManager.Instance.IsHaveEnemy)
+        {
+            List<InGameBasePlayerItem> EnemysAlive = InGameManager.Instance.EnemysAlive;
+            List<Transform> enemyPos = new List<Transform>();
+            foreach (var item in EnemysAlive)
+            {
+                enemyPos.Add(item.transform);
+            }
+            //create attack vfx
+            VFXActionManager.Instance.ShowMultiVFxXByCard(vfxId: VFXGameID.AttackSword, amount: EnemysAlive.Count, desPoss: enemyPos, delay: 0.25f, cbOnFirst: OnCallbackProjectileHit);
+
+            void OnCallbackProjectileHit(VFXBaseObject _)
+            {
+                InGameManager.Instance.OnPlayerAttackingAllUnit(isEnemySide: true, dmg);
+                base.AttackAllUnit(dmg);
+
+                //set stun
+                InGameBasePlayerItem frontEnemy = InGameManager.Instance.FrontEnemy;
+                if (frontEnemy != null)
+                    InGameManager.Instance.SetStun(frontEnemy, turnStun);
+
+                InGameManager.Instance.OnTellControllerContinueTurn();
+            }
+        }
+    }
+    public override void SetMultiplierDamage(float damageMultiplier)
+    {
+        //create attack vfx
+        VFXActionManager.Instance.ShowVFxXBycard(vfxId: VFXGameID.BuffGreen, amount: 1, desPos: _playerAttributePallet.Panel, delay: 0.25f, cb: OnCallbackProjectileHit);
+
+        void OnCallbackProjectileHit(VFXBaseObject _)
+        {
+            base.SetMultiplierDamage(damageMultiplier);
+            InGameManager.Instance.OnTellControllerContinueTurn();
+        }
+    }
+    public override void SetVulnerable(int amountTurn)
+    {        
+        //create attack vfx
+        VFXActionManager.Instance.ShowVFxXBycard(vfxId: VFXGameID.BuffGreen, amount: 1, desPos: _playerAttributePallet.Panel, delay: 0.25f, cb: OnCallbackProjectileHit);
+
+        void OnCallbackProjectileHit(VFXBaseObject _)
+        {
+            base.SetVulnerable(amountTurn);
+            InGameManager.Instance.OnTellControllerContinueTurn();
         }
     }
     #endregion Turn Action
