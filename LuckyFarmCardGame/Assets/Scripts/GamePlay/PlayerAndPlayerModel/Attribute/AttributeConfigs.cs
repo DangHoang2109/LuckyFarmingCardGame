@@ -52,4 +52,7 @@ public enum AttributeID
     SHIELD = 0,
     STUN = 1,
     INVULNERABLE = 2,
+    INCREASE_DMG = 3,
+    REDUCE_DAMAGE = 4,
+
 }

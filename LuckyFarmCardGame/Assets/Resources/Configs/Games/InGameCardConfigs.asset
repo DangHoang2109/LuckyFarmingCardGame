@@ -297,3 +297,113 @@ MonoBehaviour:
         _level: 5
         _require: 6
         _stat: 5
+    - _ID: 6
+      levels:
+      - _ID: 6
+        _level: 1
+        _require: 2
+        _stat: 1
+      - _ID: 6
+        _level: 2
+        _require: 3
+        _stat: 2
+      - _ID: 6
+        _level: 3
+        _require: 4
+        _stat: 3
+      - _ID: 6
+        _level: 4
+        _require: 5
+        _stat: 4
+      - _ID: 6
+        _level: 5
+        _require: 6
+        _stat: 5
+    - _ID: 7
+      levels:
+      - _ID: 7
+        _level: 1
+        _require: 2
+        _stat: 1
+      - _ID: 7
+        _level: 2
+        _require: 3
+        _stat: 2
+      - _ID: 7
+        _level: 3
+        _require: 4
+        _stat: 3
+      - _ID: 7
+        _level: 4
+        _require: 5
+        _stat: 4
+      - _ID: 7
+        _level: 5
+        _require: 6
+        _stat: 5
+    - _ID: 8
+      levels:
+      - _ID: 8
+        _level: 1
+        _require: 2
+        _stat: 1
+      - _ID: 8
+        _level: 2
+        _require: 3
+        _stat: 2
+      - _ID: 8
+        _level: 3
+        _require: 4
+        _stat: 3
+      - _ID: 8
+        _level: 4
+        _require: 5
+        _stat: 4
+      - _ID: 8
+        _level: 5
+        _require: 6
+        _stat: 5
+    - _ID: 9
+      levels:
+      - _ID: 9
+        _level: 1
+        _require: 2
+        _stat: 1
+      - _ID: 9
+        _level: 2
+        _require: 3
+        _stat: 2
+      - _ID: 9
+        _level: 3
+        _require: 4
+        _stat: 3
+      - _ID: 9
+        _level: 4
+        _require: 5
+        _stat: 4
+      - _ID: 9
+        _level: 5
+        _require: 6
+        _stat: 5
+    - _ID: 10
+      levels:
+      - _ID: 10
+        _level: 1
+        _require: 2
+        _stat: 1
+      - _ID: 10
+        _level: 2
+        _require: 3
+        _stat: 2
+      - _ID: 10
+        _level: 3
+        _require: 4
+        _stat: 3
+      - _ID: 10
+        _level: 4
+        _require: 5
+        _stat: 4
+      - _ID: 10
+        _level: 5
+        _require: 6
+        _stat: 5

@@ -202,7 +202,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbddae0004e923f41bb437b5419dbbbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  id: 8
+  id: 9
   prefab: {fileID: 3155782256822214580, guid: 8813257dd3aba2245a6928a7003c179e, type: 3}
 --- !u!1 &7580941415270041105
 GameObject:
@@ -305,7 +305,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   id: 5
-  prefab: {fileID: 8215862612551824300, guid: cd2365e698d4da34a90d16e25c0a504a, type: 3}
+  prefab: {fileID: 6037422823096327320, guid: cd2365e698d4da34a90d16e25c0a504a, type: 3}
 --- !u!1 &7580941415692926288
 GameObject:
   m_ObjectHideFlags: 0
@@ -541,7 +541,7 @@ RectTransform:
   m_Children:
   - {fileID: 7580941416380147769}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}

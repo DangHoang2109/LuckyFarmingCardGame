@@ -17,7 +17,7 @@ public class AttributeUI : MonoBehaviour
         this._imgIcon.sprite = AttributeConfigs.Instance.GetIcon(id);
         return this;
     }
-    public AttributeUI UpdateValue(int currentVal, bool isAnim = true, float durationValue = 1f)
+    public AttributeUI UpdateValue(int currentVal, bool isAnim = true, float durationValue = 1f, bool isPercent = false)
     {
         int currentCache = _currentValue;
         this._currentValue = currentVal;
@@ -29,16 +29,20 @@ public class AttributeUI : MonoBehaviour
             Sequence seq = DOTween.Sequence();
             seq.SetId(this.GetInstanceID());
             // Update text value using DOTween
-            seq.Join(DOTween.To(() => currentCache, x => this._tmpValue.SetText($"{x}"), currentVal, durationValue));
+            seq.Join(DOTween.To(() => currentCache, x => this._tmpValue.SetText($"{x} {(isPercent ? "%" : "")}"), currentVal, durationValue));
             // Update image fill amount using DOTween
             seq.OnComplete(() => { this.gameObject.SetActive(currentVal > 0); });
         }
         else
         {
-            this._tmpValue.SetText($"{_currentValue}");
+            this._tmpValue.SetText($"{_currentValue} {(isPercent ? "%" : "")}");
             this.gameObject.SetActive(currentVal > 0);
         }
 
         return this;
+    }
+    public void OnClick()
+    {
+        Debug.Log("Show the attribute");
     }
 }

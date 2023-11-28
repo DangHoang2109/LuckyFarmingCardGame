@@ -352,6 +352,7 @@ public class InGameBasePlayerItem : MonoBehaviour
     public virtual void SetMultiplierDamage(float damageMultiplier)
     {
         this.MultiplierDamage = damageMultiplier;
+        this._playerAttributePallet?.AddAttribute(AttributeID.INCREASE_DMG, (int)(this.MultiplierDamage * 100));
     }
     public virtual void SetVulnerable(int amountTurn)
     {

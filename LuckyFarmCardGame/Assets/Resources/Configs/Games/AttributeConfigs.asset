@@ -21,3 +21,15 @@ MonoBehaviour:
     _sprIcon: {fileID: 21300000, guid: 8f856fe34feef4a41a499826211b9fa2, type: 3}
     _name: Stun
     _description: Can not conduct the turn
+  - _id: 2
+    _sprIcon: {fileID: 21300000, guid: 6c0f1d0b2ed68ea4c86951af894afba3, type: 3}
+    _name: Invulnerable
+    _description: Can not be damaged
+  - _id: 3
+    _sprIcon: {fileID: 21300000, guid: b94e20d8676f2aa49aa2785a45419296, type: 3}
+    _name: Berserker
+    _description: Increase Damage
+  - _id: 4
+    _sprIcon: {fileID: 21300000, guid: 1d6a5fe9ad2971f4e9b456346005adcb, type: 3}
+    _name: Reduce Damage
+    _description: Reduce Damage

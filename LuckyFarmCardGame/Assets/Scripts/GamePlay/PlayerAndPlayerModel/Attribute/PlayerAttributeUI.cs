@@ -36,13 +36,13 @@ public class PlayerAttributeUI : MonoBehaviour
         _dicItem.Add(id, item);
         return item;
     }
-    public void AddAttribute(AttributeID id, int value, bool isAnim = true, float durationValue = 1)
+    public void AddAttribute(AttributeID id, int value, bool isAnim = true, float durationValue = 1, bool isPercent = false)
     {
         //find the item
         if(!TryGetItem(id, out AttributeUI item))
         {
             item = AddItem(id);
         }
-        item.UpdateValue(value, isAnim: isAnim, durationValue: durationValue);
+        item.UpdateValue(value, isAnim: isAnim, durationValue: durationValue, isPercent: isPercent);
     }
 }

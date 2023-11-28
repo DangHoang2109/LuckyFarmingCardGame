@@ -232,13 +232,13 @@ public class InGameMainPlayerItem : InGameBasePlayerItem
         InGameBasePlayerItem frontEnemy = InGameManager.Instance.FrontEnemy;
         if (frontEnemy != null)
         {
-            //create attack vfx
-            VFXActionManager.Instance.ShowFromToVFxXByCard(vfxId: VFXGameID.orbHPRed, amount: 1, startPos: frontEnemy.transform, desPos: _hpBar.transform, delay: 0.25f, cb: OnCallbackProjectileHit);
+            //create attack vfx , startPos: frontEnemy.transform
+            VFXActionManager.Instance.ShowVFxXBycard(vfxId: VFXGameID.orbHPRed, amount: 1, desPos: _hpBar.transform, delay: 0.25f, cb: OnCallbackProjectileHit);
 
             void OnCallbackProjectileHit(VFXBaseObject _)
             {
                 InGameManager.Instance.OnPlayerAttacking(frontEnemy.SeatID, stat);
-                Heal(stat);
+                InGameManager.Instance.OnPlayerHeal(this.SeatID, stat);
             }
         }
     }

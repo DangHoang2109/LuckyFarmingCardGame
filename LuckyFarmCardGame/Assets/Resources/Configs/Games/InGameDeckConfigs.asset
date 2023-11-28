@@ -28,3 +28,12 @@ MonoBehaviour:
       _amountCard: 9
     - _cardID: 5
       _amountCard: 9
+  - _id: -1
+    _name: Test
+    _deckContain:
+    - _cardID: 6
+      _amountCard: 3
+    - _cardID: 8
+      _amountCard: 3
+    - _cardID: 10
+      _amountCard: 3
