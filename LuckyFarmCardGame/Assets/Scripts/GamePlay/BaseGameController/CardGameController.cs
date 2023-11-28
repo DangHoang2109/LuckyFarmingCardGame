@@ -281,6 +281,8 @@ public class CardGameController : MonoBehaviour
         {
             _currentDeck.RemoveAt(0);
             _uiDeckDraw?.OnChangeCardAmount(_currentDeck.Count);
+
+            CheckDeck();
         }
 
         return CreateCardDataModel(topCardId);
@@ -297,6 +299,8 @@ public class CardGameController : MonoBehaviour
         {
             _currentDeck.RemoveRange(0, amount);
             _uiDeckDraw?.OnChangeCardAmount(_currentDeck.Count);
+
+            CheckDeck();
         }
 
         return top;
@@ -578,7 +582,7 @@ public class CardGameController : MonoBehaviour
     #region Shrine And Layout Of Game
     public void GoShrineBonus()
     {
-        this._gShrineBonusStage.gameObject.SetActive(true);
+        //this._gShrineBonusStage.gameObject.SetActive(true);
         this._palletUI.Turn(false);
         _gShrineBonusStage.Show(OnCompleteShowShrine);
 
@@ -590,7 +594,7 @@ public class CardGameController : MonoBehaviour
     public void QuitShrineBonus()
     {
         _gShrineBonusStage.Hide(() => {
-            this._gShrineBonusStage.gameObject.SetActive(false);
+            //this._gShrineBonusStage.gameObject.SetActive(false);
             this._palletUI.Turn(true);
         });
     }

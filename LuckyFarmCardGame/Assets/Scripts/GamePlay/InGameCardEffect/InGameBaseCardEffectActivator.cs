@@ -328,6 +328,11 @@ public class InGameCardEffectActivator_DrainHP : InGameBaseCardEffectActivator
     {
         base.ActiveEffectWhenPulledToBag();
     }
+
+    public override float GetStat()
+    {
+        return this.CurrentLevelConfig._stat * _host.BaseHPPerHeal;
+    }
 }
 public class InGameCardEffectActivator_ReduceDmgNAttackSingle : InGameBaseCardEffectActivator
 {
@@ -341,7 +346,6 @@ public class InGameCardEffectActivator_ReduceDmgNAttackSingle : InGameBaseCardEf
     {
         base.ActiveEffectWhenPlaceToPallet();
         InGameManager.Instance.OnTellControllerContinueTurn();
-
     }
     public override void ActiveEffectWhenDestroyed()
     {
@@ -353,6 +357,10 @@ public class InGameCardEffectActivator_ReduceDmgNAttackSingle : InGameBaseCardEf
     }
     public override void ShowingNotification()
     {
+    }
+    public override float GetStat()
+    {
+        return this.CurrentLevelConfig._stat * _host.BaseDamagePerTurn;
     }
 }
 public class InGameCardEffectActivator_AttackAllNStunFront : InGameBaseCardEffectActivator
@@ -380,6 +388,10 @@ public class InGameCardEffectActivator_AttackAllNStunFront : InGameBaseCardEffec
     public override void ShowingNotification()
     {
     }
+    public override float GetStat()
+    {
+        return this.CurrentLevelConfig._stat * _host.BaseDamagePerTurn;
+    }
 }
 public class InGameCardEffectActivator_MultiplierDamage : InGameBaseCardEffectActivator
 {
@@ -392,7 +404,7 @@ public class InGameCardEffectActivator_MultiplierDamage : InGameBaseCardEffectAc
     public override void ActiveEffectWhenPlaceToPallet()
     {
         base.ActiveEffectWhenPlaceToPallet();
-        this._host?.SetMultiplierDamage(this.GetStat());
+        this._host?.SetMultiplierDamage(this.GetStat(), 3);
     }
     public override void ActiveEffectWhenDestroyed()
     {
@@ -404,6 +416,10 @@ public class InGameCardEffectActivator_MultiplierDamage : InGameBaseCardEffectAc
     }
     public override void ShowingNotification()
     {
+    }
+    public override float GetStat()
+    {
+        return this.CurrentLevelConfig._stat;
     }
 }
 public class InGameCardEffectActivator_Invulnerable : InGameBaseCardEffectActivator
@@ -429,6 +445,10 @@ public class InGameCardEffectActivator_Invulnerable : InGameBaseCardEffectActiva
     }
     public override void ShowingNotification()
     {
+    }
+    public override float GetStat()
+    {
+        return this.CurrentLevelConfig._stat;
     }
 }
 public class InGameCardEffectActivator_MultiplierCardEffect : InGameBaseCardEffectActivator
@@ -456,6 +476,10 @@ public class InGameCardEffectActivator_MultiplierCardEffect : InGameBaseCardEffe
     public override void ShowingNotification()
     {
     }
+    public override float GetStat()
+    {
+        return this.CurrentLevelConfig._stat;
+    }
 }
 public class InGameCardEffectActivator_ReduceDamage : InGameBaseCardEffectActivator
 {
@@ -481,6 +505,12 @@ public class InGameCardEffectActivator_ReduceDamage : InGameBaseCardEffectActiva
     }
     public override void ShowingNotification()
     {
+
+    }
+
+    public override float GetStat()
+    {
+        return this.CurrentLevelConfig._stat;
     }
 }
 public class InGameCardEffectActivator_ReorderCards : InGameBaseCardEffectActivator
@@ -507,5 +537,9 @@ public class InGameCardEffectActivator_ReorderCards : InGameBaseCardEffectActiva
     }
     public override void ShowingNotification()
     {
+    }
+    public override float GetStat()
+    {
+        return this.CurrentLevelConfig._stat ;
     }
 }

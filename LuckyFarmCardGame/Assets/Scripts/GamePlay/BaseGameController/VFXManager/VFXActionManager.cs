@@ -5,6 +5,12 @@ using UnityEngine;
 public class VFXActionManager : DoActionManager
 {
     public static VFXActionManager Instance => CardGameActionController.Instance.vfxActionManager;
+    public void ShowVFxXAttributeChange(AttributeUI item)
+    {
+        DoShowAttributeChangeVFX act = new DoShowAttributeChangeVFX(item);
+        this.AddAction(act);
+        this.RunningAction();
+    }
     public void ShowVFxXBycard(int vfxId, int amount, Transform desPos, float delay, System.Action<VFXBaseObject> cb)
     {
         List<VFXProjectile> vfxObjs = VFXManager.Instance.GetObjects<VFXProjectile>(vfxId, amount);
@@ -93,7 +99,7 @@ public class DoShowCardFromToVFX : IDoAction
         if (_vfxObj != null)
             _vfxObj.gameObject.SetActive(false);
 
-        this._startPos = desPos;
+        this._startPos = startPos;
         this._desPos = desPos;
         this._delay = delay;
         this.cb = cb;
@@ -151,4 +157,22 @@ public class DoShowCardMultipleVFX : IDoAction
         yield return new WaitUntil(() => AllReady());
     }
     private bool AllReady() => _vfxObj.TrueForAll(x => x.isReadyForNext);
+}
+
+public class DoShowAttributeChangeVFX : IDoAction
+{
+    private AttributeUI _vfxObj;
+    public DoShowAttributeChangeVFX() : base()
+    {
+    }
+    public DoShowAttributeChangeVFX(int id) : base(id)
+    { }
+    public DoShowAttributeChangeVFX(AttributeUI vfxObj) : base()
+    {
+        this._vfxObj = vfxObj;
+    }
+    public override IEnumerator DoAction()
+    {
+        yield return new WaitUntil(() => _vfxObj.IsReadyForNext);
+    }
 }

@@ -148,6 +148,10 @@ public class InGameMainPlayerItem : InGameBasePlayerItem
         if (dmg <= 0)
             dmg = BaseDamagePerTurn; //replace with this host info
 
+        float mulDmg = MultiplierDamage;
+        if (mulDmg > 0)
+            dmg = (int)(dmg * mulDmg);
+
         InGameBasePlayerItem frontEnemy = InGameManager.Instance.FrontEnemy;
         if(frontEnemy != null)
         {
@@ -160,12 +164,18 @@ public class InGameMainPlayerItem : InGameBasePlayerItem
                 base.AttackSingleUnit(dmg);
             }
         }
+        else
+        {
+            InGameManager.Instance.OnTellControllerContinueTurn();
+        }
     }
     public override void AttackAllUnit(int dmg = -1)
     {
         if (dmg <= 0)
             dmg = BaseDamagePerTurn; //replace with this host info
-
+        float mulDmg = MultiplierDamage;
+        if (mulDmg > 0)
+            dmg = (int)(dmg * mulDmg);
         if (InGameManager.Instance.IsHaveEnemy)
         {
             List<InGameBasePlayerItem> EnemysAlive = InGameManager.Instance.EnemysAlive;
@@ -182,6 +192,10 @@ public class InGameMainPlayerItem : InGameBasePlayerItem
                 InGameManager.Instance.OnPlayerAttackingAllUnit(isEnemySide: true, dmg);
                 base.AttackAllUnit(dmg);
             }
+        }
+        else
+        {
+            InGameManager.Instance.OnTellControllerContinueTurn();
         }
     }
     public override void AddShield(int shieldUnit = -1)
@@ -232,14 +246,20 @@ public class InGameMainPlayerItem : InGameBasePlayerItem
         InGameBasePlayerItem frontEnemy = InGameManager.Instance.FrontEnemy;
         if (frontEnemy != null)
         {
-            //create attack vfx , startPos: frontEnemy.transform
-            VFXActionManager.Instance.ShowVFxXBycard(vfxId: VFXGameID.orbHPRed, amount: 1, desPos: _hpBar.transform, delay: 0.25f, cb: OnCallbackProjectileHit);
+            //create attack vfx 
+            VFXActionManager.Instance.ShowFromToVFxXByCard(vfxId: VFXGameID.orbHPRed, amount: 1, startPos: frontEnemy.transform, desPos: _hpBar.transform, delay: 0.25f, cb: OnCallbackProjectileHit);
 
             void OnCallbackProjectileHit(VFXBaseObject _)
             {
                 InGameManager.Instance.OnPlayerAttacking(frontEnemy.SeatID, stat);
-                InGameManager.Instance.OnPlayerHeal(this.SeatID, stat);
+                this.AddHP(stat);
+
+                InGameManager.Instance.OnTellControllerContinueTurn();
             }
+        }
+        else
+        {
+            InGameManager.Instance.OnTellControllerContinueTurn();
         }
     }
 
@@ -274,15 +294,19 @@ public class InGameMainPlayerItem : InGameBasePlayerItem
                 InGameManager.Instance.OnTellControllerContinueTurn();
             }
         }
+        else
+        {
+            InGameManager.Instance.OnTellControllerContinueTurn();
+        }
     }
-    public override void SetMultiplierDamage(float damageMultiplier)
+    public override void SetMultiplierDamage(float damageMultiplier, int turnActive)
     {
         //create attack vfx
         VFXActionManager.Instance.ShowVFxXBycard(vfxId: VFXGameID.BuffGreen, amount: 1, desPos: _playerAttributePallet.Panel, delay: 0.25f, cb: OnCallbackProjectileHit);
 
         void OnCallbackProjectileHit(VFXBaseObject _)
         {
-            base.SetMultiplierDamage(damageMultiplier);
+            base.SetMultiplierDamage(damageMultiplier, turnActive);
             InGameManager.Instance.OnTellControllerContinueTurn();
         }
     }

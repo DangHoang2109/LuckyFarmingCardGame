@@ -280,12 +280,6 @@ public class InGameManager : MonoSingleton<InGameManager>
     }
     public void OnEndRound()
     {
-        //loop all the alive player and reset it shield, we not allow shield remain 
-        foreach (var item in this._players)
-        {
-            if (item.IsActive())
-                item.ResetShield();
-        }
         //begin new round
         OnBeginRound();
     }

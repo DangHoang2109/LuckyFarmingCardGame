@@ -37,3 +37,5 @@ MonoBehaviour:
       _amountCard: 3
     - _cardID: 10
       _amountCard: 3
+    - _cardID: 2
+      _amountCard: 3

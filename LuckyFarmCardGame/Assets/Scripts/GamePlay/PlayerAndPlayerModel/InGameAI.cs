@@ -376,7 +376,7 @@ public class InGameAI
             //trừ count down
             if (countDown <= 0)
             {
-                this._bot.SetMultiplierDamage(this._skillConfig._statValue);
+                this._bot.SetMultiplierDamage(this._skillConfig._statValue, this._skillConfig._statIntervall);
                 countDown = this._skillConfig._statIntervall;
             }
             else

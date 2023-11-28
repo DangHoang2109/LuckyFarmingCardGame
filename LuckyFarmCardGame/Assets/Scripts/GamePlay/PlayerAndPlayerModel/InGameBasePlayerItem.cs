@@ -6,6 +6,7 @@ using System.Linq;
 using Spine;
 using UnityEditor.Experimental.GraphView;
 using System;
+using Unity.VisualScripting;
 
 public class InGameBasePlayerItem : MonoBehaviour
 {
@@ -15,7 +16,16 @@ public class InGameBasePlayerItem : MonoBehaviour
     public HPBarUI _hpBar;
 
     public PlayerAttributeUI _playerAttributePallet;
-    public AttributeUI ShieldUI => _playerAttributePallet?.GetItemSafe(AttributeID.SHIELD);
+    public Transform ShieldUI
+    {
+        get
+        {
+            if (_playerAttributePallet.TryGetItem(AttributeID.SHIELD, out var item))
+                return item.transform;
+            else
+                return _playerAttributePallet.Panel;
+        }
+    }
 
     #endregion Prop on editor
 
@@ -51,21 +61,6 @@ public class InGameBasePlayerItem : MonoBehaviour
             }
         }
     }
-    public virtual int CurrentShield
-    {
-        get
-        {
-            return this.PlayerModel?.Shield ?? 0;
-        }
-        set
-        {
-            if (this.PlayerModel != null)
-            {
-                this.PlayerModel.Shield = value;
-                this._playerAttributePallet?.AddAttribute(AttributeID.SHIELD, this.PlayerModel.Shield);
-            }
-        }
-    }
     public int BaseDamagePerTurn => this.PlayerModel?.DamagePerTurn ?? 0;
     public int BaseShieldPerAdd => this.PlayerModel?.ShieldPerAdd ?? 0;
     public int BaseHPPerHeal => this.PlayerModel?.HPPerHeal ?? 0;
@@ -82,16 +77,55 @@ public class InGameBasePlayerItem : MonoBehaviour
 
 
     #region InGame skill involve Data : Curse, Stun, Burn, Poision....
-    public int AmountTurnStunned { get; set; }
-    public bool IsStunning => AmountTurnStunned > 0;
+    public int AmountTurnStunned
+    {
+        get
+        {
+            if (AttributeDatas.TryGetData(AttributeID.STUN, out var item))
+                return item.GetTurnLeft();
+            else
+                return 0;
+        }
+    }
     /// <summary>
     /// 1f is 100% -> normal state
     /// </summary>
-    public float MultiplierDamage { get; set; }
+    public float MultiplierDamage
+    {
+        get
+        {
+            if (AttributeDatas.TryGetData(AttributeID.INCREASE_DMG, out var item))
+                return item.GetValue() / 100f;
+            else
+                return 0f;
+        }
+    }
     /// <summary>
     /// Số turn miễn đụng
     /// </summary>
-    public int AmountTurnInvulnerable { get; set; }
+    public int AmountTurnInvulnerable
+    {
+        get
+        {
+            if (AttributeDatas.TryGetData(AttributeID.INVULNERABLE, out var item))
+                return item.GetTurnLeft();
+            else
+                return 0;
+        }
+    }
+
+    public bool IsStunning
+    {
+        get
+        {
+            if (AttributeDatas.TryGetData(AttributeID.STUN, out var item))
+                return item.GetTurnLeft() > 0;
+            else
+                return false;
+        }
+    }
+
+    public InGamePlayerAttributeDatas AttributeDatas => this.PlayerModel?.AttributeDatas;
 
     #endregion InGame skill involve Data
 
@@ -107,11 +141,11 @@ public class InGameBasePlayerItem : MonoBehaviour
         this._playerModel = model;
         _tmpCoinValue?.SetText($"{(PlayerModel.CurrentCoinPoint).ToString("D2")}");
         this._hpBar.SetMaxValue(PlayerModel.MaxHP);
+        _playerAttributePallet?.JoinGame(this);
         return this;
     }
     public virtual InGameBasePlayerItem InitPlayerItSelf()
     {
-        ClearStun();
         return this;
     }
     public virtual void ParseVisualBagUI()
@@ -122,12 +156,10 @@ public class InGameBasePlayerItem : MonoBehaviour
     #region Turn Action
     public virtual void BeginTurn()
     {
+        AttributeDatas?.StartTurn();
     }
     public virtual void EndTurn()
     {
-        this.AmountTurnStunned--;
-        if (AmountTurnStunned <= 0) 
-            ClearStun();
     }
     public virtual void ContinueTurn()
     {
@@ -263,12 +295,6 @@ public class InGameBasePlayerItem : MonoBehaviour
         Debug.Log("HOST: CREATE SHIELD" + shieldUnit);
         this.CurrentShield += shieldUnit;
     }
-    public virtual void ResetShield()
-    {
-        Debug.Log("HOST: RESET SHIELD");
-        this.CurrentShield = 0;
-    }
-
     public virtual void AttackSingleUnit(int dmg = -1)
     {
         if (dmg <= 0)
@@ -336,28 +362,53 @@ public class InGameBasePlayerItem : MonoBehaviour
     public virtual void ClearWhenDead()
     {
         this.gameObject.SetActive(false);
+        this.AttributeDatas?.ClearAll();
         this._playerModel = null;
-        ClearStun();
-    }
-    public virtual void ClearStun()
-    {
-        this.AmountTurnStunned = 0;
     }
     #region Skill & Card Affect
+    public virtual void AssignCallbackToAttributeData(AttributeID id, System.Action<AttributeID, int, int> cb)
+    {
+        AttributeDatas.AssignCallback(id, cb);
+    }
+    public virtual void AddAttribute(AttributeID id, int value, int turnActive, bool isPercent = false)
+    {
+        int val = AttributeDatas.AddAttribute(id, value, turnActive: turnActive);
+        this._playerAttributePallet.AddAttribute(id, val, turnActive, turnActive > 0, isPercent: isPercent);
+    }
+    public virtual void SetAttribute(AttributeID id, int value, int turnActive, bool isPercent = false)
+    {
+        AttributeDatas.SetAttribute(id, value, turnActive: turnActive);
+        this._playerAttributePallet.AddAttribute(id, value, turnActive, turnActive > 0, isPercent: isPercent);
+    }
     public virtual void SetStun(int amountTurnStunnning)
     {
-        this.AmountTurnStunned = amountTurnStunnning;
-        this._playerAttributePallet?.AddAttribute(AttributeID.STUN, this.AmountTurnStunned);
+        AddAttribute(AttributeID.STUN, 1, turnActive: amountTurnStunnning);
     }
-    public virtual void SetMultiplierDamage(float damageMultiplier)
+    public virtual void SetMultiplierDamage(float damageMultiplier, int turnActive)
     {
-        this.MultiplierDamage = damageMultiplier;
-        this._playerAttributePallet?.AddAttribute(AttributeID.INCREASE_DMG, (int)(this.MultiplierDamage * 100));
+        AddAttribute(AttributeID.INCREASE_DMG, (int)(damageMultiplier*100), turnActive, isPercent: true);
     }
     public virtual void SetVulnerable(int amountTurn)
     {
-        this.AmountTurnInvulnerable = amountTurn;
-        this._playerAttributePallet?.AddAttribute(AttributeID.INVULNERABLE, this.AmountTurnInvulnerable);
+        AddAttribute(AttributeID.INVULNERABLE, value: 1, turnActive: amountTurn);
+    }
+    public virtual int CurrentShield
+    {
+        get
+        {
+            if (AttributeDatas.TryGetData(AttributeID.SHIELD, out var item))
+                return item.GetValue();
+            else
+                return 0;
+        }
+        set
+        {
+            value = Mathf.Clamp(value, 0, int.MaxValue);
+            if (this.PlayerModel != null)
+            {
+                SetAttribute(AttributeID.SHIELD, value, turnActive: 1);
+            }
+        }
     }
     #endregion 
 
@@ -380,11 +431,13 @@ public class BaseInGamePlayerDataModel
 
     public virtual int CurrentHP { get => currentHP; set => currentHP = Mathf.Clamp(value, 0, MaxHP); }
     public virtual int MaxHP { get => maxHP; set => maxHP = value; }
-    public int Shield { get => shield; set => shield = Mathf.Clamp(value, 0, int.MaxValue); }
+    //public int Shield { get => shield; set => shield = Mathf.Clamp(value, 0, int.MaxValue); }
+
+    public virtual InGamePlayerAttributeDatas AttributeDatas { get; set; } 
 
     protected int currentHP;
     protected int maxHP;
-    protected int shield;
+    //protected int shield;
     protected int baseDamagePerTurn = 0, baseShieldPerAdd = 0, baseHPPerHeal = 0;
     public int DamagePerTurn => baseDamagePerTurn;
     public int ShieldPerAdd => baseShieldPerAdd;
@@ -414,6 +467,8 @@ public class BaseInGamePlayerDataModel
 
     public virtual BaseInGamePlayerDataModel StartGame()
     {
+        AttributeDatas ??= new InGamePlayerAttributeDatas();
+        AttributeDatas.JoinGame(this._seatId);
         return this;
     }
     public bool IsDead()
@@ -517,22 +572,6 @@ public class BaseInGameMainPlayerDataModel : BaseInGamePlayerDataModel
         _statConfig = config;
         this.SetHP(config._maxHP);
         this.SetBaseStat(config._baseDamage, config._baseShield, config._baseHeal);
-        return this;
-    }
-    public override BaseInGamePlayerDataModel StartGame()
-    {
-        //setting up the dic with full of user monster card, starting at level 1
-        //var _deckConfig = InGameDeckConfigs.Instance.GetStandardDeck();
-        //if(_deckConfig != null)
-        //{
-        //    foreach (var item in _deckConfig._deckContain)
-        //    {
-        //        InGame_CardDataModelLevels c = new InGame_CardDataModelLevels(id: item._cardID);
-        //        this._bag.Add(c);
-        //        this._dictionaryBags.Add(c._cardID, c);
-        //    }
-        //}
-        //this._bag.DebugListCardInGame();
         return this;
     }
     public bool TryGetCardInBag(int id, out InGame_CardDataModelLevels card)
