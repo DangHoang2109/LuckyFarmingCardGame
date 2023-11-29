@@ -17,10 +17,12 @@ public class ShrineItem : MonoBehaviour
     {
         yield return new WaitForEndOfFrame();
         _animator.gameObject.SetActive(true);
+        this._animator?.ShowAnimation(state: AnimationState.IDLE_ANIM);
+
         _canvasGroup.alpha = 0f;
-        this.transform.localScale = new Vector3(0.5f, 0.5f);
+        this._animator.transform.localScale = new Vector3(0.5f, 0.5f);
         Sequence seq = DOTween.Sequence();
-        seq.Join(this.transform.DOScale(1f, 0.25f));
+        seq.Join(this._animator.transform.DOScale(1f, 0.25f));
         seq.Append(this._canvasGroup.DOFade(1f, duration));
         seq.AppendInterval(2f);
         seq.OnComplete(() =>

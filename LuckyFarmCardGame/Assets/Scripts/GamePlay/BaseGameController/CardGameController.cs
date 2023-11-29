@@ -127,13 +127,8 @@ public class CardGameController : MonoBehaviour
             }
             _currentDeck.Shuffle();
             _uiDeckDraw?.OnChangeCardAmount(_currentDeck.Count);
-            ////test deck top
-            //Debug.LogError("THE DECK CONTENT IS NOT RANDOM");
-            //_currentDeck.Insert(0, 2);
-            //_currentDeck.Insert(1, 4);
-            //_currentDeck.Insert(0, 0);
 
-            //end test deck top
+            _uiDeckDraw?.PlayAnimationShuffleDeck();
         }
     }
     protected void CheckDeck()
