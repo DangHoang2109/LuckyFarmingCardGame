@@ -82,8 +82,10 @@ public class InGameManager : MonoSingleton<InGameManager>
     }
     #endregion Getter
 
-
-    private void Start()
+    /// <summary>
+    /// Call this function firstly
+    /// </summary>
+    public void PrepareGame()
     {
         this._gameState = GameState.WAITING;
 
@@ -103,6 +105,10 @@ public class InGameManager : MonoSingleton<InGameManager>
 
         //Start the game
         StartGame();
+    }
+    private void Start()
+    {
+        //PrepareGame();
     }
 
     protected void InitGame()

@@ -83,6 +83,11 @@ public class InGameMainPlayerItem : InGameBasePlayerItem
 
         InGameManager.Instance.ShowConfirmUsingCoin(amountCoinNeeding, pointAdding);
     }
+    public void OnClickEndTurn()
+    {
+        InGameManager.Instance.OnUserEndTurn();
+    }
+
     public override void EndTurn()
     {
         base.EndTurn();
@@ -326,5 +331,9 @@ public class InGameMainPlayerItem : InGameBasePlayerItem
     public override void CustomUpdate()
     {
         base.CustomUpdate();
+    }
+    public void OnClickShowQuickTutorial()
+    {
+        GameManager.Instance.OnShowDialog<Instruction_CardEffectQuickthroughDialog>("Dialogs/Instruction_CardEffectQuickthroughDialog");
     }
 }

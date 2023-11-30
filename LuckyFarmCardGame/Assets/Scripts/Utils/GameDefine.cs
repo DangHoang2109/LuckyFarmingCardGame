@@ -43,7 +43,7 @@ public static class SceneName
 {
     public const string LOADING = "LoadingScene";
     public const string HOME = "HomeScene";
-    public const string GAME = "PoolGame";
+    public const string GAME = "GameScene";
 }
 
 /// <summary>
