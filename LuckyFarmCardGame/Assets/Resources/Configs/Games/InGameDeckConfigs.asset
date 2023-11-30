@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: InGameDeckConfigs
   m_EditorClassIdentifier: 
   _configs:
-  - _id: 0
+  - _id: 1
     _name: KnightMale
     _deckContain:
     - _cardID: 0
@@ -39,3 +39,18 @@ MonoBehaviour:
       _amountCard: 3
     - _cardID: 2
       _amountCard: 3
+  - _id: 0
+    _name: Farmer
+    _deckContain:
+    - _cardID: 0
+      _amountCard: 10
+    - _cardID: 1
+      _amountCard: 3
+    - _cardID: 2
+      _amountCard: 5
+    - _cardID: 3
+      _amountCard: 5
+    - _cardID: 4
+      _amountCard: 5
+    - _cardID: 5
+      _amountCard: 10

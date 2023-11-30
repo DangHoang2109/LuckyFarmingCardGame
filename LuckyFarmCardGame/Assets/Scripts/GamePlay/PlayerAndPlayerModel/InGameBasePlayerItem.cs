@@ -7,6 +7,7 @@ using Spine;
 using UnityEditor.Experimental.GraphView;
 using System;
 using Unity.VisualScripting;
+using Sirenix.OdinInspector;
 
 public class InGameBasePlayerItem : MonoBehaviour
 {
@@ -494,6 +495,7 @@ public class BaseInGamePlayerDataModel
 [System.Serializable]
 public class InGame_CardDataModelWithAmount
 {
+    [ValueDropdown("ListNextStepViews", ExpandAllMenuItems = true)]
     public int _cardID;
     public int _amountCard;
 
@@ -547,7 +549,15 @@ public class InGame_CardDataModelWithAmount
     {
         return this._cardID == other._cardID && this._amountCard >= other._amountCard;
     }
-
+#if UNITY_EDITOR
+    private IEnumerable ListNextStepViews()
+    {
+        var temp = Resources.Load<InGameCardConfigs>("Configs/Games/InGameCardConfigs")._configs
+            .Select(x => new ValueDropdownItem($"{x._cardID} - {x._cardName}", x._cardID)).ToList();
+        temp.Insert(0, new ValueDropdownItem("None", -1));
+        return temp;
+    }
+#endif
 }
 
 

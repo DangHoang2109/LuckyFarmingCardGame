@@ -20,6 +20,16 @@ public class BaseCardItem : MonoBehaviour
     #region Data
     protected int _cardID;
     public int CardID => _cardID;
+    private InGameCardConfig _cardConfig;
+    public InGameCardConfig CardConfig
+    {
+        get
+        {
+            if (_cardConfig == null)
+                _cardConfig = InGameCardConfigs.Instance.GetCardConfig(this._cardID);
+            return _cardConfig;
+        }
+    }
     #endregion Data
 
     protected void OnDisable()
@@ -30,8 +40,7 @@ public class BaseCardItem : MonoBehaviour
     public BaseCardItem ParseInfo(int id)
     {
         this._cardID = id;
-
-        this.CardVisual?.SetCardIDAndDisplayAllVisual(id);
+        this.CardVisual?.SetCardIDAndDisplayAllVisual(CardConfig);
 
         return this;
     }

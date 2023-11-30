@@ -32,10 +32,15 @@ public class BaseCardVisual : MonoBehaviour
     }
     public BaseCardVisual SetCardIDAndDisplayAllVisual(int cardID)
     {
-        this._cardID = cardID;
+        SetCardIDAndDisplayAllVisual(InGameCardConfigs.Instance.GetCardConfig(cardID));
+        return this;
+    }
+    public BaseCardVisual SetCardIDAndDisplayAllVisual(InGameCardConfig config)
+    {
+        this._cardID = config._cardID;
+        _cardConfig = config;
 
-        _cardConfig = InGameCardConfigs.Instance.GetCardConfig(cardID);
-        if(_cardConfig != null)
+        if (_cardConfig != null)
         {
             this.DisplayArtwork(_cardConfig._sprCardArtwork)
                 .DisplayEffect(_cardConfig._sprCardEffect)

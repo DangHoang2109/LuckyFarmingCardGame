@@ -4,15 +4,9 @@ using UnityEngine;
 
 public class BaseCardCircleItem : BaseCardItem
 {
-    // Start is called before the first frame update
-    void Start()
+    public void OnClickItem()
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        //Show card effect
+        Debug.Log($"Card Effect: {CardConfig.GetBaseLevelDescription()}");
     }
 }

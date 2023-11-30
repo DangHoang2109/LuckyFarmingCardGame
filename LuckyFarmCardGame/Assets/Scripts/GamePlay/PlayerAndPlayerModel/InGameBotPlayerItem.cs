@@ -168,4 +168,9 @@ public class InGameBotPlayerItem : InGameBasePlayerItem
             Executor?.Execute();
         }
     }
+
+    public void OnClickViewEffect()
+    {
+        Debug.Log("OnClickViewEffect");
+    }
 }
