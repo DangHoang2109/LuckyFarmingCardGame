@@ -30,6 +30,8 @@ public class BaseCardItem : MonoBehaviour
             return _cardConfig;
         }
     }
+
+    protected InGame_CardDataModel cardModel;
     #endregion Data
 
     protected void OnDisable()
@@ -37,9 +39,10 @@ public class BaseCardItem : MonoBehaviour
         this._host = null;
     }
 
-    public BaseCardItem ParseInfo(int id)
+    public BaseCardItem ParseInfo(InGame_CardDataModel card)
     {
-        this._cardID = id;
+        cardModel = card;
+        this._cardID = card._id;
         this.CardVisual?.SetCardIDAndDisplayAllVisual(CardConfig);
 
         return this;
@@ -113,6 +116,7 @@ public class InGame_CardDataModel : ICloneable
     public InGameBaseCardEffectID _effect;
     public int _coinPoint;
     public int _amount = 1;
+    public int _currentLevel;
 
     protected InGameBaseCardEffectActivator _effectActivator;
     public InGameBaseCardEffectActivator EffectActivator => _effectActivator;
@@ -120,7 +124,33 @@ public class InGame_CardDataModel : ICloneable
     protected BaseCardItem _cardContainer;
     public BaseCardItem CardContainer => _cardContainer;
 
-    public InGameBasePlayerItem _host;
+    public InGameMainPlayerItem _host;
+
+    protected InGameCardConfig _cardConfig;
+    public InGameCardConfig CardConfig
+    {
+        get
+        {
+            if (_cardConfig == null)
+                _cardConfig = InGameCardConfigs.Instance.GetCardConfig(_id);
+            return _cardConfig;
+        }
+    }
+    protected InGameCardLevel _currentLevelConfig;
+    public InGameCardLevel CurrentLevelConfig
+    {
+        get
+        {
+            if (_currentLevelConfig == null || this._currentLevelConfig._level != this._currentLevel)
+            {
+                if (InGameCardLevelsConfigs.Instance.TryGetCardLevelConfig(this._id, this._currentLevel, out InGameCardLevel l))
+                    _currentLevelConfig = l;
+                else
+                    Debug.LogError($"NOT FOUNT {_id} {_currentLevel}");
+            }
+            return _currentLevelConfig;
+        }
+    }
 
     public InGame_CardDataModel()
     {
@@ -152,18 +182,18 @@ public class InGame_CardDataModel : ICloneable
     }
     public InGame_CardDataModel SetHost(InGameBasePlayerItem h)
     {
-        this._host = h;
+        this._host = h as InGameMainPlayerItem;
         return this;
     }
     public InGame_CardDataModel SetCurrentLevel(int currentLevel)
     {
-        this.EffectActivator?.UpdateCardLevel(currentLevel);
+        this._currentLevel = currentLevel;
         return this;
     }
     #region These function should in cardItem
     protected void CreateEffectActivator()
     {
-        this._effectActivator = InGameUtils.CreateCardEffectActivator(skillID: this._effect, cardID: this._id, host: this._host);
+        this._effectActivator = InGameUtils.CreateCardEffectActivator(skillID: this._effect, cardID: this._id, host: this._host, cardModel: this);
     }
     public void OnDrawedFromDeck()
     {
@@ -184,6 +214,10 @@ public class InGame_CardDataModel : ICloneable
         this.CardContainer?.OnPullingToBagEffect();
     }
     #endregion
+    public string GetSkillDescribe()
+    {
+        return string.Format(this.CardConfig?._cardSkillDescription, this.CurrentLevelConfig._stat);
+    }
     private void ParseUIInfo()
     {
 

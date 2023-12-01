@@ -250,19 +250,12 @@ public class CardGameController : MonoBehaviour
         PutACardToPallet(topDeckCard);
     }
 
-    public InGame_CardDataModel CreateCardDataModel(int id)
-    {
-        InGameCardConfig cardConfig = IngameCardConfigs?.GetCardConfig(id);
-        int currentCardLevel = this.InGameManager?.MainUserPlayer?.GetCardLevel(id) ?? 0;
-
-        return new InGame_CardDataModel().SetHost(InGameManager.CurrentTurnPlayer).SetCardID(id, cardConfig).SetCurrentLevel(currentCardLevel);
-    }
     private BaseCardItem CreateCardItem(ref InGame_CardDataModel card)
     {
         BaseCardItem newCardItem = Instantiate(_cardCirclePrefab, _tfActEffectPanel);
         newCardItem.transform.localPosition = Vector3.zero;
         newCardItem.gameObject.SetActive(true);
-        newCardItem.ParseHost(InGameManager.CurrentTurnPlayer).ParseInfo(card._id);
+        newCardItem.ParseHost(InGameManager.CurrentTurnPlayer).ParseInfo(card);
         card.SetCardItemContainer(newCardItem);
         return newCardItem;
     }
@@ -280,7 +273,7 @@ public class CardGameController : MonoBehaviour
             CheckDeck();
         }
 
-        return CreateCardDataModel(topCardId);
+        return InGameUtils.CreateCardDataModel(topCardId);
     }
     public List<InGame_CardDataModel> GetDeckTopCards(int amount, bool isWillPopThatCardOut)
     {
@@ -288,7 +281,7 @@ public class CardGameController : MonoBehaviour
         for (int i = 0; i < amount; i++)
         {
             int topCardId = this._currentDeck?[i] ?? 0;
-            top.Add(CreateCardDataModel(topCardId));
+            top.Add(InGameUtils.CreateCardDataModel(topCardId));
         }
         if (isWillPopThatCardOut)
         {

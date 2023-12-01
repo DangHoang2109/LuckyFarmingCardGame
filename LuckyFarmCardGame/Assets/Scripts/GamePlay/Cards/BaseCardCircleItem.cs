@@ -6,7 +6,6 @@ public class BaseCardCircleItem : BaseCardItem
 {
     public void OnClickItem()
     {
-        //Show card effect
-        Debug.Log($"Card Effect: {CardConfig.GetBaseLevelDescription()}");
+        Debug.Log($"Card Effect: {this.cardModel?.GetSkillDescribe()}");
     }
 }

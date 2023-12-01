@@ -6,35 +6,14 @@ public class InGameBaseCardEffectActivator
 {
     public virtual InGameBaseCardEffectID ID => InGameBaseCardEffectID.NONE_EFFECT;
     public int _cardID;
-    protected int _cardLevel;
-    public int CardLevel => this._cardLevel;
+    public int CardLevel => this.cardModel._currentLevel;
 
-    protected InGameCardConfig _cardConfig;
-    public InGameCardConfig CardConfig
-    {
-        get
-        {
-            if (_cardConfig == null)
-                _cardConfig = InGameCardConfigs.Instance.GetCardConfig(_cardID);
-            return _cardConfig;
-        }
-    }
-    protected InGameCardLevel _currentLevelConfig;
-    public InGameCardLevel CurrentLevelConfig
-    {
-        get
-        {
-            if (_currentLevelConfig == null || this._currentLevelConfig._level != this._cardLevel)
-            {
-                if (InGameCardLevelsConfigs.Instance.TryGetCardLevelConfig(this._cardID, this._cardLevel, out InGameCardLevel l))
-                    _currentLevelConfig = l;
-                else
-                    Debug.LogError($"NOT FOUNT {_cardID} {CardLevel}");
-            }
-            return _currentLevelConfig;
-        }
-    }
-    public InGameMainPlayerItem _host;
+    public InGameCardConfig CardConfig => this.cardModel.CardConfig;
+    public InGameCardLevel CurrentLevelConfig => this.cardModel.CurrentLevelConfig;
+
+    public InGameMainPlayerItem _host => this.cardModel._host;
+
+    protected InGame_CardDataModel cardModel;
 
     public virtual void ActiveEffectWhenDrawed()
     {
@@ -54,17 +33,13 @@ public class InGameBaseCardEffectActivator
     }
     public virtual void ShowingNotification()
     {
-        Debug.Log("Show noti " + string.Format(this.CardConfig?._cardSkillDescription, this.CurrentLevelConfig._stat));
-        InGameManager.Instance.ShowNotificationCardAction($"Card effect: {string.Format(this.CardConfig?._cardSkillDescription, this.CurrentLevelConfig._stat)}");
+        Debug.Log("Show noti " + cardModel?.GetSkillDescribe());
+        InGameManager.Instance.ShowNotificationCardAction($"{cardModel?.GetSkillDescribe()}");
     }
-    public virtual void SetIDAndHost(int id,InGameBasePlayerItem host)
+    public virtual void SetIDAndHost(int id,InGameBasePlayerItem host, InGame_CardDataModel cardModel)
     {
         this._cardID = id;
-        this._host = host as InGameMainPlayerItem;
-    }
-    public virtual void UpdateCardLevel(int cardLevel)
-    {
-        this._cardLevel = cardLevel;
+        this.cardModel = cardModel;
     }
     public virtual float GetStat() { return 0f; }
     public virtual int GetStatAsInt() => ((int)GetStat());

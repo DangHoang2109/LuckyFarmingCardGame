@@ -654,12 +654,12 @@ public static class InGameUtils
         UnityEngine.Debug.Log(debug);
         return debug;
     }
-    public static InGameBaseCardEffectActivator CreateCardEffectActivator(InGameBaseCardEffectID skillID,int cardID, InGameBasePlayerItem host)
+    public static InGameBaseCardEffectActivator CreateCardEffectActivator(InGameBaseCardEffectID skillID,int cardID, InGameBasePlayerItem host, InGame_CardDataModel cardModel)
     {
         try
         {
             InGameBaseCardEffectActivator _effectActivator = Activator.CreateInstance(EnumUtility.GetStringType(skillID)) as InGameBaseCardEffectActivator;
-            _effectActivator?.SetIDAndHost(cardID, host);
+            _effectActivator?.SetIDAndHost(cardID, host, cardModel);
             return _effectActivator;
         }
         catch (Exception e)
@@ -667,5 +667,12 @@ public static class InGameUtils
             Debug.LogError(e.StackTrace);
             throw;
         }
+    }
+    public static InGame_CardDataModel CreateCardDataModel(int id)
+    {
+        InGameCardConfig cardConfig = InGameCardConfigs.Instance.GetCardConfig(id);
+        int currentCardLevel = InGameManager.Instance.GetPlayerCardCurrentLevel(id);
+
+        return new InGame_CardDataModel().SetHost(InGameManager.Instance.MainUserPlayer).SetCardID(id, cardConfig).SetCurrentLevel(currentCardLevel);
     }
 }

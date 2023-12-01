@@ -64,4 +64,12 @@ public class InGamePlayerConfig
             return InGameDeckConfigs.Instance.GetDeckByName(_deckLink);
         }
     }
+
+    public enum PlayerStatID
+    {
+        DAMAGE,
+        HP,
+        SHIELD,
+        HEAL,
+    }
 } 

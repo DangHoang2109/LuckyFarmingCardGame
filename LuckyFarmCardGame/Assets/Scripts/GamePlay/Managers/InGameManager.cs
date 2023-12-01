@@ -5,6 +5,7 @@ using System.Security.Cryptography;
 using Unity.VisualScripting;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using static InGamePlayerConfig;
 
 /// <summary>
 /// Manage GameState: WinLose, State, Init Match
@@ -495,7 +496,7 @@ public class InGameManager : MonoSingleton<InGameManager>
     public void OnPlayerAddCardPoint(int cardID, int amount)
     {
         List<InGame_CardDataModel> cardModel = new List<InGame_CardDataModel>();
-        InGame_CardDataModel c = this.GameController.CreateCardDataModel(cardID);
+        InGame_CardDataModel c = InGameUtils.CreateCardDataModel(cardID);
         c._amount = amount;
         cardModel.Add(c);
         MainUserPlayer.PullCardToBag(cardModel);
@@ -653,6 +654,27 @@ public class InGameManager : MonoSingleton<InGameManager>
         return info;
     }
     #endregion Bot Looker API Need
+
+    public int GetPlayerBaseStat(PlayerStatID statID)
+    {
+        switch (statID)
+        {
+            case PlayerStatID.DAMAGE:
+                return MainUserPlayer?.MainDataModel?._statConfig?._baseDamage ?? 0;
+            case PlayerStatID.HP:
+                return MainUserPlayer?.MainDataModel?._statConfig?._maxHP ?? 0;
+            case PlayerStatID.SHIELD:
+                return MainUserPlayer?.MainDataModel?._statConfig?._baseShield ?? 0;
+            case PlayerStatID.HEAL:
+                return MainUserPlayer?.MainDataModel?._statConfig?._baseHeal ?? 0;
+            default:
+                return 0;
+        }
+    }
+    public int GetPlayerCardCurrentLevel(int cardID)
+    {
+        return MainUserPlayer?.GetCardLevel(cardID) ?? 1;
+    }
 }
 
 public enum GameState
