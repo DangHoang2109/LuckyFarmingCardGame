@@ -20,4 +20,4 @@ MonoBehaviour:
     _baseShield: 5
     _baseHeal: 3
     _icon: {fileID: 21300000, guid: 3094f2d10d417124782a2120875594c3, type: 3}
-    _deckLink: Test
+    _deckLink: Farmer

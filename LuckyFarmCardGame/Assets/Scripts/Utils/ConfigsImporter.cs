@@ -52,7 +52,7 @@ public class ConfigsImporter : MonoBehaviour
                     config.enemyID = int.Parse(element[0]);
                     config.enemyName = element[1];
                     config.enemyBaseMaxHP = int.Parse(element[3]);
-                    config.enemyEffectDes = element[5];
+                    //config.enemyEffectDes = element[5];
                 }
                 catch (System.Exception e)
                 {

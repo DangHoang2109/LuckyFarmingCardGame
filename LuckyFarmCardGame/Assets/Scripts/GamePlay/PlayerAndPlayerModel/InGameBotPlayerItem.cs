@@ -59,6 +59,8 @@ public class InGameBotPlayerItem : InGameBasePlayerItem
         _AIexecutor = new InGameAI.AIExecutor(this);
         _AIlooker = new InGameAI.AILooker(this);
 
+        Executor.Decide();
+
         return base.InitPlayerItSelf();
     }
     public override InGameBasePlayerItem SetAPlayerModel(BaseInGamePlayerDataModel model)
@@ -90,8 +92,12 @@ public class InGameBotPlayerItem : InGameBasePlayerItem
     #region Turn Action
     public override void BeginTurn()
     {
+        bool isStunning = this.IsStunning;
         base.BeginTurn();
-        StartPlaningTurn();
+        if(!isStunning)
+            StartPlaningTurn();
+        else
+            InGameManager.Instance.OnUserEndTurn();
     }
     public override void ContinueTurn()
     {
@@ -109,7 +115,7 @@ public class InGameBotPlayerItem : InGameBasePlayerItem
         InGameAI.LookingMessage collect = Looker?.Look();
 
         yield return new WaitForEndOfFrame();
-        Executor.Decide(collect);
+        Executor.Decide();
         yield return new WaitForEndOfFrame();
         Executor.SetDecision();
         yield return new WaitForEndOfFrame();
@@ -171,6 +177,6 @@ public class InGameBotPlayerItem : InGameBasePlayerItem
 
     public void OnClickViewEffect()
     {
-        Debug.Log("OnClickViewEffect");
+        Debug.Log($"OnClickViewEffect: {this.Executor?.GetSkillDescribe()}");
     }
 }

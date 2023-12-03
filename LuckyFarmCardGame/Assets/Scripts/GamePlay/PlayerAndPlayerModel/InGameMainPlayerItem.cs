@@ -58,9 +58,17 @@ public class InGameMainPlayerItem : InGameBasePlayerItem
     #region Turn Action
     public override void BeginTurn()
     {
+        bool isStunning = this.IsStunning;
         base.BeginTurn();
-        _imgTimer.gameObject.SetActive(true);
-        _btnEndTurn.interactable = true;
+        if (!isStunning)
+        {
+            _imgTimer.gameObject.SetActive(true);
+            _btnEndTurn.interactable = true;
+        }
+        else
+        {
+            InGameManager.Instance.OnUserEndTurn();
+        }
     }
     public override void ContinueTurn()
     {

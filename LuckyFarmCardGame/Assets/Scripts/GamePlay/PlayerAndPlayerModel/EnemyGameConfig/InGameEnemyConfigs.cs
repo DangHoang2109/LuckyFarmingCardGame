@@ -42,6 +42,10 @@ public class InGameEnemyConfigs : ScriptableObject
     #endregion Data Prop
 
     #region Getter
+    public InGameEnemyInfoConfig GetEnemyInfoConfig(int enemyID)
+    {
+        return InGameEnemyInfoConfigs.Instance.GetInfo(enemyID);
+    }
     #endregion Getter
 
 #if UNITY_EDITOR
@@ -150,17 +154,17 @@ public class InGameEnemyStatConfig
     public List<InGameEnemySkillConfig> _skills;
 
     public int MaxHP => this.Info?.enemyBaseMaxHP ?? 0 ;
-    public string EffectDes => this.Info?.enemyEffectDes;
 }
 
 [System.Serializable]
 public class InGameEnemySkillConfig
 {
     //[TableColumnWidth(20, Resizable = false)]
+    [TabGroup("ID")]
     public EnemySkillID _skillID;
-    public float _statValue; //Damage, Heal, Shield, Amount Foes Spawn...
-    public int _statIntervall; //How many turn cast this, if do it every turn, let it 0
-    public int _statID; //ID Does to spawn
+    [TabGroup("Config")] public float _statValue; //Damage, Heal, Shield, Amount Foes Spawn...
+    [TabGroup("Config")] public int _statIntervall; //How many turn cast this, if do it every turn, let it 0
+    [TabGroup("Config")] public int _statID; //ID Does to spawn
 
     public int StatAsInt => (int)_statValue;
 }
@@ -189,7 +193,6 @@ public class InGameEnemyInfoConfig
     [Header("STAT BASE")]
     [Space(10f)]
     public int enemyBaseMaxHP;
-    public string enemyEffectDes;
 
     [Header("SKIN AND ANIM")]
     [Space(10f)]

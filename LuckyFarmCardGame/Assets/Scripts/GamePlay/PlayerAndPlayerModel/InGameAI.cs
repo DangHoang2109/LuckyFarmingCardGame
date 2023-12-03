@@ -99,16 +99,14 @@ public class InGameAI
             _actions = new Queue<ExecutionAction>();
             deQueue = false;
         }
-        public void Decide(LookingMessage _cMsg)
+        public void Decide()
         {
-            _msg = _cMsg;
-
             if(this._allActions == null || _allActions.Count == 0)
             {
                 List<ExecutionAction> actions = new List<ExecutionAction>();
                 foreach (var skillID in EnemyStat._skills)
                 {
-                    actions.Add(CreateAction(skillID, this._enemyItem, _msg));
+                    actions.Add(CreateAction(skillID, this._enemyItem));
                 }
                 actions.Add(new ExecuteEndTurn(this._enemyItem));
                 _allActions = actions;
@@ -153,6 +151,20 @@ public class InGameAI
             this._actions.Clear();
             deQueue = false;
         }
+
+        public string GetSkillDescribe()
+        {
+            string concat = "";
+
+            foreach (var item in _allActions)
+            {
+                if (item is ExecuteThink || item is ExecuteEndTurn)
+                    continue;
+
+                concat = $"{concat} {item.GetDescribe()}";
+            }
+            return concat;
+        }
     }
 
     #region Execution Action
@@ -172,7 +184,6 @@ public class InGameAI
     public abstract class ExecutionAction
     {
         protected InGameBotPlayerItem _bot;
-        protected LookingMessage _lMsg;
         protected InGameEnemySkillConfig _skillConfig;
         public float m_ThinkTime = 0;
 
@@ -211,9 +222,16 @@ public class InGameAI
         /// <returns></returns>
         public virtual bool IsCanDo() { return !(this._bot?.IsStunning ?? false); }
 
-        public virtual void SetLookingMessage(LookingMessage msg)
+        public virtual string GetDescribe()
         {
-            this._lMsg = msg;
+            return "";
+        }
+        protected string GetInterval()
+        {
+            string interval = "each Turn";
+            if (_skillConfig._statIntervall > 1)
+                interval = $"every {_skillConfig._statIntervall} turns";
+            return interval;
         }
     }
 
@@ -245,6 +263,10 @@ public class InGameAI
                 return true;
             return false;
         }
+        public override string GetDescribe()
+        {
+            return "Thinking...";
+        }
     }
 
     public class ExecuteEndTurn : ExecutionAction
@@ -263,6 +285,10 @@ public class InGameAI
         {
             return true;
         }
+        public override string GetDescribe()
+        {
+            return "End Turn!";
+        }
     }
     public class ExecuteAttackMainPlayer : ExecutionAction
     {
@@ -278,6 +304,10 @@ public class InGameAI
         public override bool Preparing()
         {
             return true;
+        }
+        public override string GetDescribe()
+        {
+            return $"Attack {this._skillConfig.StatAsInt} damage to player";
         }
     }
     /// <summary>
@@ -315,6 +345,12 @@ public class InGameAI
         {
             return true;
         }
+        public override string GetDescribe()
+        {
+            string foesName = InGameEnemyConfigs.Instance.GetEnemyInfoConfig(this._skillConfig._statID)?.enemyName;
+
+            return $"Spawn {this._skillConfig.StatAsInt} {foesName} { GetInterval()}";
+        }
     }
     /// <summary>
     /// Tạo khiên thủ
@@ -334,6 +370,10 @@ public class InGameAI
         public override bool Preparing()
         {
             return true;
+        }
+        public override string GetDescribe()
+        {
+            return $"Create {this._skillConfig.StatAsInt} shield";
         }
     }
     /// <summary>
@@ -355,6 +395,10 @@ public class InGameAI
         {
             return true;
         }
+        public override string GetDescribe()
+        {
+            return $"Drain {this._skillConfig.StatAsInt} HP from player and increase same amount";
+        }
     }
     /// <summary>
     /// Hút máu
@@ -372,27 +416,29 @@ public class InGameAI
 
         public override void Do()
         {
-            Debug.Log("act skill: multiplier damage");
             //trừ count down
             if (countDown <= 0)
             {
-                this._bot.SetMultiplierDamage(this._skillConfig._statValue, this._skillConfig._statIntervall);
+                this._bot.SetMultiplierDamage(this._skillConfig._statValue, this._skillConfig._statIntervall-1);
                 countDown = this._skillConfig._statIntervall;
             }
             else
             {
                 countDown--;
-                Debug.Log($"UPDATE COUNT DOWN EFFECT {this._skillConfig._skillID} -{countDown}");
             }
         }
         public override bool Preparing()
         {
             return true;
         }
+        public override string GetDescribe()
+        {
+            return $"X{this._skillConfig._statValue} it damage {GetInterval()}";
+        }
     }
     #endregion Execution Action
 
-    public static ExecutionAction CreateAction(InGameEnemySkillConfig skillConfig, InGameBotPlayerItem host, LookingMessage lMsg)
+    public static ExecutionAction CreateAction(InGameEnemySkillConfig skillConfig, InGameBotPlayerItem host)
     {
         ExecutionAction action = null;
         switch (skillConfig._skillID)
@@ -416,8 +462,6 @@ public class InGameAI
                 Debug.Log("NOT DEFINE ENEMY SKILL " + skillConfig);
                 return null;
         }
-
-        action?.SetLookingMessage(lMsg);
         return action;
     }
 }
