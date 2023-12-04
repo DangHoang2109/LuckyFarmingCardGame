@@ -82,6 +82,8 @@ public class InGameBasePlayerItem : MonoBehaviour
     {
         get
         {
+            if (AttributeDatas == null)
+                return 0;
             if (AttributeDatas.TryGetData(AttributeID.STUN, out var item))
                 return item.GetTurnLeft();
             else
@@ -95,10 +97,12 @@ public class InGameBasePlayerItem : MonoBehaviour
     {
         get
         {
+            if (AttributeDatas == null)
+                return 1f;
             if (AttributeDatas.TryGetData(AttributeID.INCREASE_DMG, out var item))
                 return item.GetValue() / 100f;
             else
-                return 0f;
+                return 1f;
         }
     }
     /// <summary>
@@ -108,6 +112,8 @@ public class InGameBasePlayerItem : MonoBehaviour
     {
         get
         {
+            if (AttributeDatas == null)
+                return 0;
             if (AttributeDatas.TryGetData(AttributeID.INVULNERABLE, out var item))
                 return item.GetTurnLeft();
             else
@@ -119,6 +125,8 @@ public class InGameBasePlayerItem : MonoBehaviour
     {
         get
         {
+            if (AttributeDatas == null)
+                return false;
             if (AttributeDatas.TryGetData(AttributeID.STUN, out var item))
                 return item.GetTurnLeft() > 0;
             else

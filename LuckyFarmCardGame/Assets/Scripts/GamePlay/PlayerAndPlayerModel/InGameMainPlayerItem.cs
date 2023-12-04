@@ -75,11 +75,6 @@ public class InGameMainPlayerItem : InGameBasePlayerItem
         base.ContinueTurn();
         _btnEndTurn.interactable = true;
     }
-    public override void OnACardGoingBeDrawed()
-    {
-        base.OnACardGoingBeDrawed();
-        _btnEndTurn.interactable = false;
-    }
     public override void Action_ACardPutToPallet(int cardID)
     {
         base.Action_ACardPutToPallet(cardID);

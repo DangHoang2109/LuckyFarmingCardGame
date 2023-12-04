@@ -18,6 +18,11 @@ public class CardGameController : MonoBehaviour
     public System.Action _onPalletDestroyed;
     //Pallet conflict after: roll dice và thắng roll
     public System.Action<List<InGame_CardDataModel>> _onRuleMakeUserPullCard;
+
+    /// <summary>
+    /// Invoke current amount card in deck
+    /// </summary>
+    public System.Action<int> _onDeckAmountChanging;
     #endregion Callback
 
     #region Prop on Editor
@@ -44,6 +49,7 @@ public class CardGameController : MonoBehaviour
 
     [Space(5f)]
     public InGameDeckUI _uiDeckDraw;
+    public ExplodeRateMater _explodeMeter;
 
     [Space(5f)]
     [SerializeField] protected InGameTurnNotification _notificator;
@@ -111,6 +117,14 @@ public class CardGameController : MonoBehaviour
 
         this._uiDeckDraw._onClickDraw -= this.OnDrawACard;
         this._uiDeckDraw._onClickDraw += this.OnDrawACard;
+        this._onDeckAmountChanging -= _uiDeckDraw.OnChangeCardAmount;
+        this._onDeckAmountChanging += _uiDeckDraw.OnChangeCardAmount;
+
+        _explodeMeter.Init(this);
+        this._onDeckAmountChanging -= _explodeMeter.OnChangeDeckAmount;
+        this._onDeckAmountChanging += _explodeMeter.OnChangeDeckAmount;
+        this._onCardPutToPallet -= _explodeMeter.OnChangeDeckAmount;
+        this._onCardPutToPallet += _explodeMeter.OnChangeDeckAmount;
     }
     #region Action with Deck
     protected virtual void RecreateTheDeck()
@@ -126,8 +140,7 @@ public class CardGameController : MonoBehaviour
                 }
             }
             _currentDeck.Shuffle();
-            _uiDeckDraw?.OnChangeCardAmount(_currentDeck.Count);
-
+            _onDeckAmountChanging?.Invoke(this.DeckCardAmount);
             _uiDeckDraw?.PlayAnimationShuffleDeck();
         }
     }
@@ -268,8 +281,7 @@ public class CardGameController : MonoBehaviour
         if (isWillPopThatCardOut)
         {
             _currentDeck.RemoveAt(0);
-            _uiDeckDraw?.OnChangeCardAmount(_currentDeck.Count);
-
+            _onDeckAmountChanging?.Invoke(this.DeckCardAmount);
             CheckDeck();
         }
 
@@ -286,8 +298,7 @@ public class CardGameController : MonoBehaviour
         if (isWillPopThatCardOut)
         {
             _currentDeck.RemoveRange(0, amount);
-            _uiDeckDraw?.OnChangeCardAmount(_currentDeck.Count);
-
+            _onDeckAmountChanging?.Invoke(this.DeckCardAmount);
             CheckDeck();
         }
 
@@ -306,6 +317,8 @@ public class CardGameController : MonoBehaviour
 
         //add vào deck config để hết deck thì recreate vẫn có
         this._deckConfig.AddNewCard(cardID, amount);
+
+        _onDeckAmountChanging?.Invoke(this.DeckCardAmount);
     }
     public bool IsOwningThisCardIDInDeck(int cardID)
     {
@@ -524,7 +537,7 @@ public class CardGameController : MonoBehaviour
 
         this.CheckDeck();
         int amountCardCauseConflict = this._currentDeck.Where(x => _cardsOnPallet.Find((c) => c._id == x) != null).Count();
-        return amountCardCauseConflict / DeckCardAmount;
+        return (float)amountCardCauseConflict / DeckCardAmount;
     }
     public List<int> GetCurrentPalletIDs()
     {
