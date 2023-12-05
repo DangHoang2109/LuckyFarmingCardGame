@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DG.Tweening;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -18,11 +19,11 @@ public class InGameMainPlayerItem : InGameBasePlayerItem
     }
     public InGameDeckConfig DeckConfig => this.MainDataModel?.DeckConfig;
 
-    public Button _btnDeck;
 
     #region Prop on editor
+    public Button _btnDeck;
     public Button _btnEndTurn;
-
+    public Transform _tfInteractingInTurn; //transform contain button deck and enturn for animation sliding
     //[SerializeField]
     //protected InGameBasePlayerBagVisual _bagVisual;
     //public InGameBasePlayerBagVisual BagVisual => _bagVisual;
@@ -65,6 +66,8 @@ public class InGameMainPlayerItem : InGameBasePlayerItem
         {
             _imgTimer.gameObject.SetActive(true);
             _btnEndTurn.interactable = true;
+
+            _tfInteractingInTurn.DOLocalMoveY(0, 0.75f);
         }
         else
         {
@@ -97,6 +100,7 @@ public class InGameMainPlayerItem : InGameBasePlayerItem
         base.EndTurn();
         _imgTimer.gameObject.SetActive(false);
         _btnEndTurn.interactable = false;
+        _tfInteractingInTurn.DOLocalMoveY(-200f, 0.75f);
     }
     public int GetCardLevel(int cardID)
     {
