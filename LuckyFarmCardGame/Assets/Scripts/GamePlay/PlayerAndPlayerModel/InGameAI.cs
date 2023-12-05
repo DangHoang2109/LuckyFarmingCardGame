@@ -90,7 +90,7 @@ public class InGameAI
 
         List<ExecutionAction> _allActions;
         Queue<ExecutionAction> _actions;
-
+        public Queue<ExecutionAction> GetAction() => _actions;
         public bool deQueue;
 
         public AIExecutor(InGameBotPlayerItem _player)
@@ -117,7 +117,7 @@ public class InGameAI
             try
             {
                 //chờ vài giây
-                _actions.Enqueue(new ExecuteThink(_enemyItem, Random.Range(0.8f, 1.2f)));
+                _actions.Enqueue(new ExecuteThink(_enemyItem, 0.5f));
                 foreach (var action in _allActions)
                 {
                     this._actions.Enqueue(action);
@@ -129,18 +129,6 @@ public class InGameAI
             }
         }
 
-        public void Execute()
-        {
-            if (_actions.Count == 0)
-                return;
-
-            if (_actions.Peek().Preparing())
-            {
-                ExecutionAction act = _actions.Dequeue();
-                if(act.IsCanDo())
-                    act.Do();
-            }
-        }
         public bool IsHasAction()
         {
             return this._actions.Count > 0;
@@ -208,7 +196,7 @@ public class InGameAI
         /// <summary>
         /// Thực thi action
         /// </summary>
-        public abstract void Do();
+        public abstract IEnumerator Do();
 
         /// <summary>
         /// Cần chờ trước khi thực thi action này
@@ -255,7 +243,7 @@ public class InGameAI
         {
             return true;
         }
-        public override void Do() { }
+        public override IEnumerator Do() { Debug.Log("Turn action: Think"); yield return new WaitForSeconds(m_ThinkTime); }
         public override bool Preparing()
         {
             m_ThinkTime -= Time.deltaTime;
@@ -273,8 +261,9 @@ public class InGameAI
     {
         public ExecuteEndTurn(InGameBotPlayerItem p) : base(p) { }
 
-        public override void Do()
+        public override IEnumerator Do()
         {
+            yield return new WaitForEndOfFrame(); Debug.Log("Turn action: endturn");
             InGameManager.Instance.OnUserEndTurn();
         }
         public override bool IsCanDo()
@@ -296,10 +285,11 @@ public class InGameAI
         {
         }
         public ExecuteAttackMainPlayer(InGameBotPlayerItem p) : base(p) { }
-        public override void Do()
+        public override IEnumerator Do()
         {
-            Debug.Log("act skill: attack player");
+            Debug.Log("Turn action: Attack");
             this._bot.AttackSingleUnit(this._skillConfig.StatAsInt);
+            yield return new WaitUntil(() => this._bot.IsInIdleAnimState());
         }
         public override bool Preparing()
         {
@@ -326,8 +316,9 @@ public class InGameAI
         {
             return InGameManager.Instance.EnemysAlive.Count < CardGameController.MAX_ENEMY_ALLOW; //3 is max
         }
-        public override void Do()
+        public override IEnumerator Do()
         {
+            yield return new WaitForSeconds(0.7f);
             //trừ count down
             if (countDown <= 0)
             {
@@ -362,8 +353,10 @@ public class InGameAI
         }
         public ExecuteCreateShield(InGameBotPlayerItem p) : base(p) { }
 
-        public override void Do()
+        public override IEnumerator Do()
         {
+            yield return new WaitForSeconds(0.2f);
+
             Debug.Log("act skill: create shield");
             this._bot.DefenseCreateShield(this._skillConfig.StatAsInt);
         }
@@ -386,8 +379,10 @@ public class InGameAI
         }
         public ExecuteSuckingDrainHP(InGameBotPlayerItem p) : base(p) { }
 
-        public override void Do()
+        public override IEnumerator Do()
         {
+            yield return new WaitForSeconds(0.2f);
+
             this._bot.AttackSingleUnit(this._skillConfig.StatAsInt);
             this._bot.Heal(this._skillConfig.StatAsInt);
         }
@@ -414,8 +409,10 @@ public class InGameAI
         }
         public ExecuteMultiplierDamage(InGameBotPlayerItem p) : base(p) { }
 
-        public override void Do()
+        public override IEnumerator Do()
         {
+            yield return new WaitForSeconds(0.2f);
+
             //trừ count down
             if (countDown <= 0)
             {

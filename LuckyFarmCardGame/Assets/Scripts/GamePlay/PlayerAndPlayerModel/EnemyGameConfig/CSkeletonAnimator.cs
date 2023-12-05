@@ -65,9 +65,25 @@ public class CSkeletonAnimator : MonoBehaviour
             {
                 cb?.Invoke();
             }
-
         }
     }
+    public void ShowAnimationWithCallback(string animKey, Action cb)
+    {
+        //Cler Appearing or Idle anim
+        CAnimation.ClearTrack(0);
 
+        CAnimation.Complete += OnSpineAnimationEnd;
+        CAnimation?.AddAnimation(trackIndex: 0, animationName: animKey, loop: false, delay: 0);
+        CAnimation?.AddAnimation(trackIndex: 0, animationName: AnimationState.IDLE_ANIM, loop: true, delay: 0);
+
+        void OnSpineAnimationEnd(TrackEntry trackEntry) //, Spine.Event e
+        {
+            //Spine.Animation dieAnimation = SkeletonGraphic.SkeletonData.FindAnimation(AnimationState.DIE_ANIM);
+            if (trackEntry.Animation.Name.Equals(animKey))
+            {
+                cb?.Invoke();
+            }
+        }
+    }
 
 }

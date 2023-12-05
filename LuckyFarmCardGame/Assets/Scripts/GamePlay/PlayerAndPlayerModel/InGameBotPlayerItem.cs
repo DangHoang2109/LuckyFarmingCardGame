@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using static InGameAI;
 public class InGameBotPlayerItem : InGameBasePlayerItem
 {
     #region Prop on editor
@@ -12,6 +13,8 @@ public class InGameBotPlayerItem : InGameBasePlayerItem
 
     public Transform _tfPosition;
     protected CSkeletonAnimator _animator;
+
+    private bool isInIdle = true; 
     #endregion Prop on editor
 
     #region Data
@@ -90,8 +93,14 @@ public class InGameBotPlayerItem : InGameBasePlayerItem
     #endregion InitAction
 
     #region Turn Action
+    private void SetIdleAnimState(bool state)
+    {
+        isInIdle = state;
+    }
+    public bool IsInIdleAnimState() => isInIdle;
     public override void BeginTurn()
     {
+        SetIdleAnimState(true);
         bool isStunning = this.IsStunning;
         base.BeginTurn();
         if(!isStunning)
@@ -101,8 +110,8 @@ public class InGameBotPlayerItem : InGameBasePlayerItem
     }
     public override void ContinueTurn()
     {
+        //SetIdleAnimState(true);
         base.ContinueTurn();
-        StartPlaningTurn();
     }
     void StartPlaningTurn()
     {
@@ -110,8 +119,6 @@ public class InGameBotPlayerItem : InGameBasePlayerItem
     }
     IEnumerator OnThinkingInTurn()
     {
-        yield return new WaitForSeconds(0.25f);
-
         InGameAI.LookingMessage collect = Looker?.Look();
 
         yield return new WaitForEndOfFrame();
@@ -119,6 +126,7 @@ public class InGameBotPlayerItem : InGameBasePlayerItem
         yield return new WaitForEndOfFrame();
         Executor.SetDecision();
         yield return new WaitForEndOfFrame();
+        StartCoroutine(ExecuteTurn());
     }
 
     public override void EndTurn()
@@ -137,19 +145,33 @@ public class InGameBotPlayerItem : InGameBasePlayerItem
     }
     public override void AttackSingleUnit(int dmg = -1)
     {
+        SetIdleAnimState(false);
         if (dmg <= 0)
             dmg = BaseDamagePerTurn; //replace with this host info
-        InGameManager.Instance.OnPlayerAttacking(InGameManager.Instance.MainUserPlayer.SeatID, dmg);
-        this._animator?.ShowAttack();
-        base.AttackSingleUnit(dmg);
+        //this._animator?.ShowAttack();
+        this._animator?.ShowAnimationWithCallback(animKey: AnimationState.ATTACK_ANIM, cb: () =>
+        {
+            InGameManager.Instance.OnPlayerAttacking(InGameManager.Instance.MainUserPlayer.SeatID, dmg);
+            SetIdleAnimState(true); 
+            base.AttackSingleUnit(dmg);
+        });
     }
     public override void AttackAllUnit(int dmg = -1)
     {
+        SetIdleAnimState(false);
+
         if (dmg <= 0)
             dmg = this.BaseDamagePerTurn; //replace with this host info
-        this._animator?.ShowAttack();
-        InGameManager.Instance.OnPlayerAttackingAllUnit(isEnemySide: false, dmg);
-        base.AttackAllUnit(dmg);
+        //this._animator?.ShowAttack();
+
+        this._animator?.ShowAnimationWithCallback(animKey: AnimationState.ATTACK_ANIM, cb: () =>
+        {
+
+            InGameManager.Instance.OnPlayerAttackingAllUnit(isEnemySide: false, dmg);
+            SetIdleAnimState(true);
+            base.AttackAllUnit(dmg);
+
+        });
     }
     public override void Dead(Action cb)
     {
@@ -169,12 +191,17 @@ public class InGameBotPlayerItem : InGameBasePlayerItem
     public override void CustomUpdate()
     {
         base.CustomUpdate();
-        if (Executor?.IsHasAction() ?? false)
+
+    }
+    IEnumerator ExecuteTurn()
+    {
+        Queue<ExecutionAction> turnActions = this.Executor.GetAction();
+
+        while (turnActions.Count > 0)
         {
-            Executor?.Execute();
+            yield return turnActions.Dequeue().Do();
         }
     }
-
     public void OnClickViewEffect()
     {
         Debug.Log($"OnClickViewEffect: {this.Executor?.GetSkillDescribe()}");

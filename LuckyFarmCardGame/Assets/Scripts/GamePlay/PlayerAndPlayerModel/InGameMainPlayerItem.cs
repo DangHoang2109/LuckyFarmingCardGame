@@ -30,6 +30,7 @@ public class InGameMainPlayerItem : InGameBasePlayerItem
     public Image _imgTimer;
     public Image _imgAvatar;
 
+    public GameObject _gVFXAttacked;
 
     #endregion Prop on editor
 
@@ -120,36 +121,17 @@ public class InGameMainPlayerItem : InGameBasePlayerItem
         }
         _tmpCoinValue.SetText($"{(PlayerModel.CurrentCoinPoint).ToString("D2")}");
     }
-    public override void ParseVisualBagUI()
+    public override void Attacked(int dmg, Action<InGameBasePlayerItem> deaded = null)
     {
-        base.ParseVisualBagUI();
-        ///this.BagVisual?.SetHostPlayer(this);
+        base.Attacked(dmg, deaded);
+        StartCoroutine(ieVFXAttacked());
     }
-    public override void ReadyInDestroyCardEffectStage(int amountCardToBeChoseInEffect, Action<int, List<int>> onCompleteBeingChose)
+    IEnumerator ieVFXAttacked()
     {
-        base.ReadyInDestroyCardEffectStage(amountCardToBeChoseInEffect, onCompleteBeingChose);
-        //this.BagVisual?.EnableToggleForEffectStage(true, OnACardItemInBagBeingChose_DestroyingPhase);
-    }
-    protected override void OnACardItemInBagBeingChose_DestroyingPhase(int cardID, bool isChosed)
-    {
-        base.OnACardItemInBagBeingChose_DestroyingPhase(cardID, isChosed);
-        //if (CardBeingChose.Count == _amountCardToBeChoseInEffect)
-        //{
-        //    this.BagVisual?.EnableToggleForEffectStage(false, null);
-        //}
-    }
-    public override void ReadyInPullingCardEffectStage(int amountCardToBeChoseInEffect, Action<int, List<int>> onCompleteBeingChose)
-    {
-        base.ReadyInPullingCardEffectStage(amountCardToBeChoseInEffect, onCompleteBeingChose);
-        //this.BagVisual?.EnableToggleForEffectStage(true, OnACardItemInBagBeingChose_PullingCardEffect);
-    }
-    protected override void OnACardItemInBagBeingChose_PullingCardEffect(int cardID, bool isChosed)
-    {
-        base.OnACardItemInBagBeingChose_PullingCardEffect(cardID, isChosed);
-        //if (CardBeingChose.Count == _amountCardToBeChoseInEffect)
-        //{
-        //    this.BagVisual?.EnableToggleForEffectStage(false, null);
-        //}
+        _gVFXAttacked.SetActive(false);
+
+        yield return new WaitForEndOfFrame();
+        _gVFXAttacked.SetActive(true);
     }
     public override void AttackSingleUnit(int dmg = -1)
     {
