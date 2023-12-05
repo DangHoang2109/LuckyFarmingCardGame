@@ -302,6 +302,8 @@ public class InGameManager : MonoSingleton<InGameManager>
     #region Turn Action
     public void OnBeginTurn()
     {
+        if (!IsPlaying)
+            return;
         this.GameController?.BeginTurn(CurrentTurnPlayer.IsMainPlayer);
         Debug.Log($"GAME MANGE: Player seat {this._turnIndex} begin turn");
         CurrentTurnPlayer.BeginTurn();
@@ -313,6 +315,8 @@ public class InGameManager : MonoSingleton<InGameManager>
 
     public void OnDrawCard()
     {
+        if (!IsPlaying)
+            return;
         GameController?.OnDrawACard();
     }
     /// <summary>
@@ -339,6 +343,8 @@ public class InGameManager : MonoSingleton<InGameManager>
     }
     private void OnUserPullCardFromPalletToBag(List<InGame_CardDataModel> cardsReceive)
     {
+        if (!IsPlaying)
+            return;
         if (cardsReceive != null && cardsReceive.Count > 0)
         {
             this.CurrentTurnPlayer.PullCardToBag(cardsReceive);
@@ -352,8 +358,10 @@ public class InGameManager : MonoSingleton<InGameManager>
     /// <param name="amountUsing"></param>
     public void OnUserDecideToUseGameCoin(int amountUsing)
     {
+        if (!IsPlaying)
+            return;
         //trừ coin từ user đang dùng
-        if(this.CurrentTurnPlayerModel?.SubtractGameCoinIfCan(amountUsing) ?? false)
+        if (this.CurrentTurnPlayerModel?.SubtractGameCoinIfCan(amountUsing) ?? false)
         {
             this.GameController?.OnUserDecideToUseGameCoin(amountUsing);
         }
@@ -388,6 +396,8 @@ public class InGameManager : MonoSingleton<InGameManager>
     /// <param name="damage"></param>
     public void OnPlayerAttacking(int idWhoAttacked, int damage) //int idWhoAttacking: only the current turn user will be able to attack
     {
+        if (!IsPlaying)
+            return;
         if (TryGetSeatItem(idWhoAttacked, out InGameBasePlayerItem attacked))
         {
             attacked.Attacked(damage, this.OnCallbackPlayerDead);
@@ -401,6 +411,8 @@ public class InGameManager : MonoSingleton<InGameManager>
     /// <param name="damage"></param>
     public void OnPlayerAttackingAllUnit(bool isEnemySide, int damage) //int idWhoAttacking: only the current turn user will be able to attack
     {
+        if (!IsPlaying)
+            return;
         if (isEnemySide)
         {
             //get all enemy alive, list có thể bị thay đổi nếu có obj dead 
@@ -420,6 +432,8 @@ public class InGameManager : MonoSingleton<InGameManager>
     }
     public void OnPlayerHeal(int idHealReceiver, int heal)
     {
+        if (!IsPlaying)
+            return;
         if (TryGetSeatItem(idHealReceiver, out InGameBasePlayerItem healReceive))
         {
             healReceive.AddHP(heal);
@@ -427,6 +441,8 @@ public class InGameManager : MonoSingleton<InGameManager>
     }
     public void OnPlayerHealFullHP(int idHealReceiver)
     {
+        if (!IsPlaying)
+            return;
         if (TryGetSeatItem(idHealReceiver, out InGameBasePlayerItem healReceive))
         {
             healReceive.RecoverFullHP();
@@ -434,6 +450,8 @@ public class InGameManager : MonoSingleton<InGameManager>
     }
     public void OnPlayerIncreaseMaxHP(int idHealReceiver, int hpAdd)
     {
+        if (!IsPlaying)
+            return;
         if (TryGetSeatItem(idHealReceiver, out InGameBasePlayerItem healReceive))
         {
             healReceive.IncreaseMaxHP(hpAdd, isAddToCurrentToo: true);
@@ -441,13 +459,17 @@ public class InGameManager : MonoSingleton<InGameManager>
     }
     public void OnPlayerDefense(int idDefenseder, int def)
     {
+        if (!IsPlaying)
+            return;
         if (TryGetSeatItem(idDefenseder, out InGameBasePlayerItem defenseder))
         {
             defenseder.AddShield(def);
         }
     }
     public void OnAPlayerDie(int id)
-    {            
+    {
+        if (!IsPlaying)
+            return;
         //disable the obj
         if (TryGetSeatItem(id, out InGameBasePlayerItem dead))
         {
@@ -463,8 +485,6 @@ public class InGameManager : MonoSingleton<InGameManager>
         //remove from the list -> move to remove when no enemy left
         //RemoveCharacter(dead);
     }
-
-
     public bool IsOwningThisCardIDInDeck(int cardID)
     {
         return this.GameController.IsOwningThisCardIDInDeck(cardID);
@@ -491,10 +511,14 @@ public class InGameManager : MonoSingleton<InGameManager>
     }
     public void OnPlayerAddNewCard(int cardID, int amount)
     {
+        if (!IsPlaying)
+            return;
         GameController.AddCardToDeck(cardID, amount);
     }
     public void OnPlayerAddCardPoint(int cardID, int amount)
     {
+        if (!IsPlaying)
+            return;
         List<InGame_CardDataModel> cardModel = new List<InGame_CardDataModel>();
         InGame_CardDataModel c = InGameUtils.CreateCardDataModel(cardID);
         c._amount = amount;
@@ -537,23 +561,6 @@ public class InGameManager : MonoSingleton<InGameManager>
             }
         });
     }
-    /// <summary>
-    /// Bật UI chọn card, simulate hành động click chọn của bot
-    /// </summary>
-    /// <param name="playerID"></param>
-    /// <param name="cardID"></param>
-    public void OnBotClickChoseToggleBagUIItem(int playerID, int cardID)
-    {
-        if(TryGetSeatItem(playerID, out InGameBasePlayerItem player))
-        {
-            Debug.Log("COMMENTED THIS, CONSIDER MOVE THIS LOGIC TO MAIN PLAYER ONLY");
-            //if(player.BagVisual.TryFindUIItem(cardID, out InGameBagCardTypeUIItem uiCardItem))
-            //{
-            //    uiCardItem.ClickToggleFromMManager();
-            //}
-        }
-    }
-
 
     private void Update()
     {
@@ -592,6 +599,10 @@ public class InGameManager : MonoSingleton<InGameManager>
     #endregion Pallet behavior
 
     #region End game behavior
+    public void MainPlayerDied()
+    {
+        OnEndGame();
+    }
     public void OnEndGame()
     {
         Debug.Log($"INGAME MANGE: End Game");
@@ -605,6 +616,9 @@ public class InGameManager : MonoSingleton<InGameManager>
     private bool _isPushActionContinueTurn = false;
     public void OnTellControllerContinueTurn()
     {
+        if (!IsPlaying)
+            return;
+
         if(!_isPushActionContinueTurn)
         {
             CardGameActionController.Instance.AddCallbackWhenFXComplete(cb: () =>
@@ -618,10 +632,14 @@ public class InGameManager : MonoSingleton<InGameManager>
     }
     public void OnTellControllerToRollDice()
     {
+        if (!IsPlaying)
+            return;
         this.GameController?.RollADiceAndCheckPalletCondition();
     }
     public void OnTellControllerToDrawCards(int cardToDraw)
     {
+        if (!IsPlaying)
+            return;
         for (int i = 0; i < cardToDraw; i++)
         {
             this.OnDrawCard();
@@ -629,6 +647,8 @@ public class InGameManager : MonoSingleton<InGameManager>
     }
     public void OnTellControllerToRevealTopCard(int cardToReveal)
     {
+        if (!IsPlaying)
+            return;
         this.GameController?.OnRevealTopDeck(cardToReveal);
     }
     #endregion Card activator behavior

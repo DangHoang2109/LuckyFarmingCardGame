@@ -1288,34 +1288,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: UpgradedInfoCardItem
       objectReference: {fileID: 0}
-    - target: {fileID: 4728544304886800186, guid: ea224ea1551cea44eb8a9b15e823c37e, type: 3}
-      propertyPath: m_fontSize
-      value: 30
-      objectReference: {fileID: 0}
-    - target: {fileID: 4728544304886800186, guid: ea224ea1551cea44eb8a9b15e823c37e, type: 3}
-      propertyPath: m_fontSizeMax
-      value: 30
-      objectReference: {fileID: 0}
-    - target: {fileID: 4728544304886800186, guid: ea224ea1551cea44eb8a9b15e823c37e, type: 3}
-      propertyPath: m_fontSizeMin
-      value: 12
-      objectReference: {fileID: 0}
-    - target: {fileID: 4728544304886800186, guid: ea224ea1551cea44eb8a9b15e823c37e, type: 3}
-      propertyPath: m_enableAutoSizing
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8082021098404485312, guid: ea224ea1551cea44eb8a9b15e823c37e, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 83.7427
-      objectReference: {fileID: 0}
-    - target: {fileID: 8082021098404485312, guid: ea224ea1551cea44eb8a9b15e823c37e, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 83.7427
-      objectReference: {fileID: 0}
-    - target: {fileID: 8082021098404485312, guid: ea224ea1551cea44eb8a9b15e823c37e, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 64.12866
-      objectReference: {fileID: 0}
     - target: {fileID: 8175479059688077977, guid: ea224ea1551cea44eb8a9b15e823c37e, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -1350,7 +1322,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8175479059688077977, guid: ea224ea1551cea44eb8a9b15e823c37e, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 150
+      value: 170.757
       objectReference: {fileID: 0}
     - target: {fileID: 8175479059688077977, guid: ea224ea1551cea44eb8a9b15e823c37e, type: 3}
       propertyPath: m_LocalPosition.x

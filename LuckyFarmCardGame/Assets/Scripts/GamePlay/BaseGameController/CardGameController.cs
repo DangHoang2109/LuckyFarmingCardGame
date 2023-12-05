@@ -121,10 +121,10 @@ public class CardGameController : MonoBehaviour
         this._onDeckAmountChanging += _uiDeckDraw.OnChangeCardAmount;
 
         _explodeMeter.Init(this);
-        this._onDeckAmountChanging -= _explodeMeter.OnChangeDeckAmount;
-        this._onDeckAmountChanging += _explodeMeter.OnChangeDeckAmount;
-        this._onCardPutToPallet -= _explodeMeter.OnChangeDeckAmount;
-        this._onCardPutToPallet += _explodeMeter.OnChangeDeckAmount;
+        this._onDeckAmountChanging -= _explodeMeter.OnChangeDeckOrPalletInfo;
+        this._onDeckAmountChanging += _explodeMeter.OnChangeDeckOrPalletInfo;
+        this._onCardPutToPallet -= _explodeMeter.OnChangeDeckOrPalletInfo;
+        this._onCardPutToPallet += _explodeMeter.OnChangeDeckOrPalletInfo;
     }
     #region Action with Deck
     protected virtual void RecreateTheDeck()
@@ -513,6 +513,8 @@ public class CardGameController : MonoBehaviour
         this._cardsOnPallet ??= new List<InGame_CardDataModel>();
         this._cardsOnPallet.Clear();
         _palletUI.ClearPallet();
+
+        this._explodeMeter.OnChangeDeckOrPalletInfo(0);
     }
     private int RollADice()
     {

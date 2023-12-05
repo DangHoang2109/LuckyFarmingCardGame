@@ -37,6 +37,8 @@ public class ListingUpgradedCardsDialog : BaseDialog
                 item.ParseData(levelupCards[i]);
             }
         }
+
+        UnityEngine.UI.LayoutRebuilder.ForceRebuildLayoutImmediate(_tfPanel as RectTransform);
     }
 
     protected override void OnCompleteHide()

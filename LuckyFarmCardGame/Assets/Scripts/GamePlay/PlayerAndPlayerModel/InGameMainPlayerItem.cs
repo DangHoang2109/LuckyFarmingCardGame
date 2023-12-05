@@ -330,7 +330,17 @@ public class InGameMainPlayerItem : InGameBasePlayerItem
         }
     }
     #endregion Turn Action
+    public override void Dead(Action cb)
+    {
+        base.Dead(cb);
+    }
+    public override void ClearWhenDead()
+    {
+        base.ClearWhenDead();
 
+        this._btnDeck.gameObject.SetActive(false);
+        this._btnEndTurn.gameObject.SetActive(false);
+    }
     public override void CustomUpdate()
     {
         base.CustomUpdate();
