@@ -258,15 +258,21 @@ public class InGameBasePlayerItem : MonoBehaviour
     {
 
     }
-    public virtual void Attacked(int dmg, System.Action<InGameBasePlayerItem> deaded = null)
+    public virtual int Attacked(int dmg, System.Action<InGameBasePlayerItem> deaded = null)
     {
+        
         if(this.CurrentShield > 0)
         {
             int cacheShield = CurrentShield;
             this.CurrentShield -= dmg;
+            Debug.Log($"Attacked dmg {dmg} - shield {cacheShield}");
             dmg = Mathf.Clamp(dmg - cacheShield, 0 , int.MaxValue);
+            Debug.Log($"Attacked final dmg {dmg}");
         }
-        SubtractHP(dmg);
+        if(dmg > 0)
+            SubtractHP(dmg);
+
+        return dmg;
     }
     /// <summary>
     /// Only use for subtract directly damage

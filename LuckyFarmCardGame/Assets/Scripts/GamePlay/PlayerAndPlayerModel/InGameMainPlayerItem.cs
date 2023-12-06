@@ -125,10 +125,12 @@ public class InGameMainPlayerItem : InGameBasePlayerItem
         }
         _tmpCoinValue.SetText($"{(PlayerModel.CurrentCoinPoint).ToString("D2")}");
     }
-    public override void Attacked(int dmg, Action<InGameBasePlayerItem> deaded = null)
+    public override int Attacked(int dmg, Action<InGameBasePlayerItem> deaded = null)
     {
-        base.Attacked(dmg, deaded);
-        StartCoroutine(ieVFXAttacked());
+        dmg = base.Attacked(dmg, deaded);
+        if(dmg > 0)
+            StartCoroutine(ieVFXAttacked());
+        return dmg;
     }
     IEnumerator ieVFXAttacked()
     {

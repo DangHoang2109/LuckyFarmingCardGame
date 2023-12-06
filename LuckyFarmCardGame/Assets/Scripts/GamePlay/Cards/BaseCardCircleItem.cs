@@ -6,6 +6,9 @@ public class BaseCardCircleItem : BaseCardItem
 {
     public void OnClickItem()
     {
-        Debug.Log($"Card Effect: {this.cardModel?.GetSkillDescribe()}");
+        CardInfoPopup d = CardInfoPopup.ShowCardDialog();
+        d.ParseData(title: this.CardConfig?._cardName, description: this.cardModel?.GetSkillDescribe().VerifyInvisibleSpace());
+        d.SetCardIcon(this.CardConfig._sprCardArtwork);
+        d.SetPosition(Vector3.zero);
     }
 }

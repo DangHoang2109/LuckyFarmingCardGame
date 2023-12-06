@@ -139,11 +139,12 @@ public class InGameBotPlayerItem : InGameBasePlayerItem
     {
         base.EndTurn();
     }
-    public override void Attacked(int dmg, System.Action<InGameBasePlayerItem> deaded = null)
+    public override int Attacked(int dmg, System.Action<InGameBasePlayerItem> deaded = null)
     {
-        base.Attacked(dmg);
-        this._animator?.ShowAttacked(isDead(), OnDeadComplete);
-
+        dmg = base.Attacked(dmg);
+        if(dmg > 0)
+            this._animator?.ShowAttacked(isDead(), OnDeadComplete);
+        return dmg;
         void OnDeadComplete()
         {
             deaded?.Invoke(this);
@@ -210,6 +211,8 @@ public class InGameBotPlayerItem : InGameBasePlayerItem
     }
     public void OnClickViewEffect()
     {
-        Debug.Log($"OnClickViewEffect: {this.Executor?.GetSkillDescribe()}");
+        BaseInfoPopup d = BaseInfoPopup.ShowDialog();
+        d.ParseData(title: this.InfoConfig.enemyName,description: this.Executor?.GetSkillDescribe());
+        d.SetPosition(new Vector3(0, 337));
     }
 }

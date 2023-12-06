@@ -216,7 +216,8 @@ public class InGame_CardDataModel : ICloneable
     #endregion
     public string GetSkillDescribe()
     {
-        return string.Format(this.CardConfig?._cardSkillDescription, this.EffectActivator.GetStat()).VerifyInvisibleSpace();//this.CurrentLevelConfig._stat
+        string str = string.Format(this.CardConfig?._cardSkillDescription, this.EffectActivator.GetStat());
+        return str.VerifyInvisibleSpace();//this.CurrentLevelConfig._stat
     }
     private void ParseUIInfo()
     {
