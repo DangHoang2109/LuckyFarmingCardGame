@@ -22,7 +22,7 @@ public class Instruction_CardEffectQuickthroughItem : MonoBehaviour
             }
             if (_tmpCardEffectDescription != null)
             {
-                _tmpCardEffectDescription.text = config.GetBaseLevelDescription();
+               // _tmpCardEffectDescription.text = config.GetBaseLevelDescription();
             }
             if (_imgIconCard != null)
             {

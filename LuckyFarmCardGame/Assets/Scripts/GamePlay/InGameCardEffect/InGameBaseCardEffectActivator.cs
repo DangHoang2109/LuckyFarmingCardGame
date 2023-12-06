@@ -116,8 +116,8 @@ public class InGameCardEffectActivator_DrawCard : InGameBaseCardEffectActivator
     public override void ActiveEffectWhenPlaceToPallet()
     {
         base.ActiveEffectWhenPlaceToPallet();
-        this._host?.ForceDrawCard(1);
         this._host?.AttackSingleUnit(GetStatAsInt());
+        this._host?.ForceDrawCard(1);
     }
     public override void ActiveEffectWhenDestroyed()
     {

@@ -544,7 +544,7 @@ public class InGameManager : MonoSingleton<InGameManager>
                 //we can remove this do while when we apply the roll change enemy position system
                 this._turnIndex = InGameUtils.RollIndex(this._turnIndex, this._players.Count);
                 Debug.Log($"ROLL TURN INDEX TO {this._turnIndex} in {this._players.Count}");
-                while (!this._players[_turnIndex].IsActive())
+                while (!this._players[_turnIndex].IsActive() && !this._players[_turnIndex].isDead())
                 {
                     if (_turnIndex == this._players.Count - 1)
                     {

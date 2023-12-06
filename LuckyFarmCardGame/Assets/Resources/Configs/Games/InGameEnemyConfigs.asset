@@ -161,7 +161,7 @@ MonoBehaviour:
         _enemyIDsInRound: 000000000a000000
         _isBonusStage: 1
       - _wave: 3
-        _enemyIDsInRound: 010000000000000002000000
+        _enemyIDsInRound: 010000000200000000000000
         _isBonusStage: 0
       - _wave: 4
         _enemyIDsInRound: 0100000002000000

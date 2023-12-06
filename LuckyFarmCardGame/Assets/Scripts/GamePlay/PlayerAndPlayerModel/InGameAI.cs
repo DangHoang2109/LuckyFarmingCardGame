@@ -151,7 +151,7 @@ public class InGameAI
 
                 concat = $"{concat} {item.GetDescribe()}";
             }
-            return concat;
+            return concat.VerifyInvisibleSpace();
         }
     }
 

@@ -39,7 +39,7 @@ public class InGameCardConfigs : ScriptableObject
     }
     public List<InGameCardConfig> GetAllBonusCardConfigs()
     {
-        return new List<InGameCardConfig>(_configs.FindAll(x => x._isBonusTier));
+        return new List<InGameCardConfig>(_configs.FindAll(x => x._isBonusTier && x._isUsing));
     }
     #endregion Getter
 
@@ -70,6 +70,8 @@ public class InGameCardConfig
     [TabGroup("General")] public string _cardName;
     [TabGroup("General")] [TextArea] public string _cardDescription; //show as "1x player damage"
     [TabGroup("General")] [TextArea] public string _cardSkillDescription; //translate the 1x player damage to damage
+    [Space(5f)]
+    [TabGroup("General")] public bool _isUsing;
 
     [Space(5f)]
     [TabGroup("General")] public int _gamePointOfCard;
@@ -87,19 +89,6 @@ public class InGameCardConfig
     [TabGroup("Art")] public Sprite _sprCardArtwork;
     [TabGroup("Art")] public Sprite _sprCardBackground;
 
-    /// <summary>
-    /// Take the card description,
-    /// Player stat will be describe as 1x player damage/stat
-    /// </summary>
-    /// <returns></returns>
-    public string GetBaseLevelDescription()
-    {
-        if(InGameCardLevelsConfigs.Instance.TryGetCardLevelConfig(this._cardID, level: 1, out InGameCardLevel lvConfig))
-        {
-            return string.Format(this._cardDescription, $"{lvConfig._stat}x");
-        }
-        return this._cardDescription;
-    }
 }
 
 #region Card Effect

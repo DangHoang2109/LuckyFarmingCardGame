@@ -675,4 +675,14 @@ public static class InGameUtils
 
         return new InGame_CardDataModel().SetHost(InGameManager.Instance.MainUserPlayer).SetCardID(id, cardConfig).SetCurrentLevel(currentCardLevel);
     }
+    public static string VerifyInvisibleSpace(this string inputString)
+    {
+        // Check if the string ends with a carriage return character (char 13)
+        if (inputString.EndsWith("\r"))
+        {
+            // Remove the carriage return character from the end of the string
+            inputString = inputString.Substring(0, inputString.Length - 1);
+        }
+        return inputString;
+    }
 }

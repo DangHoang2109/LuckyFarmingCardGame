@@ -100,6 +100,12 @@ public class InGameBotPlayerItem : InGameBasePlayerItem
     public bool IsInIdleAnimState() => isInIdle;
     public override void BeginTurn()
     {
+        if (!IsPlaying)
+            return;
+
+        if (_ieThinkingPlan != null)
+            StopCoroutine(_ieThinkingPlan);
+
         SetIdleAnimState(true);
         bool isStunning = this.IsStunning;
         base.BeginTurn();

@@ -31,9 +31,10 @@ public class PickingBonusDialog : BaseDialog
 
         void ParseCardUI(BonusStageEffectAct act)
         {
+            InGame_CardDataModel c = InGameUtils.CreateCardDataModel(act.ID);
+
             _cardVisual.SetCardIDAndDisplayAllVisual(act.ID);
-            InGameCardConfig _cardConfig = InGameCardConfigs.Instance.GetCardConfig(act.ID);
-            this._tmpCardSkillDescription.SetText(_cardConfig.GetBaseLevelDescription());
+            this._tmpCardSkillDescription.SetText(c.GetSkillDescribe());
         }
     }
     /// <summary>

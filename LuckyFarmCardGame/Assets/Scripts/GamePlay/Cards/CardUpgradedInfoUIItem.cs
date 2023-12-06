@@ -13,11 +13,11 @@ public class CardUpgradedInfoUIItem : CardPopupUIItem
 
         _tmpCardLevel.SetText($"Level {(cardModelLevels?.CurrentLevelConfig?._level ?? 0)}");
 
-        string des = cardModelLevels?.CardConfig?._cardDescription;
+        string des = cardModelLevels?.CardConfig?._cardSkillDescription;
         if (!string.IsNullOrEmpty(des))
         {
             string statUp = $"{cardModelLevels?.CacheOldStat} -> {cardModelLevels?.CurrentStat}";
-            _tmpCardDescription.text = string.Format(des, statUp);
+            _tmpCardDescription.text = string.Format(des, statUp).VerifyInvisibleSpace();
         }
 
         this.Rect.sizeDelta = new Vector2(this.Rect.sizeDelta.x, Mathf.Max(_tmpCardDescription.preferredHeight, Prefered_Min_Height));

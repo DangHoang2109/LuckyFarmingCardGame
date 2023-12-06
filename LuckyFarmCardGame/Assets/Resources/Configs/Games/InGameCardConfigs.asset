@@ -17,6 +17,7 @@ MonoBehaviour:
     _cardName: Sword
     _cardDescription: "Attack 01 front enemy {0}x\r player damage.\r"
     _cardSkillDescription: "Attack 01 front enemy {0} damage.\r"
+    _isUsing: 0
     _gamePointOfCard: 3
     _skillID: 3
     _sprCardEffect: {fileID: 21300000, guid: 9955f68ccecc8d8458ba8992bf7a638f, type: 3}
@@ -27,6 +28,7 @@ MonoBehaviour:
     _cardName: Crossbow
     _cardDescription: "Attack all enemies {0}x player\r damage"
     _cardSkillDescription: "Attack all enemies {0}\r damage"
+    _isUsing: 0
     _gamePointOfCard: 4
     _skillID: 4
     _sprCardEffect: {fileID: 21300000, guid: 9955f68ccecc8d8458ba8992bf7a638f, type: 3}
@@ -37,6 +39,7 @@ MonoBehaviour:
     _cardName: Bucklet
     _cardDescription: "Create shield {0}x player\r defense point.\r"
     _cardSkillDescription: "Create {0} shield point.\r"
+    _isUsing: 0
     _gamePointOfCard: 4
     _skillID: 5
     _sprCardEffect: {fileID: 21300000, guid: eaba1188c22e6874f9debbef0da7f449, type: 3}
@@ -47,6 +50,7 @@ MonoBehaviour:
     _cardName: Pill
     _cardDescription: Heal {0}x player heal point
     _cardSkillDescription: Heal {0} HP
+    _isUsing: 0
     _gamePointOfCard: 1
     _skillID: 0
     _sprCardEffect: {fileID: 21300000, guid: 74b85af84e84515499ec3c33dc72b950, type: 3}
@@ -57,6 +61,7 @@ MonoBehaviour:
     _cardName: MagicEye
     _cardDescription: Look up {0} top card on deck.
     _cardSkillDescription: Look up {0} top card on deck.
+    _isUsing: 0
     _gamePointOfCard: 1
     _skillID: 2
     _sprCardEffect: {fileID: 21300000, guid: ff1cf923ce40aad41940f9df2efbb8a8, type: 3}
@@ -69,6 +74,7 @@ MonoBehaviour:
       player damage.\r"
     _cardSkillDescription: "Force to draw one more card\r and attack front enemy
       {0} damage.\r"
+    _isUsing: 0
     _gamePointOfCard: 2
     _skillID: 1
     _sprCardEffect: {fileID: 21300000, guid: 1c10f27e8a36b2747afd88630bbfa676, type: 3}
@@ -81,6 +87,7 @@ MonoBehaviour:
       the player for the same amount.
     _cardSkillDescription: Drain {0} HP from the front enemy and heal the player
       for the same amount.
+    _isUsing: 1
     _gamePointOfCard: 4
     _skillID: 6
     _sprCardEffect: {fileID: 21300000, guid: 50cab2eb3c0c0f844a16a605b70533ce, type: 3}
@@ -93,6 +100,7 @@ MonoBehaviour:
       damage to the front enemy.
     _cardSkillDescription: Reduce damage taken by 50% for one turn and deal {0} damage
       to the front enemy.
+    _isUsing: 0
     _gamePointOfCard: 4
     _skillID: 7
     _sprCardEffect: {fileID: 21300000, guid: 9955f68ccecc8d8458ba8992bf7a638f, type: 3}
@@ -105,6 +113,7 @@ MonoBehaviour:
       for one turn.
     _cardSkillDescription: Deal {0} damage to all enemies and stun the front enemy
       for one turn.
+    _isUsing: 1
     _gamePointOfCard: 4
     _skillID: 8
     _sprCardEffect: {fileID: 21300000, guid: 6b1d9a75d06f576418ef7d12e0cc6fb7, type: 3}
@@ -117,6 +126,7 @@ MonoBehaviour:
       This Effect can be stacked
     _cardSkillDescription: Increase player's damage by {0}% for the next three turns.
       This Effect can be stacked
+    _isUsing: 1
     _gamePointOfCard: 4
     _skillID: 10
     _sprCardEffect: {fileID: 0}
@@ -127,6 +137,7 @@ MonoBehaviour:
     _cardName: Guardian Spirit
     _cardDescription: Grants invulnerability for {0} turn.
     _cardSkillDescription: Grants invulnerability for {0} turn.
+    _isUsing: 0
     _gamePointOfCard: 6
     _skillID: 11
     _sprCardEffect: {fileID: 0}
@@ -137,6 +148,7 @@ MonoBehaviour:
     _cardName: Mana Burst
     _cardDescription: X{0} the effect of the next card played.
     _cardSkillDescription: 
+    _isUsing: 0
     _gamePointOfCard: 5
     _skillID: 14
     _sprCardEffect: {fileID: 0}
@@ -147,6 +159,7 @@ MonoBehaviour:
     _cardName: Shadow Cloak
     _cardDescription: Reduce damage taken by {0}% for the next 3 turns.
     _cardSkillDescription: Reduce damage taken by {0}% for the next 3 turns.
+    _isUsing: 0
     _gamePointOfCard: 5
     _skillID: 15
     _sprCardEffect: {fileID: 0}
@@ -157,6 +170,7 @@ MonoBehaviour:
     _cardName: Time Machine
     _cardDescription: Reorder the top {0} cards of your deck.
     _cardSkillDescription: Reorder the top {0} cards of your deck.
+    _isUsing: 0
     _gamePointOfCard: 5
     _skillID: 17
     _sprCardEffect: {fileID: 0}
