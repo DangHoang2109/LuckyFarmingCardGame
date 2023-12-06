@@ -116,6 +116,7 @@ public class BonusStageEffectAct
 {
     public virtual BonusStageEffectID EffectID { get; set; }
 
+    public static bool IsCardBonus(BonusStageEffectID effID) => (int)effID < 10;
     public virtual float ValueAmount { get; set; }
     public int ValueAsInt => (int)ValueAmount;
     /// <summary>

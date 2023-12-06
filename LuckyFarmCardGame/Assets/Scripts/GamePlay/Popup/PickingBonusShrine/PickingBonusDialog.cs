@@ -1,20 +1,50 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class PickingBonusDialog : BaseDialog
 {
-    public List<PickingBonusCardItem> _items;
+    //public List<PickingBonusCardItem> _items;
     List<BonusStageEffectAct> acts;
     System.Action _onCompleteChose;
+    [Header("TextDesInButton")]
+    public List<TextMeshProUGUI> btnDes;
+
+    [Header("Card Bonus")]
+    public BaseCardVisual _cardVisual;
+    public TextMeshProUGUI _tmpCardSkillDescription;
+
     public void ParseData(List<BonusStageEffectAct> acts, System.Action onCompleteChose)
     {
         this.acts = acts;
         _onCompleteChose = onCompleteChose;
+
         for (int i = 0; i < acts.Count; i++)
         {
-            _items[i].ParseData(acts[i], OnClickChose);
+            btnDes[i].SetText(acts[i].DescriptionTop);
         }
+
+        BonusStageEffectAct cardAct = acts.Find(x => BonusStageEffectAct.IsCardBonus(x.EffectID));
+        if(cardAct != null)
+            ParseCardUI(cardAct);
+
+        void ParseCardUI(BonusStageEffectAct act)
+        {
+            _cardVisual.SetCardIDAndDisplayAllVisual(act.ID);
+            InGameCardConfig _cardConfig = InGameCardConfigs.Instance.GetCardConfig(act.ID);
+            this._tmpCardSkillDescription.SetText(_cardConfig.GetBaseLevelDescription());
+        }
+    }
+    /// <summary>
+    /// paramsIndex Should be 0 - 1
+    /// 0 - 1 is index of act if user pick one only
+    /// </summary>
+    /// <param name="paramsIndex"></param>
+    public void OnClickButtonChose(int paramsIndex)
+    {
+        if (paramsIndex >= 0 && paramsIndex < this.acts.Count)
+            OnClickChose(acts[paramsIndex]);
     }
     void OnClickChose(BonusStageEffectAct act)
     {

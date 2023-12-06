@@ -14,23 +14,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _configs:
   - _id: 0
-    descriptionTop: Receive 01 copy of this card
+    descriptionTop: Take this card
     descriptionPerk: Receive 01 copy of this card
     _icon: {fileID: 0}
   - _id: 1
-    descriptionTop: Receive 03 points of this card
+    descriptionTop: +03 points of this card
     descriptionPerk: Receive 03 points of this card
     _icon: {fileID: 0}
   - _id: 2
-    descriptionTop: Receive 01 copy of this card
+    descriptionTop: Take this card
     descriptionPerk: Receive 01 copy of this card
     _icon: {fileID: 0}
   - _id: 10
-    descriptionTop: Recover all of your HP
+    descriptionTop: Recover full HP
     descriptionPerk: HEAL FULL HP
     _icon: {fileID: 21300000, guid: b4344289d7040cb4ba388eeadd396306, type: 3}
   - _id: 11
-    descriptionTop: Increase 10% of your Max HP
+    descriptionTop: Increase 10% Max HP
     descriptionPerk: Max HP Boost
     _icon: {fileID: 21300000, guid: 750be54459a7f7649b40999ab3e1e559, type: 3}
   - _id: 12
