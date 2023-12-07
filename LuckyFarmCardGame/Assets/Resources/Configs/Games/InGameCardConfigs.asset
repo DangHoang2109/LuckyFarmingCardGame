@@ -71,9 +71,9 @@ MonoBehaviour:
   - _cardID: 5
     _cardName: Chain
     _cardDescription: "Force to draw one more card\r and attack front enemy {0}x\r
-      player damage.\r"
+      player damage."
     _cardSkillDescription: "Force to draw one more card\r and attack front enemy
-      {0} damage.\r"
+      {0} damage."
     _isUsing: 0
     _gamePointOfCard: 2
     _skillID: 1
