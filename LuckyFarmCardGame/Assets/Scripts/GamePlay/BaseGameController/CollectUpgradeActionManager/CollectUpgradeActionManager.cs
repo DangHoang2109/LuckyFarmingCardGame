@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CollectUpgradeActionManager : DoActionManager
+public class CollectUpgradeActionManager : BaseDoActionManager
 {
     public static CollectUpgradeActionManager Instance => CardGameActionController.Instance.collectUpgradeActionManager;
 }

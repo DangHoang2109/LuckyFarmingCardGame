@@ -1,0 +1,78 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 475a3f0077feb2b4dbffe22d01cabe2b, type: 3}
+  m_Name: TutorialConfigs
+  m_EditorClassIdentifier: 
+  completeStep: 110
+  tutorials:
+  - step: 100
+    title: Welcome
+    message: Welcome to Lucky Farm, in here we will try to win the stage by drawing
+      cards
+    nextStep: 101
+    _isShowHighLight: 0
+  - step: 101
+    title: Draw 1st card
+    message: First, Click the Deck button to draw a card.
+    nextStep: 102
+    _isShowHighLight: 1
+  - step: 102
+    title: Pallet
+    message: Card drawn will be put to pallet after activated it effect.
+    nextStep: 103
+    _isShowHighLight: 1
+  - step: 103
+    title: View Card
+    message: You can click on to the card icon on pallet to view the effect.
+    nextStep: 104
+    _isShowHighLight: 1
+  - step: 104
+    title: Draw 2nd Card
+    message: Draw your next card, Bucklet is just one among 6 different cards in
+      deck.
+    nextStep: 105
+    _isShowHighLight: 1
+  - step: 105
+    title: End 1st Turn
+    message: Let end the turn here!
+    nextStep: 106
+    _isShowHighLight: 1
+  - step: 106
+    title: Points
+    message: Card from pallet will be collected as point, and your card will be upgraded
+      automatically from it, so try to maximize the pallet.
+    nextStep: 107
+    _isShowHighLight: 1
+  - step: 107
+    title: Monster Attack
+    message: The Monster will try to attack you or activated their skill on their
+      turn, you can also tap on to view their skill
+    nextStep: 108
+    _isShowHighLight: 1
+  - step: 108
+    title: 'Draw Card '
+    message: It is your turn again, draw first card and see what it is.
+    nextStep: 109
+    _isShowHighLight: 1
+  - step: 109
+    title: Explode
+    message: If you draw an existed card on pallet, the pallet will explode and you
+      will receive nothing, so be careful. This is the chance to be safe when draw
+      next card
+    nextStep: 110
+    _isShowHighLight: 1
+  - step: 110
+    title: Summary
+    message: I believe you can defeat all the monster on your own, You can view the
+      summary of rule in here anytime
+    nextStep: -1
+    _isShowHighLight: 1

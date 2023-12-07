@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class VFXActionManager : DoActionManager
+public class VFXActionManager : BaseDoActionManager
 {
     public static VFXActionManager Instance => CardGameActionController.Instance.vfxActionManager;
     public void ShowVFxXAttributeChange(AttributeUI item)

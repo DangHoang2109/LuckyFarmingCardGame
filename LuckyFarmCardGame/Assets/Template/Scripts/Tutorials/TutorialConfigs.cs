@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -54,6 +54,12 @@ public class TutorialConfig
     public string message;
     [ValueDropdown("ListNextStepViews", ExpandAllMenuItems = true)]
     public int nextStep = -1;
+
+    /// <summary>
+    /// Làm đen nền + highlight sáng 1 vùng
+    /// False: Ko đen nền, tap anywhere sẽ run next step
+    /// </summary>
+    public bool _isShowHighLight;
     #if UNITY_EDITOR
     private IEnumerable ListNextStepViews()
     {

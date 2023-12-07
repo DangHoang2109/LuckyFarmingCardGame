@@ -107,11 +107,6 @@ public class InGameManager : MonoSingleton<InGameManager>
         //Start the game
         StartGame();
     }
-    private void Start()
-    {
-        //PrepareGame();
-    }
-
     protected void InitGame()
     {
         ///Get the map Config

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DoActionManager : MonoBehaviour
+public class BaseDoActionManager : MonoBehaviour
 {
     protected Queue<IDoAction> doSomething = new Queue<IDoAction>();
     protected Coroutine coRunining;

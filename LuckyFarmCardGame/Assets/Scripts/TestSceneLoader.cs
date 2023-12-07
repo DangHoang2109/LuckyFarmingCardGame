@@ -16,7 +16,15 @@ public class TestSceneLoader : MonoSingleton<TestSceneLoader>
     }
     public void OnClickJoinGameTutorial()
     {
-        this.gameObject.SetActive(false);
+        JoinTutorialGame();
+    }
+    void JoinTutorialGame()
+    {
+        this.StartCoroutine(this.CheckLoadGameSceneDone(()=> {
+            DoTutorialAction openBag = new DoTutorialAction(100);
+            DoActionManager.Instance.AddAction(openBag);
+            DoActionManager.Instance.RunningAction();
+        }));
     }
     void JoinGame(System.Action _onDoneCb = null)
     {
@@ -24,7 +32,6 @@ public class TestSceneLoader : MonoSingleton<TestSceneLoader>
     }
     private IEnumerator CheckLoadGameSceneDone(System.Action _onDoneCb = null)
     {
-        
         //yield return new WaitForEndOfFrame();
         //TempSceneManager.Instance.UnLoadScene(SceneName.HOME);
         yield return new WaitForEndOfFrame();
@@ -34,8 +41,9 @@ public class TestSceneLoader : MonoSingleton<TestSceneLoader>
         yield return new WaitForEndOfFrame();
         this.gameObject.SetActive(false); 
     }
-    private IEnumerator LoadGameScene()
+    private IEnumerator LoadGameScene(System.Action _onDoneCb = null)
     {
         yield return TempSceneManager.Instance.PreLoadScene(SceneName.GAME);
+        _onDoneCb?.Invoke();
     }
 }

@@ -92,6 +92,8 @@ public class TutorialManager : MonoSingleton<TutorialManager>
         }
 
         this.isShow = true;
+
+
         this.ShowFace(true);
         this.ShowHighLight(this.TutorialCurrentStep, true);
     }
@@ -109,6 +111,7 @@ public class TutorialManager : MonoSingleton<TutorialManager>
             if (nextStep != null)
             {
                 this.ShowHighLight(this.TutorialCurrentStep, false);
+                Debug.Log($"Tutorial: {nextStep.message}");
                 this.TutorialCurrentStep = nextStep.step;
                 this.ShowHighLight(this.TutorialCurrentStep, true);
             }
