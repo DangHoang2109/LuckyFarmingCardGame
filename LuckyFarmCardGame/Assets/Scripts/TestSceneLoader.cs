@@ -2,8 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TestSceneLoader : MonoSingleton<TestSceneLoader>
+public class TestSceneLoader : MonoBehaviour
 {
+    //Will be remove when have joingame datas and joingamemanager
+    public static bool _isTutorial = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -12,19 +14,17 @@ public class TestSceneLoader : MonoSingleton<TestSceneLoader>
 
     public void OnClickJoinGameNormal()
     {
+        _isTutorial = false;
         JoinGame();
     }
     public void OnClickJoinGameTutorial()
     {
+        _isTutorial = true;
         JoinTutorialGame();
     }
     void JoinTutorialGame()
     {
-        this.StartCoroutine(this.CheckLoadGameSceneDone(()=> {
-            DoTutorialAction openBag = new DoTutorialAction(100);
-            DoActionManager.Instance.AddAction(openBag);
-            DoActionManager.Instance.RunningAction();
-        }));
+        this.StartCoroutine(this.CheckLoadGameSceneDone());
     }
     void JoinGame(System.Action _onDoneCb = null)
     {

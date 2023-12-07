@@ -15,6 +15,7 @@ public class TutorialManager : MonoSingleton<TutorialManager>
     
     [SerializeField]
     private TutorialFaceImage panelFace;
+    [SerializeField] private TutorialTapAnywhere panelTapAnywhere;
 
     private Dictionary<int, List<TutorialHighLight>> dicHightLights = new Dictionary<int, List<TutorialHighLight>>();
     public static System.Action<int> tutorialCallback;
@@ -92,10 +93,25 @@ public class TutorialManager : MonoSingleton<TutorialManager>
         }
 
         this.isShow = true;
+        ShowTutorialStep(this.config);
+    }
 
+    private void ShowTutorialStep(TutorialConfig config)
+    {
+        this.ShowFace(false);
+        this.ShowHighLight(this.TutorialCurrentStep, false);
+        this.ShowTapAnyWhere(config.step, false);
 
-        this.ShowFace(true);
-        this.ShowHighLight(this.TutorialCurrentStep, true);
+        Debug.Log($"TUT: {config.message}");
+        if (config._isShowHighLight)
+        {
+            this.ShowFace(true);
+            this.ShowHighLight(this.TutorialCurrentStep, true);
+        }
+        else
+        {
+            this.ShowTapAnyWhere(config.step, true);
+        }
     }
 
     public void DoTutorial(int step)
@@ -110,10 +126,8 @@ public class TutorialManager : MonoSingleton<TutorialManager>
             TutorialConfig nextStep = TutorialConfigs.Instance.GetTutorialByStep(this.config.nextStep);
             if (nextStep != null)
             {
-                this.ShowHighLight(this.TutorialCurrentStep, false);
-                Debug.Log($"Tutorial: {nextStep.message}");
                 this.TutorialCurrentStep = nextStep.step;
-                this.ShowHighLight(this.TutorialCurrentStep, true);
+                ShowTutorialStep(nextStep);
             }
         }
         else
@@ -121,6 +135,7 @@ public class TutorialManager : MonoSingleton<TutorialManager>
             this.nextStep = -1;
             this.ShowFace(false);
             this.ShowHighLight(this.TutorialCurrentStep, false);
+            this.ShowTapAnyWhere(this.TutorialCurrentStep, false);
             this.isShow = false;
         }
     }
@@ -148,7 +163,13 @@ public class TutorialManager : MonoSingleton<TutorialManager>
         this.panelFace.gameObject.SetActive(isOn);
     }
     
-    #if UNITY_EDITOR
+    public void ShowTapAnyWhere(int _step, bool _isShow)
+    {
+        panelTapAnywhere.gameObject.SetActive(_isShow);
+        if(_isShow)
+            panelTapAnywhere.step = _step;
+    }
+#if UNITY_EDITOR
 
-    #endif
+#endif
 }

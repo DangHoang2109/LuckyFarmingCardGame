@@ -104,9 +104,32 @@ public class InGameManager : MonoSingleton<InGameManager>
 
         GameController?.InitGame(this.MainUserPlayer.DeckConfig);
 
+        //Will be remove when have joingame datas and joingamemanager
+        if (TestSceneLoader._isTutorial)
+            InitTutorialDeck();
+
         //Start the game
         StartGame();
+
+        //Will be remove when have joingame datas and joingamemanager
+        if (TestSceneLoader._isTutorial)
+        {
+            DoTutorialAction openBag = new DoTutorialAction(100);
+            DoActionManager.Instance.AddAction(openBag);
+            DoActionManager.Instance.RunningAction();
+        }
     }
+    public void InitTutorialDeck()
+    {
+        List<int> cardPlaceOnTop = new List<int>()
+        {
+            2, //bucklet
+            0, //Sword
+            4, //magic eye
+        };
+        GameController?.PlaceCardOnTopDeck(cardPlaceOnTop);
+    }
+
     protected void InitGame()
     {
         ///Get the map Config
@@ -114,7 +137,6 @@ public class InGameManager : MonoSingleton<InGameManager>
         this._mapConfig = InGameEnemyConfigs.Instance._mapConfigs.GetMapConfig(mapID);
 
         int amountPlayerJoin = 1;//Random.Range(2, this._players.Count); //pulling this info fromn JoinGameData outside
-        Debug.Log($"INGAME MANGE: Init {amountPlayerJoin} players");
         //Init player seat
         InitPlayers(amountPlayerJoin);
         //inti enemy wave 0;

@@ -103,10 +103,6 @@ public class CardGameController : MonoBehaviour
 
     #endregion
 
-    public void InitGame()
-    {
-        InitGame(InGameDeckConfigs.Instance.GetStandardDeck());
-    }
     public void InitGame(InGameDeckConfig deckConfig)
     {
         _cardsOnPallet = new List<InGame_CardDataModel>();
@@ -153,6 +149,16 @@ public class CardGameController : MonoBehaviour
     {
         Debug.Log("Deck Button: Set deck " + isAllow);
         this._uiDeckDraw?.SetInterractable(isAllow);
+    }
+
+    /// <summary>
+    /// Can be use with re-order or tutorial to setup card
+    /// </summary>
+    /// <param name="cardIds"></param>
+    public virtual void PlaceCardOnTopDeck(List<int> cardIds)
+    {
+        CheckDeck();
+        _currentDeck.InsertRange(0, cardIds);
     }
     #endregion Action with Deck
 
