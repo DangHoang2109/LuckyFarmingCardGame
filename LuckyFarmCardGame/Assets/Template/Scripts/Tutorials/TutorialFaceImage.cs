@@ -14,7 +14,15 @@ public class TutorialFaceImage : MaskableGraphic, ICanvasRaycastFilter
     private RectTransform targetPanel;
     public bool IsRaycastLocationValid(Vector2 sp, Camera eventCamera)
     {
-        return !RectTransformUtility.RectangleContainsScreenPoint(_targetArea, sp, eventCamera);
+        if(_isClickable)
+            return RectTransformUtility.RectangleContainsScreenPoint(_targetArea, sp, eventCamera);
+        else
+            return !RectTransformUtility.RectangleContainsScreenPoint(_targetArea, sp, eventCamera);
+
+        //if (!_btnClickOn.gameObject.activeInHierarchy)
+        //    return !RectTransformUtility.RectangleContainsScreenPoint(_targetArea, sp, eventCamera);
+        //else
+        //    return RectTransformUtility.RectangleContainsScreenPoint(_btnClickOn.transform as RectTransform, sp, eventCamera);
     }
     
     public void Close()
@@ -46,8 +54,17 @@ public class TutorialFaceImage : MaskableGraphic, ICanvasRaycastFilter
             Close();
             return;
         }
-        
+       
+        UpdateRectToTarget(_targetArea, localPoint);
+        //if(_btnClickOn.gameObject.activeInHierarchy)
+        //    UpdateRectToTarget(this._btnClickOn.transform as RectTransform, localPoint);
 
+        _targetArea.ForceUpdateRectTransforms();
+        _target = _targetArea;
+        _target.ForceUpdateRectTransforms();
+    }
+    void UpdateRectToTarget(RectTransform _targetArea, Vector2 localPoint)
+    {
         _targetArea.anchorMax = this.targetPanel.anchorMax;
         _targetArea.anchorMin = this.targetPanel.anchorMin;
         _targetArea.anchoredPosition = this.targetPanel.anchoredPosition;
@@ -134,6 +151,7 @@ public class TutorialFaceImage : MaskableGraphic, ICanvasRaycastFilter
     }
 
     private int _step;
+    private bool _isClickable;
     [SerializeField] private Button _btnClickOn;
     /// <summary>
     /// Use this if you need to highlight anywhere need tap, but it not be a button
@@ -142,11 +160,13 @@ public class TutorialFaceImage : MaskableGraphic, ICanvasRaycastFilter
     /// <param name="isClickable"></param>
     public void SetClickable(int step, bool isClickable)
     {
-        this._btnClickOn.gameObject.SetActive(isClickable);
+        _isClickable = isClickable;
+        //this._btnClickOn.gameObject.SetActive(isClickable);
         this._step = step;
     }
     public void Click()
     {
-        TutorialManager.Instance.DoTutorial(_step);
+        if(_isClickable)
+            TutorialManager.Instance.DoTutorial(_step);
     }
 }

@@ -36,6 +36,12 @@ MonoBehaviour:
   - step: 103
     title: View Card
     message: You can click on to the card icon on pallet to view the effect.
+    nextStep: 112
+    _isShowHighLight: 1
+    _isNeedTapOnFace: 0
+  - step: 112
+    title: Close Card Effect
+    message: Tap here to close it
     nextStep: 104
     _isShowHighLight: 1
     _isNeedTapOnFace: 0
@@ -58,11 +64,17 @@ MonoBehaviour:
       automatically from it, so try to maximize the pallet.
     nextStep: 107
     _isShowHighLight: 1
-    _isNeedTapOnFace: 0
+    _isNeedTapOnFace: 1
   - step: 107
     title: Monster Attack
     message: The Monster will try to attack you or activated their skill on their
       turn, you can also tap on to view their skill
+    nextStep: 111
+    _isShowHighLight: 1
+    _isNeedTapOnFace: 0
+  - step: 111
+    title: Close Enemy Eff
+    message: Tap here to close it
     nextStep: 108
     _isShowHighLight: 1
     _isNeedTapOnFace: 0
@@ -79,7 +91,7 @@ MonoBehaviour:
       next card
     nextStep: 110
     _isShowHighLight: 1
-    _isNeedTapOnFace: 0
+    _isNeedTapOnFace: 1
   - step: 110
     title: Summary
     message: I believe you can defeat all the monster on your own, You can view the

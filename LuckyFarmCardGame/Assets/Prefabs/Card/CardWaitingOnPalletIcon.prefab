@@ -195,6 +195,7 @@ GameObject:
   - component: {fileID: 4809454369938915202}
   - component: {fileID: 269827396486172622}
   - component: {fileID: 6686814898379256419}
+  - component: {fileID: 584663181901337468}
   m_Layer: 5
   m_Name: CardWaitingOnPalletIcon
   m_TagString: Untagged
@@ -217,7 +218,7 @@ RectTransform:
   - {fileID: 4874979579419377741}
   - {fileID: 4759342712625741837}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -395,3 +396,28 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 584663181901337468}
+        m_TargetAssemblyTypeName: TutorialHighLight, Assembly-CSharp
+        m_MethodName: ClickAction
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &584663181901337468
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7112816002542122871}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 390daaca07eeed54888c1d9beb96e3d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  step: 103

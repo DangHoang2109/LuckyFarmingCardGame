@@ -157,6 +157,19 @@ public class TutorialManager : MonoSingleton<TutorialManager>
                 h.ShowTutorial(_isShow);
             }
         }
+        else
+        {
+            //find that object again
+            List< TutorialHighLight> tutHighlight = new List<TutorialHighLight>( FindObjectsOfType<TutorialHighLight>());
+            if(tutHighlight != null && tutHighlight.Count > 0)
+            {
+                List<TutorialHighLight> highLightsByCode = tutHighlight.FindAll(x => x.step == _step);
+                if(highLightsByCode != null && highLightsByCode.Count > 0)
+                {
+                    this.dicHightLights.Add(_step, highLightsByCode);
+                }
+            }
+        }
     }
     
     private void ShowFace(bool isOn)
