@@ -60,7 +60,11 @@ public class TutorialConfig
     /// False: Ko đen nền, tap anywhere sẽ run next step
     /// </summary>
     public bool _isShowHighLight;
-    #if UNITY_EDITOR
+    /// <summary>
+    /// Highlight đang chỉ vào các UI không phải button nên cần bật buttn internal của face để bắt event
+    /// </summary>
+    public bool _isNeedTapOnFace;
+#if UNITY_EDITOR
     private IEnumerable ListNextStepViews()
     {
         var temp = Resources.Load<TutorialConfigs>("Configs/TutorialConfigs").tutorials

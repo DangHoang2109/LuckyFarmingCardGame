@@ -132,4 +132,21 @@ public class TutorialFaceImage : MaskableGraphic, ICanvasRaycastFilter
             SetAllDirty();
         }
     }
+
+    private int _step;
+    [SerializeField] private Button _btnClickOn;
+    /// <summary>
+    /// Use this if you need to highlight anywhere need tap, but it not be a button
+    /// </summary>
+    /// <param name="step"></param>
+    /// <param name="isClickable"></param>
+    public void SetClickable(int step, bool isClickable)
+    {
+        this._btnClickOn.gameObject.SetActive(isClickable);
+        this._step = step;
+    }
+    public void Click()
+    {
+        TutorialManager.Instance.DoTutorial(_step);
+    }
 }

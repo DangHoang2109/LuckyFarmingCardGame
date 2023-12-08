@@ -106,6 +106,7 @@ public class TutorialManager : MonoSingleton<TutorialManager>
         if (config._isShowHighLight)
         {
             this.ShowFace(true);
+            this.panelFace.SetClickable(TutorialCurrentStep, config._isNeedTapOnFace);
             this.ShowHighLight(this.TutorialCurrentStep, true);
         }
         else
