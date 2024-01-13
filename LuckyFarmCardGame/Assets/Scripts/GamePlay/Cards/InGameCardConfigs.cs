@@ -44,9 +44,10 @@ public class InGameCardConfigs : ScriptableObject
     #endregion Getter
 
 #if UNITY_EDITOR
-    #region VALIDATE
+    #region VALIDATEE
     private void OnValidate()
     {
+        return;
         foreach (var item in _levelsConfigs._configs)
         {
             for (int i = 0; i < item.levels.Count; i++)
@@ -70,6 +71,7 @@ public class InGameCardConfig
     [TabGroup("General")] public string _cardName;
     [TabGroup("General")] [TextArea] public string _cardDescription; //show as "1x player damage"
     [TabGroup("General")] [TextArea] public string _cardSkillDescription; //translate the 1x player damage to damage
+
     [Space(5f)]
     [TabGroup("General")] public bool _isUsing;
 

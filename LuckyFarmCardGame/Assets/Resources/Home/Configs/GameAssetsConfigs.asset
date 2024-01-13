@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd3da3b1e6092284a84984463f2c6728, type: 3}
+  m_Name: GameAssetsConfigs
+  m_EditorClassIdentifier: 
+  animBtController: {fileID: 0}
+  boosters:
+    boosters: []
+  valueIconAsset:
+    coinIcons: []
+    cashIcons: []
+  sprPointBattePass: {fileID: 0}
+  _waveConfigs:
+    configs:
+    - type: 0
+      sprIcon: {fileID: 21300000, guid: 191aec1f5bfc13546b1aef4b0bfb013f, type: 3}
+    - type: 2
+      sprIcon: {fileID: 21300000, guid: 7d7c1f2952453ef49b7fcf95e091a98e, type: 3}
+    - type: 1
+      sprIcon: {fileID: 21300000, guid: 5f2fdeccbe1f2d04095303b690477266, type: 3}

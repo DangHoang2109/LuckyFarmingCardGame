@@ -147,7 +147,6 @@ public class CardGameController : MonoBehaviour
     }
     public void EnableDrawingCardFromDeck(bool isAllow)
     {
-        Debug.Log("Deck Button: Set deck " + isAllow);
         this._uiDeckDraw?.SetInterractable(isAllow);
     }
 
@@ -251,7 +250,7 @@ public class CardGameController : MonoBehaviour
 
         void OnRevealClosed()
         {
-            InGameManager.Instance.Notificator?.DisableText();
+            //InGameManager.Instance.Notificator?.DisableText();
             TellGameManagerICanContinueTurn();
         }
     }
@@ -492,7 +491,7 @@ public class CardGameController : MonoBehaviour
     }
     public void PullCardFromPalletToUser(System.Action<List<InGame_CardDataModel>> onAnimationComplete)
     {
-        Debug.Log("CONTROLER: PULL PALLET");
+        //Debug.Log("CONTROLER: PULL PALLET");
 
         List<InGame_CardDataModel> cardFromPallet = new List<InGame_CardDataModel>(this._cardsOnPallet);
 

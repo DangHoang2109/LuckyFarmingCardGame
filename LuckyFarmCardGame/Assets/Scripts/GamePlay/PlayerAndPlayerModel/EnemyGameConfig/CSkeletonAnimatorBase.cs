@@ -42,15 +42,5 @@ public class CSkeletonAnimatorBase : MonoBehaviour
         }
     }
 }
-public static class AnimationState
-{
-    public const string APPEAR_ANIM = "Appear";
-    public const string IDLE_ANIM = "Idle";
-    public const string ATTACK_ANIM = "AttackA";
-    public const string HURT_ANIM = "HurtA";
-    public const string HURT_CRIT_ANIM = "HurtCritical";
-    public const string DIE_ANIM = "Die";
 
-    public const string DISAPPEAR = "Disappear";
-}
 

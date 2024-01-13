@@ -17,6 +17,9 @@ public class GameAssetsConfigs : ScriptableObject
 
     [Header("Spire point battle pass")]
     public Sprite sprPointBattePass;
+
+    public WaveIconConfigs _waveConfigs;
+
     public static GameAssetsConfigs Instance
     {
         get
@@ -111,5 +114,36 @@ public class SpriteValueIconConfig
 {
     public long value;
     public Sprite spr;
+}
+#endregion
+
+#region Wave Icon sprite
+[System.Serializable]
+public class WaveIconConfigs
+{
+    public static WaveIconConfigs Instance
+    {
+        get
+        {
+            return GameAssetsConfigs.Instance._waveConfigs;
+        }
+    }
+
+    [Header("Coins")]
+    public List<WaveIconConfig> configs;
+
+   
+
+    public Sprite GetSprite(WaveType type)
+    {
+        return configs.Find(x=>x.type == type)?.sprIcon;
+    }
+}
+
+[System.Serializable]
+public class WaveIconConfig
+{
+    public WaveType type;
+    public Sprite sprIcon;
 }
 #endregion

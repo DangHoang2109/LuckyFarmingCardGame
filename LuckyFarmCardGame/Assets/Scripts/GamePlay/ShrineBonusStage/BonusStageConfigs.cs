@@ -100,9 +100,9 @@ public enum BonusStageEffectID
 
     [Type(typeof(BonusStageEffectAct_AddNewCard))]
     AddNewCard = 0,
-    [Type(typeof(BonusStageEffectAct_DuplicateExistCard))]
-    AddPointToCard = 1,
     [Type(typeof(BonusStageEffectAct_AddPointExistCard))]
+    AddPointToCard = 1,
+    [Type(typeof(BonusStageEffectAct_DuplicateExistCard))]
     DuplicateCard = 2,
 
     [Type(typeof(BonusStageEffectAct_HealFullHP))]

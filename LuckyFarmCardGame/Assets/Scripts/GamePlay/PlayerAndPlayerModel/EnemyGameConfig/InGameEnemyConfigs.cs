@@ -77,6 +77,7 @@ public class InGameMapConfig
 {
     public int _id;
     public string _name;
+    public InGameMapStatProgression _waveProgression;
     public List<InGameEnemyWaveConfig> _waveConfigs;
 
     public InGameEnemyWaveConfig GetWaveConfig(int wave)
@@ -94,14 +95,22 @@ public class InGameMapConfig
     }
 }
 [System.Serializable]
+public class InGameMapStatProgression
+{
+    public float _hpProgression;
+    public float _dmgProgression;
+    public float _shieldProgression;
+}
+[System.Serializable]
 public class InGameEnemyWaveConfig
 {
+    public WaveType _type;
     public int _wave; //số round
     public List<int> _enemyIDsInRound; //số enemy trong ROUND NÀY
 
     public int AmountEnemy => _enemyIDsInRound.Count;
-    public bool _isBonusStage = false; 
-    public bool IsBonusStage => _isBonusStage;
+    public bool IsBonusStage => _type == WaveType.BONUS;
+    public bool IsBossStage => _type == WaveType.BOSS;
     public InGameEnemyStatConfig GetEnemyStat(int index)
     {
         if (index >= 0 && index < _enemyIDsInRound.Count)
@@ -113,6 +122,13 @@ public class InGameEnemyWaveConfig
         Debug.LogError("OUT OF CONFIG");
         return null;
     }
+}
+public enum WaveType
+{
+    NONE = -1,
+    NORMAL = 0,
+    BONUS = 1,
+    BOSS = 2,
 }
 #endregion Map and Stage
 
@@ -154,6 +170,11 @@ public class InGameEnemyStatConfig
     public List<InGameEnemySkillConfig> _skills;
 
     public int MaxHP => this.Info?.enemyBaseMaxHP ?? 0 ;
+
+    public InGameEnemyStatConfig()
+    {
+
+    }
 }
 
 [System.Serializable]

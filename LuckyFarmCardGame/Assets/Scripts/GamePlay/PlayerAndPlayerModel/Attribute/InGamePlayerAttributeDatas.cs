@@ -42,9 +42,9 @@ public class InGamePlayerAttributeDatas
             };
             _datas.Add(id, item);
         }
-        item.AddAttribute(value);
         item.SetTurn(turnActive, isCountingTurn);
-
+        item.AddAttribute(value);
+        ClearInvalidAtt();
         return item.GetValue();
     }
     public int SetAttribute(AttributeID id, int value, int turnActive = 1, bool isCountingTurn = true)
@@ -58,20 +58,31 @@ public class InGamePlayerAttributeDatas
             };
             _datas.Add(id, item);
         }
-        item.SetAttribute(value);
         item.SetTurn(turnActive, isCountingTurn);
-
+        item.SetAttribute(value);
+        ClearInvalidAtt();
         return item.GetValue();
     }
     public void StartTurn()
     {
         _datas ??= new Dictionary<AttributeID, AttributeDataValue>();
-        List< AttributeID > ids = new List< AttributeID >();
         foreach (var item in _datas.Values)
         {
             item.CountingTurn();
-            if (item.GetTurnLeft() <= 0) 
+        }
+        ClearInvalidAtt();
+    }
+    public void ClearInvalidAtt()
+    {
+        List<AttributeID> ids = new List<AttributeID>();
+
+        foreach (var item in _datas.Values)
+        {
+            if (item.GetTurnLeft() <= 0 || item.GetValue() <= 0)
+            {
+                item._onChangeValue?.Invoke(item._id, 0, 0);
                 ids.Add(item._id);
+            }
         }
         foreach (var item in ids)
         {

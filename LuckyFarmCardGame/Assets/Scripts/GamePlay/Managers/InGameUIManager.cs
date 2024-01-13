@@ -11,6 +11,8 @@ public class InGameUIManager : MonoSingleton<InGameUIManager>
     }
     public void OnClickShowCardQuickthrough()
     {
-        GameManager.Instance.OnShowDialog<Instruction_CardEffectQuickthroughDialog>("Dialogs/Instruction_CardEffectQuickthroughDialog");
+        GameManager.Instance.OnShowDialog<BaseDialog>("Dialogs/RuleSummaryDialog");
+
+        //GameManager.Instance.OnShowDialog<Instruction_CardEffectQuickthroughDialog>("Dialogs/Instruction_CardEffectQuickthroughDialog");
     }
 }

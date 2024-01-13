@@ -31,7 +31,7 @@ public class InGameMainPlayerItem : InGameBasePlayerItem
     public Image _imgTimer;
     public Image _imgAvatar;
 
-    public GameObject _gVFXAttacked;
+    public GameObject _gVFXAttacked, _gVFXShieldDefAttack;
 
     #endregion Prop on editor
 
@@ -122,22 +122,44 @@ public class InGameMainPlayerItem : InGameBasePlayerItem
                 ListingUpgradedCardsDialog d = ListingUpgradedCardsDialog.ShowDialog();
                 d.ParseData(levelUp, null);
             }
+            //heal 1HP each card, use this for not showing the animation flower
+            this.CurrentHP += cardReceive.Count;
         }
         _tmpCoinValue.SetText($"{(PlayerModel.CurrentCoinPoint).ToString("D2")}");
     }
     public override int Attacked(int dmg, Action<InGameBasePlayerItem> deaded = null)
     {
+        bool isShieldUsed = this.CurrentShield > 0;
         dmg = base.Attacked(dmg, deaded);
-        if(dmg > 0)
-            StartCoroutine(ieVFXAttacked());
+        //if(dmg > 0)
+        StartCoroutine(ieVFXAttacked(isShieldUsed,deaded));
+        
         return dmg;
     }
-    IEnumerator ieVFXAttacked()
+    IEnumerator ieVFXAttacked(bool shieldDef,Action<InGameBasePlayerItem> deaded = null)
     {
-        _gVFXAttacked.SetActive(false);
+        if (shieldDef)
+        {
+            _gVFXShieldDefAttack.SetActive(false);
 
-        yield return new WaitForEndOfFrame();
-        _gVFXAttacked.SetActive(true);
+            yield return new WaitForEndOfFrame();
+            _gVFXShieldDefAttack.SetActive(true);
+        }
+        else
+        {
+            _gVFXAttacked.SetActive(false);
+
+            yield return new WaitForEndOfFrame();
+            _gVFXAttacked.SetActive(true);
+        }
+
+
+        if (this.isDead())
+        {
+            yield return new WaitForSeconds(0.2f);
+            deaded?.Invoke(this);
+        }
+
     }
     public override void AttackSingleUnit(int dmg = -1)
     {
@@ -335,6 +357,8 @@ public class InGameMainPlayerItem : InGameBasePlayerItem
     }
     public void OnClickShowQuickTutorial()
     {
-        GameManager.Instance.OnShowDialog<Instruction_CardEffectQuickthroughDialog>("Dialogs/Instruction_CardEffectQuickthroughDialog");
+        GameManager.Instance.OnShowDialog<BaseDialog>("Dialogs/RuleSummaryDialog");
+
+        //GameManager.Instance.OnShowDialog<Instruction_CardEffectQuickthroughDialog>("Dialogs/Instruction_CardEffectQuickthroughDialog");
     }
 }

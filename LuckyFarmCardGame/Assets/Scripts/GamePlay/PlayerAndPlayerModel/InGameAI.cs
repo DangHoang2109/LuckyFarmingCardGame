@@ -174,7 +174,16 @@ public class InGameAI
         protected InGameBotPlayerItem _bot;
         protected InGameEnemySkillConfig _skillConfig;
         public float m_ThinkTime = 0;
-
+        protected InGameMapStatProgression _progssionConfig;
+        public InGameMapStatProgression ProgressionConfig
+        {
+            get
+            {
+                if (_progssionConfig == null)
+                    _progssionConfig = InGameManager.Instance.MapConfig._waveProgression;
+                return _progssionConfig;
+            }
+        }
         public ExecutionAction()
         { }
         public ExecutionAction(InGameBotPlayerItem _player)
@@ -211,6 +220,10 @@ public class InGameAI
         public virtual bool IsCanDo() { return !(this._bot?.IsStunning ?? false); }
 
         public virtual string GetDescribe()
+        {
+            return "";
+        }
+        public virtual string GetDescribeNoti()
         {
             return "";
         }
@@ -287,8 +300,8 @@ public class InGameAI
         public ExecuteAttackMainPlayer(InGameBotPlayerItem p) : base(p) { }
         public override IEnumerator Do()
         {
-            Debug.Log("Turn action: Attack");
-            this._bot.AttackSingleUnit(this._skillConfig.StatAsInt);
+            InGameManager.Instance.ShowNotificationCardAction(GetDescribeNoti(), this._bot.transform.position);
+            this._bot.AttackSingleUnit(Stat());
             yield return new WaitUntil(() => this._bot.IsInIdleAnimState());
         }
         public override bool Preparing()
@@ -297,8 +310,13 @@ public class InGameAI
         }
         public override string GetDescribe()
         {
-            return $"Attack {this._skillConfig.StatAsInt} damage to player";
+            return $"Attack {Stat()} damage to player";
         }
+        public override string GetDescribeNoti()
+        {
+            return $"Attack {Stat()} damage";
+        }
+        public int Stat() => (int)(this._skillConfig.StatAsInt * Mathf.Pow(ProgressionConfig._dmgProgression, (InGameManager.Instance.CurrentWaveIndex + 1)));
     }
     /// <summary>
     /// Spawn creep
@@ -318,6 +336,8 @@ public class InGameAI
         }
         public override IEnumerator Do()
         {
+            InGameManager.Instance.ShowNotificationCardAction(GetDescribeNoti(), this._bot.transform.position);
+
             yield return new WaitForSeconds(0.7f);
             //trừ count down
             if (countDown <= 0)
@@ -342,6 +362,11 @@ public class InGameAI
 
             return $"Spawn {this._skillConfig.StatAsInt} {foesName} { GetInterval()}";
         }
+        public override string GetDescribeNoti()
+        {
+            string foesName = InGameEnemyConfigs.Instance.GetEnemyInfoConfig(this._skillConfig._statID)?.enemyName;
+            return $"Spawn {this._skillConfig.StatAsInt} {foesName}";
+        }
     }
     /// <summary>
     /// Tạo khiên thủ
@@ -355,10 +380,10 @@ public class InGameAI
 
         public override IEnumerator Do()
         {
-            yield return new WaitForSeconds(0.2f);
+            InGameManager.Instance.ShowNotificationCardAction(GetDescribeNoti(), this._bot.transform.position);
 
-            Debug.Log("act skill: create shield");
-            this._bot.DefenseCreateShield(this._skillConfig.StatAsInt);
+            yield return new WaitForSeconds(0.2f);
+            this._bot.DefenseCreateShield(this.Stat());
         }
         public override bool Preparing()
         {
@@ -366,8 +391,14 @@ public class InGameAI
         }
         public override string GetDescribe()
         {
-            return $"Create {this._skillConfig.StatAsInt} shield";
+            return $"Create {Stat()} shield";
         }
+        public override string GetDescribeNoti()
+        {
+            return $"Create {Stat()} shield";
+        }
+        public int Stat() => (int)(this._skillConfig.StatAsInt * Mathf.Pow(ProgressionConfig._shieldProgression, (InGameManager.Instance.CurrentWaveIndex + 1)));
+
     }
     /// <summary>
     /// Hút máu
@@ -381,6 +412,8 @@ public class InGameAI
 
         public override IEnumerator Do()
         {
+            InGameManager.Instance.ShowNotificationCardAction(GetDescribeNoti(), this._bot.transform.position);
+
             yield return new WaitForSeconds(0.2f);
 
             this._bot.AttackSingleUnit(this._skillConfig.StatAsInt);
@@ -393,6 +426,10 @@ public class InGameAI
         public override string GetDescribe()
         {
             return $"Drain {this._skillConfig.StatAsInt} HP from player and increase same amount";
+        }
+        public override string GetDescribeNoti()
+        {
+            return $"Drain {this._skillConfig.StatAsInt} HP";
         }
     }
     /// <summary>
@@ -411,6 +448,8 @@ public class InGameAI
 
         public override IEnumerator Do()
         {
+            InGameManager.Instance.ShowNotificationCardAction(GetDescribeNoti(), this._bot.transform.position);
+
             yield return new WaitForSeconds(0.2f);
 
             //trừ count down
@@ -431,6 +470,10 @@ public class InGameAI
         public override string GetDescribe()
         {
             return $"X{this._skillConfig._statValue} it damage {GetInterval()}";
+        }
+        public override string GetDescribeNoti()
+        {
+            return $"X{this._skillConfig._statValue} damage";
         }
     }
     #endregion Execution Action

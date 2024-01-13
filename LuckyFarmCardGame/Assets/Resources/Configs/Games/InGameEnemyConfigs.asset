@@ -125,7 +125,7 @@ MonoBehaviour:
     - enemyID: 5
       _skills:
       - _skillID: 0
-        _statValue: 14
+        _statValue: 20
         _statIntervall: 0
         _statID: 0
       - _skillID: 4
@@ -135,7 +135,7 @@ MonoBehaviour:
     - enemyID: 6
       _skills:
       - _skillID: 0
-        _statValue: 28
+        _statValue: 25
         _statIntervall: 0
         _statID: 0
       - _skillID: 2
@@ -150,40 +150,44 @@ MonoBehaviour:
     _configs:
     - _id: 0
       _name: Peaceful Forest
+      _waveProgression:
+        _hpProgression: 1.1
+        _dmgProgression: 1.05
+        _shieldProgression: 1
       _waveConfigs:
-      - _wave: 0
+      - _type: 0
+        _wave: 0
         _enemyIDsInRound: 00000000
-        _isBonusStage: 0
-      - _wave: 1
+      - _type: 0
+        _wave: 1
         _enemyIDsInRound: 0100000000000000
-        _isBonusStage: 0
-      - _wave: 2
+      - _type: 1
+        _wave: 2
         _enemyIDsInRound: 000000000a000000
-        _isBonusStage: 1
-      - _wave: 3
+      - _type: 0
+        _wave: 3
         _enemyIDsInRound: 010000000200000000000000
-        _isBonusStage: 0
-      - _wave: 4
+      - _type: 0
+        _wave: 4
         _enemyIDsInRound: 0100000002000000
-        _isBonusStage: 0
-      - _wave: 5
+      - _type: 1
+        _wave: 5
         _enemyIDsInRound: feffffffffffffff
-        _isBonusStage: 1
-      - _wave: 6
+      - _type: 0
+        _wave: 6
         _enemyIDsInRound: 0300000000000000
-        _isBonusStage: 0
-      - _wave: 7
+      - _type: 0
+        _wave: 7
         _enemyIDsInRound: 05000000
-        _isBonusStage: 0
-      - _wave: 8
+      - _type: 1
+        _wave: 8
         _enemyIDsInRound: feffffffffffffff
-        _isBonusStage: 1
-      - _wave: 9
+      - _type: 0
+        _wave: 9
         _enemyIDsInRound: 010000000200000004000000
-        _isBonusStage: 0
-      - _wave: 10
+      - _type: 0
+        _wave: 10
         _enemyIDsInRound: 000000000100000004000000
-        _isBonusStage: 0
-      - _wave: 11
+      - _type: 2
+        _wave: 11
         _enemyIDsInRound: 06000000
-        _isBonusStage: 0

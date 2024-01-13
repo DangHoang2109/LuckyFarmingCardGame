@@ -28,13 +28,15 @@ public class InGameManager : MonoSingleton<InGameManager>
 
     [Space(5f)]
     [SerializeField] protected InGameTurnNotification _notificator;
+    [Space(5f)]
+    [SerializeField] protected InGameWaveTracker _waveTracker;
     public InGameTurnNotification Notificator => _notificator;
     #endregion Property in Inspector
 
     #region Data
     protected int _turnIndex;
     protected int _enemyWaveIndex = 0; //round=wave enemy hiện tại, 1 wave có thể kéo dài trong nhiều round nếu user không diệt được hết enemy
-
+    public int CurrentWaveIndex => _enemyWaveIndex;
     protected GameState _gameState;
     public bool IsPlaying => this._gameState == GameState.PLAYING;
 
@@ -45,7 +47,13 @@ public class InGameManager : MonoSingleton<InGameManager>
     /// Contain map name, theme, wave ,enemy stat...
     /// </summary>
     protected InGameMapConfig _mapConfig;
+    public InGameMapConfig MapConfig => _mapConfig;
     public InGameEnemyWaveConfig CurrentWaveConfig { get; set; }
+
+    /// <summary>
+    /// có từng revise chưa
+    /// </summary>
+    protected bool _isContinued = false;
     #endregion Data
 
     #region Getter
@@ -139,8 +147,11 @@ public class InGameManager : MonoSingleton<InGameManager>
         int amountPlayerJoin = 1;//Random.Range(2, this._players.Count); //pulling this info fromn JoinGameData outside
         //Init player seat
         InitPlayers(amountPlayerJoin);
+        //parse wave tracker
+        _waveTracker.ParseData(_mapConfig);
+
         //inti enemy wave 0;
-        NewStage();
+        NewStage(out _);
     }
 
     protected void InitPlayers(int amountPlayerJoin)
@@ -172,8 +183,9 @@ public class InGameManager : MonoSingleton<InGameManager>
         }
     }
 
-    protected void NewStage()
+    protected void NewStage(out bool isBonusStage)
     {
+        isBonusStage = false;
         //get wave config
         CurrentWaveConfig = _mapConfig.GetWaveConfig(this._enemyWaveIndex);
         if(CurrentWaveConfig != null)
@@ -187,12 +199,22 @@ public class InGameManager : MonoSingleton<InGameManager>
                 }
 
                 this.GameController?.GoShrineBonus();
+                isBonusStage = true;
             }
             else
             {
+                isBonusStage = false;
                 InitCreep(CurrentWaveConfig);
             }
         }
+        else
+        {
+            //có thể hết wave rồi, user đã win -> check lại phát
+            if (_enemyWaveIndex >= MapConfig._waveConfigs.Count)
+                OnEndGame(isWin: true);
+        }
+
+        _waveTracker.NewWave(_enemyWaveIndex);
     }
     public void OnCompleteShowShrine()
     {
@@ -279,6 +301,7 @@ public class InGameManager : MonoSingleton<InGameManager>
     public void StartGame()
     {
         this._gameState = GameState.PLAYING;
+        GameManager.Instance.OnShowDialog<BaseDialog>("Dialogs/RuleSummaryDialog");
 
         OnBeginRound();
     }
@@ -286,6 +309,7 @@ public class InGameManager : MonoSingleton<InGameManager>
     #region Round Action
     public void OnBeginRound()
     {
+        bool isBonusStage = false;
         if (!IsHaveEnemy)
         {
             //sinh thêm creep vì datamodel = 1 -> chỉ còn main player
@@ -293,14 +317,16 @@ public class InGameManager : MonoSingleton<InGameManager>
             this._playersModels.RemoveAll(x => x.IsDead());
 
             _enemyWaveIndex++;
-            NewStage();
+            NewStage(out isBonusStage);
         }
 
-        //bgein turn, luôn là từ player
-        //Roll a turn index 
-        this._turnIndex = 0;//Random.Range(0, amountPlayerJoin);
-        OnBeginTurn();
-
+        if (!isBonusStage)
+        {
+            //bgein turn, luôn là từ player
+            //Roll a turn index 
+            this._turnIndex = 0;//Random.Range(0, amountPlayerJoin);
+            OnBeginTurn();
+        }
     }
     public void OnEndRound()
     {
@@ -312,7 +338,9 @@ public class InGameManager : MonoSingleton<InGameManager>
         this.GameController?.QuitShrineBonus();
 
         _enemyWaveIndex++;
-        NewStage();
+        NewStage(out _);
+        this._turnIndex = 0;//Random.Range(0, amountPlayerJoin);
+        OnBeginTurn();
     }
     #endregion Round Action
 
@@ -328,6 +356,14 @@ public class InGameManager : MonoSingleton<InGameManager>
     public void ShowNotificationCardAction(string text)
     {
         this.Notificator?.ShowText(text, this.CurrentTurnPlayer.IsMainPlayer);
+    }
+    public void ShowNotificationCardAction(string text, Vector3 casterPosition)
+    {
+        this.Notificator?.ShowText(text, this.CurrentTurnPlayer.IsMainPlayer, casterPosition);
+    }
+    public void ShowNotificationCardAction(List<string> texts)
+    {
+        this.Notificator?.ShowText(texts, this.CurrentTurnPlayer.IsMainPlayer);
     }
 
     public void OnDrawCard()
@@ -488,19 +524,43 @@ public class InGameManager : MonoSingleton<InGameManager>
         if (!IsPlaying)
             return;
         //disable the obj
-        if (TryGetSeatItem(id, out InGameBasePlayerItem dead))
-        {
-            //dead.Dead(OnCallbackPlayerDead);
-        }
+        //if (TryGetSeatItem(id, out InGameBasePlayerItem dead))
+        //{
+        //    //dead.Dead(OnCallbackPlayerDead);
+        //    if (dead.IsMainPlayer)
+        //    {
+        //        Debug.Log("PLAYER DEAD");
+        //        MainPlayerDied();
+        //    }
+        //}
     }
     public void OnCallbackPlayerDead(InGameBasePlayerItem dead)
     {
+        if (!IsPlaying)
+            return;
+
         this.idsMainPlayersAlive.Remove(dead.SeatID);
         this.idsEnemysAlive.Remove(dead.SeatID);
-        dead.ClearWhenDead();
 
         //remove from the list -> move to remove when no enemy left
         //RemoveCharacter(dead);
+
+        //check none enemy left -> auto end turn
+        if (dead.IsMainPlayer && idsMainPlayersAlive.Count == 0)
+        {
+            Debug.Log("PLAYER DEAD");
+            MainPlayerDied();
+            return;
+        }
+        else
+            dead.ClearWhenDead();
+
+        //auto endturn will cause error if card has multiple effect like chain
+        //if (!IsHaveEnemy)
+        //{
+        //    OnUserEndTurn();
+        //}
+
     }
     public bool IsOwningThisCardIDInDeck(int cardID)
     {
@@ -618,13 +678,28 @@ public class InGameManager : MonoSingleton<InGameManager>
     #region End game behavior
     public void MainPlayerDied()
     {
-        OnEndGame();
+        OnEndGame(isWin: false);
     }
-    public void OnEndGame()
+    public void OnEndGame(bool isWin)
     {
-        Debug.Log($"INGAME MANGE: End Game");
         this._gameState = GameState.ENDING;
-
+        EndGameDialog d = EndGameDialog.ShowEndGameDialog();
+        d.ParseData(isWin, _isContinued);
+    }
+    public void OnContinueGame(float percentHPRecover)
+    {
+        _isContinued = true;
+        int hp = (int)(this.MainUserPlayer.MaxHP * percentHPRecover);
+        if(hp > 0)
+        {
+            this.MainUserPlayer.AddHP(hp);
+            this._gameState = GameState.PLAYING;
+            OnBeginTurn();
+        }
+        else
+        {
+            Debug.LogError($"HP ADD ZERO -hp {hp} -percent {percentHPRecover} -mainMax {MainUserPlayer.MaxHP}");
+        }
     }
     #endregion End game behavior
 

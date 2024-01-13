@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -44,7 +44,7 @@ public class PlayerAttributeUI : MonoBehaviour
         _items.Add(item);
         _dicItem.Add(id, item);
 
-        //bind c�i callback v�
+        //bind cái callback vô
         _host.AssignCallbackToAttributeData(id, OnChangeValueOfAttribute);
         return item;
     }
@@ -54,6 +54,12 @@ public class PlayerAttributeUI : MonoBehaviour
         if(!TryGetItem(id, out AttributeUI item))
         {
             item = AddItem(id);
+        }
+        else
+        {
+            //nếu item này đang bị inactive -> đã từng có -> reuse nhưng att data bị clear rồi -> cần bind lại callback
+            if(!item.gameObject.activeInHierarchy)
+                _host.AssignCallbackToAttributeData(id, OnChangeValueOfAttribute);
         }
         item.UpdateValue(value, turnActive, isCountingTurn, isAnim: isAnim, durationValue: durationValue, isPercent: isPercent);
     }

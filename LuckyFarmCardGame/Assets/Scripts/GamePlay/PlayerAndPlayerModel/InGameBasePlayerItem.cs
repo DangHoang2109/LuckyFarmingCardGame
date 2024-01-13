@@ -100,7 +100,7 @@ public class InGameBasePlayerItem : MonoBehaviour
             if (AttributeDatas == null)
                 return 1f;
             if (AttributeDatas.TryGetData(AttributeID.INCREASE_DMG, out var item))
-                return item.GetValue() / 100f;
+                return (item.GetValue() / 100f) + 1f;
             else
                 return 1f;
         }
@@ -282,10 +282,10 @@ public class InGameBasePlayerItem : MonoBehaviour
     public virtual void SubtractHP(int dmg)
     {
         this.CurrentHP -= dmg;
-        if (isDead())
-        {
-            InGameManager.Instance.OnAPlayerDie(this.SeatID);
-        }
+        //if (isDead())
+        //{
+        //    InGameManager.Instance.OnAPlayerDie(this.SeatID);
+        //}
     }
     public virtual void AddHP(int heal)
     {
@@ -397,15 +397,17 @@ public class InGameBasePlayerItem : MonoBehaviour
     }
     public virtual void SetStun(int amountTurnStunnning)
     {
-        AddAttribute(AttributeID.STUN, 1, turnActive: amountTurnStunnning);
+        if(amountTurnStunnning > 0)
+            AddAttribute(AttributeID.STUN, 1, turnActive: amountTurnStunnning);
     }
     public virtual void SetMultiplierDamage(float damageMultiplier, int turnActive)
     {
-        AddAttribute(AttributeID.INCREASE_DMG, (int)(damageMultiplier*100), turnActive, isPercent: true);
+        AddAttribute(AttributeID.INCREASE_DMG, (int)(damageMultiplier), turnActive, isPercent: true);
     }
     public virtual void SetVulnerable(int amountTurn)
     {
-        AddAttribute(AttributeID.INVULNERABLE, value: 1, turnActive: amountTurn);
+        if (amountTurn > 0)
+            AddAttribute(AttributeID.INVULNERABLE, value: 1, turnActive: amountTurn);
     }
     public virtual int CurrentShield
     {
@@ -668,7 +670,11 @@ public class BaseInGameEnemyDataModel : BaseInGamePlayerDataModel
     public BaseInGameEnemyDataModel SetStatConfig(InGameEnemyStatConfig config)
     {
         _statConfig = config;
-        this.SetHP(config.MaxHP);
+
+        int currentWaveHP = (int)(config.MaxHP *
+            Mathf.Pow((InGameManager.Instance.MapConfig?._waveProgression?._hpProgression ?? 1f), (InGameManager.Instance.CurrentWaveIndex)));
+
+        this.SetHP(currentWaveHP);
         return this;
     }
 }

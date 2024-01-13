@@ -26,8 +26,8 @@ MonoBehaviour:
     _sprCardBackground: {fileID: 21300000, guid: a535a86e198a9674f866f07c0283c31c, type: 3}
   - _cardID: 1
     _cardName: Crossbow
-    _cardDescription: "Attack all enemies {0}x player\r damage"
-    _cardSkillDescription: "Attack all enemies {0}\r damage"
+    _cardDescription: Attack all enemy {0} player damage
+    _cardSkillDescription: Attack all enemy {0} damages
     _isUsing: 0
     _gamePointOfCard: 4
     _skillID: 4
@@ -70,10 +70,10 @@ MonoBehaviour:
     _sprCardBackground: {fileID: 21300000, guid: a535a86e198a9674f866f07c0283c31c, type: 3}
   - _cardID: 5
     _cardName: Chain
-    _cardDescription: "Force to draw one more card\r and attack front enemy {0}x\r
+    _cardDescription: "Force to draw one more card and attack front enemy {0}x\r
       player damage."
-    _cardSkillDescription: "Force to draw one more card\r and attack front enemy
-      {0} damage."
+    _cardSkillDescription: Force to draw one more card and attack front enemy {0}
+      damage.
     _isUsing: 0
     _gamePointOfCard: 2
     _skillID: 1
@@ -122,10 +122,10 @@ MonoBehaviour:
     _sprCardBackground: {fileID: 21300000, guid: a535a86e198a9674f866f07c0283c31c, type: 3}
   - _cardID: 10
     _cardName: Berserker Brew
-    _cardDescription: Increase player's damage by {0}% for the next three turns.
-      This Effect can be stacked
-    _cardSkillDescription: Increase player's damage by {0}% for the next three turns.
-      This Effect can be stacked
+    _cardDescription: Player's damage +{0}% for the next three turns. This Effect
+      can be stacked
+    _cardSkillDescription: Player's damage +{0}% for the next three turns. This Effect
+      can be stacked
     _isUsing: 1
     _gamePointOfCard: 4
     _skillID: 10
@@ -404,20 +404,20 @@ MonoBehaviour:
       - _ID: 10
         _level: 1
         _require: 2
-        _stat: 1
+        _stat: 30
       - _ID: 10
         _level: 2
         _require: 3
-        _stat: 2
+        _stat: 40
       - _ID: 10
         _level: 3
         _require: 4
-        _stat: 3
+        _stat: 50
       - _ID: 10
         _level: 4
         _require: 5
-        _stat: 4
+        _stat: 60
       - _ID: 10
         _level: 5
         _require: 6
-        _stat: 5
+        _stat: 70

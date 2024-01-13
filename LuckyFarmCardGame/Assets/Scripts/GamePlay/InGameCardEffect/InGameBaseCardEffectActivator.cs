@@ -15,6 +15,13 @@ public class InGameBaseCardEffectActivator
 
     protected InGame_CardDataModel cardModel;
 
+    protected List<string> notifies;
+    //fetching from localize module 
+    public virtual List<string> NotifyText()
+    {
+        return notifies;
+    }
+
     public virtual void ActiveEffectWhenDrawed()
     {
         //Debug.Log($"CARD {(int)ID}: activate effect {ID} when drawed");
@@ -33,8 +40,7 @@ public class InGameBaseCardEffectActivator
     }
     public virtual void ShowingNotification()
     {
-        Debug.Log("Show noti " + cardModel?.GetSkillDescribe());
-        InGameManager.Instance.ShowNotificationCardAction($"{cardModel?.GetSkillDescribe()}");
+        InGameManager.Instance.ShowNotificationCardAction(NotifyText()); //$"{cardModel?.GetSkillDescribe()}"
     }
     public virtual void SetIDAndHost(int id,InGameBasePlayerItem host, InGame_CardDataModel cardModel)
     {
@@ -83,6 +89,7 @@ public class InGameCardEffectActivator_NoneEffect : InGameBaseCardEffectActivato
 {
     public override InGameBaseCardEffectID ID => InGameBaseCardEffectID.NONE_EFFECT;
 
+
     public override void ActiveEffectWhenDrawed()
     {
         base.ActiveEffectWhenDrawed();
@@ -101,9 +108,6 @@ public class InGameCardEffectActivator_NoneEffect : InGameBaseCardEffectActivato
     {
         base.ActiveEffectWhenPulledToBag();
     }
-    public override void ShowingNotification()
-    {
-    }
 }
 public class InGameCardEffectActivator_DrawCard : InGameBaseCardEffectActivator
 {
@@ -116,6 +120,7 @@ public class InGameCardEffectActivator_DrawCard : InGameBaseCardEffectActivator
     public override void ActiveEffectWhenPlaceToPallet()
     {
         base.ActiveEffectWhenPlaceToPallet();
+        ShowingNotification();
         this._host?.AttackSingleUnit(GetStatAsInt());
         this._host?.ForceDrawCard(1);
     }
@@ -127,8 +132,17 @@ public class InGameCardEffectActivator_DrawCard : InGameBaseCardEffectActivator
     {
         base.ActiveEffectWhenPulledToBag();
     }
-    public override void ShowingNotification()
+    public override List<string> NotifyText()
     {
+        if(notifies == null || notifies.Count == 0)
+        {
+            notifies = new List<string>()
+            {
+                $"Draw 1 cards",
+                $"Attack {GetStat()} damages"
+            };
+        }
+        return base.NotifyText();
     }
     public override float GetStat()
     {
@@ -157,9 +171,16 @@ public class InGameCardEffectActivator_RevealTop : InGameBaseCardEffectActivator
     {
         base.ActiveEffectWhenPulledToBag();
     }
-    public override void ShowingNotification()
+    public override List<string> NotifyText()
     {
-        base.ShowingNotification();
+        if (notifies == null || notifies.Count == 0)
+        {
+            notifies = new List<string>()
+            {
+                $"View {GetStat()} cards"
+            };
+        }
+        return base.NotifyText();
     }
     public override float GetStat()
     {
@@ -188,9 +209,16 @@ public class InGameCardEffectActivator_AttackSingleUnit : InGameBaseCardEffectAc
     {
         base.ActiveEffectWhenPulledToBag();
     }
-    public override void ShowingNotification()
+    public override List<string> NotifyText()
     {
-        base.ShowingNotification();
+        if (notifies == null || notifies.Count == 0)
+        {
+            notifies = new List<string>()
+            {
+                $"Attack {GetStat()} damages"
+            };
+        }
+        return base.NotifyText();
     }
     public override float GetStat()
     {
@@ -219,9 +247,16 @@ public class InGameCardEffectActivator_AttackAllUnit : InGameBaseCardEffectActiv
     {
         base.ActiveEffectWhenPulledToBag();
     }
-    public override void ShowingNotification()
+    public override List<string> NotifyText()
     {
-        base.ShowingNotification();
+        if (notifies == null || notifies.Count == 0)
+        {
+            notifies = new List<string>()
+            {
+                $"Attack all {GetStat()} damages"
+            };
+        }
+        return base.NotifyText();
     }
     public override float GetStat() => ((int)this.CurrentLevelConfig?._stat * _host?.BaseDamagePerTurn) ?? 0;
 }
@@ -247,9 +282,16 @@ public class InGameCardEffectActivator_Defense : InGameBaseCardEffectActivator
     {
         base.ActiveEffectWhenPulledToBag();
     }
-    public override void ShowingNotification()
+    public override List<string> NotifyText()
     {
-        base.ShowingNotification();
+        if (notifies == null || notifies.Count == 0)
+        {
+            notifies = new List<string>()
+            {
+                $"Get {GetStat()} shields"
+            };
+        }
+        return base.NotifyText();
     }
     public override float GetStat() => ((int)(this.CurrentLevelConfig?._stat * _host?.BaseShieldPerAdd));
 }
@@ -275,9 +317,16 @@ public class InGameCardEffectActivator_Heal : InGameBaseCardEffectActivator
     {
         base.ActiveEffectWhenPulledToBag();
     }
-    public override void ShowingNotification()
+    public override List<string> NotifyText()
     {
-        base.ShowingNotification();
+        if (notifies == null || notifies.Count == 0)
+        {
+            notifies = new List<string>()
+            {
+                $"Heal {GetStat()} HP"
+            };
+        }
+        return base.NotifyText();
     }
     public override float GetStat() => ((int)(this.CurrentLevelConfig?._stat * _host?.BaseHPPerHeal));
 }
@@ -303,7 +352,17 @@ public class InGameCardEffectActivator_DrainHP : InGameBaseCardEffectActivator
     {
         base.ActiveEffectWhenPulledToBag();
     }
-
+    public override List<string> NotifyText()
+    {
+        if (notifies == null || notifies.Count == 0)
+        {
+            notifies = new List<string>()
+            {
+                $"Suck {GetStat()} HP"
+            };
+        }
+        return base.NotifyText();
+    }
     public override float GetStat()
     {
         return this.CurrentLevelConfig._stat * _host.BaseHPPerHeal;
@@ -330,8 +389,16 @@ public class InGameCardEffectActivator_ReduceDmgNAttackSingle : InGameBaseCardEf
     {
         base.ActiveEffectWhenPulledToBag();
     }
-    public override void ShowingNotification()
+    public override List<string> NotifyText()
     {
+        if (notifies == null || notifies.Count == 0)
+        {
+            notifies = new List<string>()
+            {
+                $"Attack {GetStat()} damages"
+            };
+        }
+        return base.NotifyText();
     }
     public override float GetStat()
     {
@@ -360,8 +427,17 @@ public class InGameCardEffectActivator_AttackAllNStunFront : InGameBaseCardEffec
     {
         base.ActiveEffectWhenPulledToBag();
     }
-    public override void ShowingNotification()
+    public override List<string> NotifyText()
     {
+        if (notifies == null || notifies.Count == 0)
+        {
+            notifies = new List<string>()
+            {
+                $"Attack {GetStat()} damage",
+                $"Stun {1} turn"
+            };
+        }
+        return base.NotifyText();
     }
     public override float GetStat()
     {
@@ -389,8 +465,16 @@ public class InGameCardEffectActivator_MultiplierDamage : InGameBaseCardEffectAc
     {
         base.ActiveEffectWhenPulledToBag();
     }
-    public override void ShowingNotification()
+    public override List<string> NotifyText()
     {
+        if (notifies == null || notifies.Count == 0)
+        {
+            notifies = new List<string>()
+            {
+                $"Damage +{GetStat()} in 3 turns"
+            };
+        }
+        return base.NotifyText();
     }
     public override float GetStat()
     {
@@ -418,8 +502,16 @@ public class InGameCardEffectActivator_Invulnerable : InGameBaseCardEffectActiva
     {
         base.ActiveEffectWhenPulledToBag();
     }
-    public override void ShowingNotification()
+    public override List<string> NotifyText()
     {
+        if (notifies == null || notifies.Count == 0)
+        {
+            notifies = new List<string>()
+            {
+                $"Vulnerable {GetStat()} turn"
+            };
+        }
+        return base.NotifyText();
     }
     public override float GetStat()
     {
