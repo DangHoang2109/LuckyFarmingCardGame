@@ -121,6 +121,7 @@ public class CardGameController : MonoBehaviour
         this._onDeckAmountChanging += _explodeMeter.OnChangeDeckOrPalletInfo;
         this._onCardPutToPallet -= _explodeMeter.OnChangeDeckOrPalletInfo;
         this._onCardPutToPallet += _explodeMeter.OnChangeDeckOrPalletInfo;
+        _onDeckAmountChanging?.Invoke(this.DeckCardAmount);
     }
     #region Action with Deck
     protected virtual void RecreateTheDeck()
@@ -295,6 +296,8 @@ public class CardGameController : MonoBehaviour
     public List<InGame_CardDataModel> GetDeckTopCards(int amount, bool isWillPopThatCardOut)
     {
         List<InGame_CardDataModel> top = new List<InGame_CardDataModel>();
+        CheckDeck();
+        amount = Mathf.Min(amount, this.DeckCardAmount); //ko cho reveal hơn lượng deck còn lại: reveal 3 card tnog khi deck còn 2
         for (int i = 0; i < amount; i++)
         {
             int topCardId = this._currentDeck?[i] ?? 0;
@@ -461,6 +464,8 @@ public class CardGameController : MonoBehaviour
 
         return _currentTurnDiceResult <= _cardsOnPallet.Count;
     }
+    #endregion 
+
     public void DestroyPallet()
     {
         //play the destroying card animation
@@ -521,10 +526,7 @@ public class CardGameController : MonoBehaviour
 
         this._explodeMeter.OnChangeDeckOrPalletInfo(0);
     }
-    private int RollADice()
-    {
-        return UnityEngine.Random.Range(1, 7);
-    }
+
     #endregion Draw and Interacting with Pallet
 
     #region Interacting with player bag

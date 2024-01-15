@@ -379,6 +379,11 @@ public class InGameManager : MonoSingleton<InGameManager>
     {
         this.CurrentTurnPlayer?.OnACardGoingBeDrawed();
     }
+    public void OnMainUserEndTurn()
+    {
+        if (this.CurrentTurnPlayer.IsMainPlayer)
+            OnUserEndTurn();
+    }
     public void OnUserEndTurn()
     {
         //pull the card by user choice if he is main player
@@ -556,10 +561,7 @@ public class InGameManager : MonoSingleton<InGameManager>
             dead.ClearWhenDead();
 
         //auto endturn will cause error if card has multiple effect like chain
-        //if (!IsHaveEnemy)
-        //{
-        //    OnUserEndTurn();
-        //}
+
 
     }
     public bool IsOwningThisCardIDInDeck(int cardID)
@@ -694,7 +696,7 @@ public class InGameManager : MonoSingleton<InGameManager>
         {
             this.MainUserPlayer.AddHP(hp);
             this._gameState = GameState.PLAYING;
-            OnBeginTurn();
+            OnBeginRound();
         }
         else
         {

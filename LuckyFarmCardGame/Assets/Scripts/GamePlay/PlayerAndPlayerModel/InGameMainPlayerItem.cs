@@ -38,6 +38,11 @@ public class InGameMainPlayerItem : InGameBasePlayerItem
     #region Data
     public int AmountCardInBag => this.MainDataModel?.AmountCardInBag ?? 0;
     public bool IsHasCardIsBag => this.MainDataModel?.IsHasCardIsBag ?? false;
+
+    /// <summary>
+    /// Use this to quarantee dont be multiple click endturn
+    /// </summary>
+    private bool _isInTurn;
     #endregion Data
 
 
@@ -60,6 +65,7 @@ public class InGameMainPlayerItem : InGameBasePlayerItem
     #region Turn Action
     public override void BeginTurn()
     {
+        _isInTurn = true;
         bool isStunning = this.IsStunning;
         base.BeginTurn();
         if (!isStunning)
@@ -92,7 +98,11 @@ public class InGameMainPlayerItem : InGameBasePlayerItem
     }
     public void OnClickEndTurn()
     {
-        InGameManager.Instance.OnUserEndTurn();
+        if (this._isInTurn)
+        {
+            _isInTurn = false;
+            InGameManager.Instance.OnMainUserEndTurn();
+        }
     }
 
     public override void EndTurn()
