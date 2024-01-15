@@ -295,7 +295,7 @@ public class InGameBasePlayerItem : MonoBehaviour
     }
     public virtual void IncreaseMaxHP(int add, bool isAddToCurrentToo)
     {
-        this.PlayerModel.MaxHP += add;
+        this.MaxHP += add;
         if (isAddToCurrentToo)
         {
             AddHP(add);

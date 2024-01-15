@@ -82,22 +82,5 @@ public class RevealCardsTopDeckDialog : BaseDialog
         return GameManager.Instance.OnShowDialog<RevealCardsTopDeckDialog>("Dialogs/RevealTopCardDialog");
     }
 
-#if UNITY_EDITOR
-
-    [UnityEditor.MenuItem("Cosinas/Game/RevealCardsTopDeckDialog")]
-    public static void Test()
-    {
-        List<InGame_CardDataModel> topCards = InGameManager.Instance.GameController.GetDeckTopCards(2, isWillPopThatCardOut: false);
-        RevealCardsTopDeckDialog d = RevealCardsTopDeckDialog.ShowDialog();
-        d.ParseData(topCards, cbClose: null);
-    }
-    [UnityEditor.MenuItem("Cosinas/Game/Reveal8CardsTopDeckDialog")]
-    public static void Test8()
-    {
-        List<InGame_CardDataModel> topCards = InGameManager.Instance.GameController.GetDeckTopCards(8, isWillPopThatCardOut: false);
-        RevealCardsTopDeckDialog d = RevealCardsTopDeckDialog.ShowDialog();
-        d.ParseData(topCards, cbClose: null);
-    }
-#endif
 
 }

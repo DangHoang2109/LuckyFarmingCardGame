@@ -149,7 +149,7 @@ public class InGameAI
                 if (item is ExecuteThink || item is ExecuteEndTurn)
                     continue;
 
-                concat = $"{concat} {item.GetDescribe()}";
+                concat = $"{concat} {item.GetDescribe()}.";
             }
             return concat.VerifyInvisibleSpace();
         }
@@ -316,7 +316,10 @@ public class InGameAI
         {
             return $"Attack {Stat()} damage";
         }
-        public int Stat() => (int)(this._skillConfig.StatAsInt * Mathf.Pow(ProgressionConfig._dmgProgression, (InGameManager.Instance.CurrentWaveIndex + 1)));
+        public int Stat() => (int)(this._skillConfig.StatAsInt * 
+            Mathf.Pow(ProgressionConfig._dmgProgression, (InGameManager.Instance.CurrentWaveIndex + 1)) *
+            this._bot.MultiplierDamage
+            );
     }
     /// <summary>
     /// Spawn creep
@@ -448,19 +451,17 @@ public class InGameAI
 
         public override IEnumerator Do()
         {
-            InGameManager.Instance.ShowNotificationCardAction(GetDescribeNoti(), this._bot.transform.position);
-
-            yield return new WaitForSeconds(0.2f);
+            yield return new WaitForEndOfFrame();
 
             //trừ count down
-            if (countDown <= 0)
+            countDown--;
+
+            if (countDown <= 1) //setup cho lượt sau 
             {
+                InGameManager.Instance.ShowNotificationCardAction(GetDescribeNoti(), this._bot.transform.position);
+
                 this._bot.SetMultiplierDamage(this._skillConfig._statValue, this._skillConfig._statIntervall-1);
                 countDown = this._skillConfig._statIntervall;
-            }
-            else
-            {
-                countDown--;
             }
         }
         public override bool Preparing()
@@ -469,11 +470,11 @@ public class InGameAI
         }
         public override string GetDescribe()
         {
-            return $"X{this._skillConfig._statValue} it damage {GetInterval()}";
+            return $"+{this._skillConfig._statValue}% damage {GetInterval()}";
         }
         public override string GetDescribeNoti()
         {
-            return $"X{this._skillConfig._statValue} damage";
+            return $"Damage +{this._skillConfig._statValue}%";
         }
     }
     #endregion Execution Action

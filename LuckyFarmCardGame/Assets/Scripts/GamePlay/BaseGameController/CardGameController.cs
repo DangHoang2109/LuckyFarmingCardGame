@@ -121,6 +121,7 @@ public class CardGameController : MonoBehaviour
         this._onDeckAmountChanging += _explodeMeter.OnChangeDeckOrPalletInfo;
         this._onCardPutToPallet -= _explodeMeter.OnChangeDeckOrPalletInfo;
         this._onCardPutToPallet += _explodeMeter.OnChangeDeckOrPalletInfo;
+        _onDeckAmountChanging?.Invoke(this.DeckCardAmount);
     }
     #region Action with Deck
     protected virtual void RecreateTheDeck()
@@ -295,6 +296,8 @@ public class CardGameController : MonoBehaviour
     public List<InGame_CardDataModel> GetDeckTopCards(int amount, bool isWillPopThatCardOut)
     {
         List<InGame_CardDataModel> top = new List<InGame_CardDataModel>();
+        CheckDeck();
+        amount = Mathf.Min(amount, this.DeckCardAmount); //ko cho reveal hơn lượng deck còn lại: reveal 3 card tnog khi deck còn 2
         for (int i = 0; i < amount; i++)
         {
             int topCardId = this._currentDeck?[i] ?? 0;
@@ -366,14 +369,13 @@ public class CardGameController : MonoBehaviour
         int indexOfSameIDCardIfExistOnPallet = _cardsOnPallet.FindIndex(x => x._id == card._id);
         if (indexOfSameIDCardIfExistOnPallet >= 0 && indexOfSameIDCardIfExistOnPallet < _cardsOnPallet.Count)
         {
-            Debug.Log($"RULE: EXISTED CARD {card._id} at index {indexOfSameIDCardIfExistOnPallet}");
             _gLightningAnimator.gameObject.SetActive(true);
             yield return new WaitForSeconds(this.AnimationTimeConfig._timeConflictAnimationShowing);
             _gLightningAnimator.gameObject.SetActive(false);
 
             yield return new WaitForSeconds(this.AnimationTimeConfig._timeWaitOnBeforeDestroyPallet);
 
-            _onPalletConflict?.Invoke();
+            //_onPalletConflict?.Invoke();
             //destroying the conflict card
             cardItem.OnDestroyingEffect();
             OnPalletConflict();
@@ -396,16 +398,30 @@ public class CardGameController : MonoBehaviour
 
     private void OnPalletConflict()
     {
-        //update rule of axie: Pallet conflict will cause to destroy it, remove the dice
-        this.DestroyPallet();
+        ///rule mới: thay vì pallet bị destroy, làm quái mạnh lên và bắt buộc thu card nếu pallet bị conflict để reduce pain khi liều bị fail
+        InGameManager.OnUserEndTurn();
 
-        ////ask the rule to see what to do?
-        //ThisFuncShouldOnRule_TellControllerToRollingDice();
+        void OldPhase2()
+        {
+            //update rule of axie: Pallet conflict will cause to destroy it, remove the dice
+            this.DestroyPallet();
+        }
 
-        //void ThisFuncShouldOnRule_TellControllerToRollingDice()
-        //{
-        //    RollADiceAndCheckPalletCondition();
-        //}
+        void OldPhase1()
+        {
+            ////ask the rule to see what to do?
+            //ThisFuncShouldOnRule_TellControllerToRollingDice();
+
+            //void ThisFuncShouldOnRule_TellControllerToRollingDice()
+            //{
+            //    RollADiceAndCheckPalletCondition();
+            //}
+        }
+    }
+    #region Roll Dice Mechanic
+    private int RollADice()
+    {
+        return UnityEngine.Random.Range(1, 7);
     }
     public void RollADiceAndCheckPalletCondition()
     {
@@ -461,6 +477,8 @@ public class CardGameController : MonoBehaviour
 
         return _currentTurnDiceResult <= _cardsOnPallet.Count;
     }
+    #endregion 
+
     public void DestroyPallet()
     {
         //play the destroying card animation
@@ -468,14 +486,12 @@ public class CardGameController : MonoBehaviour
             return;
 
         //active effect of card
-        foreach (InGame_CardDataModel cardDataModel in _cardsOnPallet)
-        {
-            cardDataModel.OnDestroyedByConflict();
-        }
+        //foreach (InGame_CardDataModel cardDataModel in _cardsOnPallet)
+        //{
+        //    cardDataModel.OnDestroyedByConflict();
+        //}
 
-        Debug.Log("CONTROLER: DESTROY PALLET");
         _onPalletDestroyed?.Invoke();
-
         ClearPallet();
     }
     public void RuleForce_PullCardFromPalletToUser()
@@ -521,10 +537,7 @@ public class CardGameController : MonoBehaviour
 
         this._explodeMeter.OnChangeDeckOrPalletInfo(0);
     }
-    private int RollADice()
-    {
-        return UnityEngine.Random.Range(1, 7);
-    }
+
     #endregion Draw and Interacting with Pallet
 
     #region Interacting with player bag

@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 [CreateAssetMenu(menuName = "Configs/InGameCardConfigs", fileName = "InGameCardConfigs")]
 public class InGameCardConfigs : ScriptableObject
 {
@@ -47,7 +50,7 @@ public class InGameCardConfigs : ScriptableObject
     #region VALIDATEE
     private void OnValidate()
     {
-        return;
+        //return;
         foreach (var item in _levelsConfigs._configs)
         {
             for (int i = 0; i < item.levels.Count; i++)
@@ -55,8 +58,8 @@ public class InGameCardConfigs : ScriptableObject
                 InGameCardLevel level = item.levels[i];
                 level._ID = item._ID;
                 level._level = i + 1;
-                level._require = level._level+1;
-                level._stat = i == 0 ? 1 : item.levels[i - 1]._stat+1;
+                level._require = i == 0 ? 2 : item.levels[i-1]._require * 2;
+                //level._stat = i == 0 ? 1 : item.levels[i - 1]._stat+1;
             }
         }
     }
@@ -90,6 +93,7 @@ public class InGameCardConfig
 
     [TabGroup("Art")] public Sprite _sprCardArtwork;
     [TabGroup("Art")] public Sprite _sprCardBackground;
+
 
 }
 
@@ -195,12 +199,14 @@ public class InGameCardLevelsConfig
     public int _ID;
 
     [Space(5f)]
+    [TableList]
     public List<InGameCardLevel> levels;
 
     public InGameCardLevel GetLevelConfig(int level)
     {
         return levels.Find(x => x._level == level);
     }
+
 }
 [System.Serializable]
 public class InGameCardLevel
