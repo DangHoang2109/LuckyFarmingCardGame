@@ -4,9 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
 using Spine;
-using UnityEditor.Experimental.GraphView;
 using System;
-using Unity.VisualScripting;
 using Sirenix.OdinInspector;
 
 public class InGameBasePlayerItem : MonoBehaviour
