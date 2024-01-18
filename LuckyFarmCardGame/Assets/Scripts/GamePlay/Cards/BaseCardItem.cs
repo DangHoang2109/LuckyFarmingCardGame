@@ -58,14 +58,14 @@ public class BaseCardItem : MonoBehaviour
         void OnPullingAnimComplete()
         {
             Transform tfDesOrb = InGamePlayerUpgradePalletAnim.Instance._tfTo;
-
-            VFXManager.Instance.ShowFX(id: VFXGameID.orbCardExp, amount: 1, _desTransform: tfDesOrb, _startTransform: this.transform, _pathType: PoolPathType.BASIC_CURVE, _onCompleteAllCb: DestroyMe);
             if (!isPalletConflict)
             {
                 Transform tfHPBar = InGameManager.Instance.MainUserPlayer._hpBar.transform;
 
                 VFXManager.Instance.ShowFX(id: VFXGameID.orbHPRed, amount: 1, _desTransform: tfHPBar, _startTransform: this.transform, _pathType: PoolPathType.BASIC_CURVE);
             }
+            VFXManager.Instance.ShowFX(id: VFXGameID.orbCardExp, amount: 1, _desTransform: tfDesOrb, _startTransform: this.transform, _pathType: PoolPathType.BASIC_CURVE, _onCompleteAllCb: DestroyMe);
+
             HideMe();
         }
     }
