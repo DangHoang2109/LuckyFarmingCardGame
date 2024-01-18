@@ -2300,8 +2300,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: BaseDialog, Assembly-CSharp
+      - m_Target: {fileID: 2331607350445746948}
+        m_TargetAssemblyTypeName: RuleSummaryDialog, Assembly-CSharp
         m_MethodName: ClickCloseDialog
         m_Mode: 1
         m_Arguments:
