@@ -181,12 +181,7 @@ public class InGameBasePlayerItem : MonoBehaviour
     {
 
     }
-    /// <summary>
-    /// Called by IngameManager when this user endturn or force endturn success by rolling dice
-    /// </summary>
-    public virtual void PullCardToBag(List<InGame_CardDataModel> cardReceive)
-    {
-    }
+
 
     /// <summary>
     /// Called by InGame Manager

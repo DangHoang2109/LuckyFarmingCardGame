@@ -218,30 +218,6 @@ public class CardGameController : MonoBehaviour
     {
         InGameManager.OnTellControllerContinueTurn();
     }
-    /// <summary>
-    /// User dùng coin để thay đổi kết quả dice, hoặc tùy theo game rule
-    /// </summary>
-    /// <param name="amountUsing"></param>
-    public void OnUserDecideToUseGameCoin(int amountUsing)
-    {
-        //check result dice luôn, vì user đã thao tác rồi
-        if (this._coroutineWaitDecidingUseGameCoin != null)
-            StopCoroutine(_coroutineWaitDecidingUseGameCoin);
-
-        if (amountUsing > 0)
-        {
-            int amountAdding = amountUsing / _coinForEachDicePoint;
-            //tăng số trên dice 1 điểm với mỗi _coinForEachDicePoint amount point
-            //mechanic này để giảm độ rủi ro với việc roll dice, vì số dice bé hơn pallet thì user sẽ bị destroy
-            this._currentTurnDiceResult += Mathf.RoundToInt(amountAdding);
-
-            //this.DiceAnimator?.AddDiceValue(amountAdding, _currentTurnDiceResult, OnFinalCheckDiceResultWithPallet);
-        }
-        else
-        {
-            OnFinalCheckDiceResultWithPallet();
-        }
-    }
     #endregion Turn Action
 
     #region Draw and Interacting with Pallet
@@ -401,7 +377,7 @@ public class CardGameController : MonoBehaviour
     private void OnPalletConflict()
     {
         ///rule mới: thay vì pallet bị destroy, làm quái mạnh lên và bắt buộc thu card nếu pallet bị conflict để reduce pain khi liều bị fail
-        InGameManager.OnUserEndTurn();
+        InGameManager.OnUserEndTurn(true);
 
         void OldPhase2()
         {
@@ -420,66 +396,6 @@ public class CardGameController : MonoBehaviour
             //}
         }
     }
-    #region Roll Dice Mechanic
-    private int RollADice()
-    {
-        return UnityEngine.Random.Range(1, 7);
-    }
-    public void RollADiceAndCheckPalletCondition()
-    {
-        if (this._cardsOnPallet == null || this._cardsOnPallet.Count == 0)
-            return;
-
-        _currentTurnDiceResult = this.RollADice();
-
-        bool willDestroy = WillPalletBeDestroyWithThisDiceResult(out int pointNeeding);
-
-        Debug.Log($"RULE: Rolling dice {_currentTurnDiceResult} compare to pallet {this._cardsOnPallet.Count}");
-        //if dice result < pallet amount card => the pallet will be destroyed
-
-        //this.DiceAnimator?.RollingDice(_currentTurnDiceResult, stayWhenRollComplete: willDestroy, callback: OnDiceShowResultComplte, this.AnimationTimeConfig._timeWaitDiceRolling, this.AnimationTimeConfig._timeWaitShowDiceResult);
-
-        void OnDiceShowResultComplte()
-        {
-            float timeWaitForDeciding = 15f;
-
-            Debug.Log($"CONTROLER: Dice anim complete, star coroutine waiting for {timeWaitForDeciding} sec");
-
-            _onDiceShowedResult?.Invoke(_currentTurnDiceResult, pointNeeding, willDestroy);
-            if (willDestroy && InGameManager.CurrentTurnPlayerModel.IsCanUseGameCoin(pointNeeding * _coinForEachDicePoint))
-                this._coroutineWaitDecidingUseGameCoin = StartCoroutine(ieWaitPlayerDecideToUseCoin(timeWaitForDeciding));
-            else
-                OnFinalCheckDiceResultWithPallet();
-        }
-        IEnumerator ieWaitPlayerDecideToUseCoin(float timeWaitForDeciding)
-        {
-            yield return new WaitForSeconds(timeWaitForDeciding);
-
-            OnFinalCheckDiceResultWithPallet();
-        }
-    }
-    //Lúc này nếu user có dùng coin thì kết quả turnDiceResult đã đổi,
-    protected void OnFinalCheckDiceResultWithPallet()
-    {
-        Debug.Log($"CONTROLER: Wait deciding complete, handle dice result");
-        //DiceAnimator?.Hide();
-
-        if (WillPalletBeDestroyWithThisDiceResult(out _))
-        {
-            this.DestroyPallet();
-        }
-        else
-        {
-            this.RuleForce_PullCardFromPalletToUser();
-        }
-    }
-    protected bool WillPalletBeDestroyWithThisDiceResult(out int pointNeedToSafe)
-    {
-        pointNeedToSafe = _cardsOnPallet.Count - _currentTurnDiceResult + 1;
-
-        return _currentTurnDiceResult <= _cardsOnPallet.Count;
-    }
-    #endregion 
 
     public void DestroyPallet()
     {
@@ -496,18 +412,7 @@ public class CardGameController : MonoBehaviour
         _onPalletDestroyed?.Invoke();
         ClearPallet();
     }
-    public void RuleForce_PullCardFromPalletToUser()
-    {
-        Debug.Log("CONTROLER: RULE PULL PALLET");
-
-        PullCardFromPalletToUser(OnPullingComplete);
-
-        void OnPullingComplete(List<InGame_CardDataModel> receiveCards)
-        {
-            _onRuleMakeUserPullCard?.Invoke(receiveCards);
-        }
-    }
-    public void PullCardFromPalletToUser(System.Action<List<InGame_CardDataModel>> onAnimationComplete)
+    public void PullCardFromPalletToUser(bool isPalletConflict, System.Action<List<InGame_CardDataModel>> onAnimationComplete)
     {
         //Debug.Log("CONTROLER: PULL PALLET");
 
@@ -517,7 +422,7 @@ public class CardGameController : MonoBehaviour
         foreach (InGame_CardDataModel cardDataModel in _cardsOnPallet)
         {
             //behavior of card
-            cardDataModel.OnPulledToBag();
+            cardDataModel.OnPulledToBag(isPalletConflict);
         }
 
         StartCoroutine(iePullingCardFromPalletToBag());

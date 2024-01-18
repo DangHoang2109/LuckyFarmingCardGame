@@ -107,8 +107,6 @@ public class InGameManager : MonoSingleton<InGameManager>
         GameController?.AddCallback_CardPutToPallet(this.OnLetUserActionWhenCardActiveEffectWhenPutToPallet);
         GameController?.AddCallback_PalletConflict(this.OnPalletConflict);
         GameController?.AddCallback_PalletDestroyed(this.OnPalletDestroyed);
-        GameController?.AddCallback_PalletPulledByRule(this.OnPalletPulledByRule);
-        GameController?.AddCallback_DiceResultShowed(this.DiceResultShowed);
 
         GameController?.InitGame(this.MainUserPlayer.DeckConfig);
 
@@ -382,64 +380,39 @@ public class InGameManager : MonoSingleton<InGameManager>
         if (!this.CurrentTurnPlayer.IsMainPlayer)
             return;
 
-        Debug.Log("ADD REQ ENDTURN");
         CardGameActionController.Instance.AddCallbackEndTurnWhenFXComplete(cb: () =>
         {
-            Debug.Log("FINAL ENDTURN");
-            OnUserEndTurn();
+            OnUserEndTurn(false);
         });
     }
     public void OnMainUserEndTurn()
     {
         if (this.CurrentTurnPlayer.IsMainPlayer)
-            OnUserEndTurn();
+            OnUserEndTurn(false);
     }
-    public void OnUserEndTurn()
+    public void OnUserEndTurn(bool isPalletConflict)
     {
         //pull the card by user choice if he is main player
         //else if creep just end the turn
         if(this.CurrentTurnPlayer.IsMainPlayer)
-            GameController?.PullCardFromPalletToUser(OnPullingAnimationComplete);
+            GameController?.PullCardFromPalletToUser(isPalletConflict, OnPullingAnimationComplete);
         else
             OnLogicEndTurn();
 
         void OnPullingAnimationComplete(List<InGame_CardDataModel> cardsReceive)
         {
-            OnUserPullCardFromPalletToBag(cardsReceive);
+            if (cardsReceive != null && cardsReceive.Count > 0 && CurrentTurnPlayer is InGameMainPlayerItem mainPlayer)
+            {
+                mainPlayer.PullCardToBag(isPalletConflict, cardsReceive);
+            }
             OnLogicEndTurn();
         }
     }
-    private void OnUserPullCardFromPalletToBag(List<InGame_CardDataModel> cardsReceive)
+    private void OnUserPullCardFromPalletToBag(bool isPalletConflict, List<InGame_CardDataModel> cardsReceive)
     {
         if (!IsPlaying)
             return;
-        if (cardsReceive != null && cardsReceive.Count > 0)
-        {
-            this.CurrentTurnPlayer.PullCardToBag(cardsReceive);
-        }
-    }
 
-
-    /// <summary>
-    /// User dùng coin để thay đổi kết quả dice, hoặc tùy theo game rule
-    /// </summary>
-    /// <param name="amountUsing"></param>
-    public void OnUserDecideToUseGameCoin(int amountUsing)
-    {
-        if (!IsPlaying)
-            return;
-        //trừ coin từ user đang dùng
-        if (this.CurrentTurnPlayerModel?.SubtractGameCoinIfCan(amountUsing) ?? false)
-        {
-            this.GameController?.OnUserDecideToUseGameCoin(amountUsing);
-        }
-    }
-    /// <summary>
-    /// User dùng coin để thay đổi kết quả dice, hoặc tùy theo game rule
-    /// </summary>
-    /// <param name="amountUsing"></param>
-    public void OnUserDecideToUseGameCoin()
-    {
     }
     /// <summary>
     /// Một card có effect đã được đưa vào trong pallet
@@ -619,7 +592,7 @@ public class InGameManager : MonoSingleton<InGameManager>
         InGame_CardDataModel c = InGameUtils.CreateCardDataModel(cardID);
         c._amount = amount;
         cardModel.Add(c);
-        MainUserPlayer.PullCardToBag(cardModel);
+        MainUserPlayer.ReceiveCardPoint(cardModel);
     }
 
     private void OnLogicEndTurn()
@@ -672,26 +645,12 @@ public class InGameManager : MonoSingleton<InGameManager>
     #endregion Turn Actions
 
     #region Pallet behavior
-    public void DiceResultShowed(int diceResult, int pointNeeding, bool willBeDestroy)
-    {
-    }
-    /// <summary>
-    /// Normally only Main Player will call this
-    /// </summary>
-    public void ShowConfirmUsingCoin(int amountCoinNeeding, int pointAdding)
-    {
-    }
     public void OnPalletConflict()
     {
 
     }
     public void OnPalletDestroyed()
     {
-        OnLogicEndTurn();
-    }
-    public void OnPalletPulledByRule(List<InGame_CardDataModel> cardsReceive)
-    {
-        OnUserPullCardFromPalletToBag(cardsReceive);
         OnLogicEndTurn();
     }
     #endregion Pallet behavior
@@ -742,12 +701,6 @@ public class InGameManager : MonoSingleton<InGameManager>
             });
             _isPushActionContinueTurn = true;
         }
-    }
-    public void OnTellControllerToRollDice()
-    {
-        if (!IsPlaying)
-            return;
-        this.GameController?.RollADiceAndCheckPalletCondition();
     }
     public void OnTellControllerToDrawCards(int cardToDraw)
     {

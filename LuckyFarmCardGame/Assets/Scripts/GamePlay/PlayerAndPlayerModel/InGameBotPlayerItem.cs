@@ -112,7 +112,7 @@ public class InGameBotPlayerItem : InGameBasePlayerItem
         if(!isStunning)
             StartPlaningTurn();
         else
-            InGameManager.Instance.OnUserEndTurn();
+            InGameManager.Instance.OnUserEndTurn(false);
     }
     public override void ContinueTurn()
     {
