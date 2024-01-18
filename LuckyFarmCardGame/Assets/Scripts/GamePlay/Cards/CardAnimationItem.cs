@@ -16,6 +16,8 @@ public class CardAnimationItem : MonoBehaviour
     }
     public Image _imgFace;
 
+    public static CardAnimationItem Instance => InGameManager.Instance.GameController?.CardDrawingAnimator;
+
     #region Anim Key
     private string animDraw = "CardPlayHeroB";
 

@@ -52,13 +52,20 @@ public class BaseCardItem : MonoBehaviour
         this._host = host;
         return this;
     }
-    public BaseCardItem OnPullingToBagEffect()
+    public BaseCardItem OnPullingToBagEffect(bool isPalletConflict)
     {
         return this.OnShinyEffect(OnPullingAnimComplete);
         void OnPullingAnimComplete()
         {
             Transform tfDesOrb = InGamePlayerUpgradePalletAnim.Instance._tfTo;
+            if (!isPalletConflict)
+            {
+                Transform tfHPBar = InGameManager.Instance.MainUserPlayer._hpBar.transform;
+
+                VFXManager.Instance.ShowFX(id: VFXGameID.orbHPRed, amount: 1, _desTransform: tfHPBar, _startTransform: this.transform, _pathType: PoolPathType.BASIC_CURVE);
+            }
             VFXManager.Instance.ShowFX(id: VFXGameID.orbCardExp, amount: 1, _desTransform: tfDesOrb, _startTransform: this.transform, _pathType: PoolPathType.BASIC_CURVE, _onCompleteAllCb: DestroyMe);
+
             HideMe();
         }
     }
@@ -208,10 +215,10 @@ public class InGame_CardDataModel : ICloneable
         this.EffectActivator?.ActiveEffectWhenDestroyed();
         this.CardContainer?.OnDestroyingEffect();
     }
-    public void OnPulledToBag()
+    public void OnPulledToBag(bool isPalletConflict)
     {
         this.EffectActivator?.ActiveEffectWhenPulledToBag();
-        this.CardContainer?.OnPullingToBagEffect();
+        this.CardContainer?.OnPullingToBagEffect(isPalletConflict);
     }
     #endregion
     public string GetSkillDescribe()

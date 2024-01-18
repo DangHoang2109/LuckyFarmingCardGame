@@ -234,6 +234,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   vfxActionManager: {fileID: 3377794085649882155}
   collectUpgradeActionManager: {fileID: 7952160765816091072}
+  vfxEnemyAttacked: {fileID: 0}
 --- !u!1 &2711465416755341167
 GameObject:
   m_ObjectHideFlags: 0
@@ -406,6 +407,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7110387238013398806}
   - component: {fileID: 2991752525659589239}
+  - component: {fileID: 4217451945324499966}
   m_Layer: 5
   m_Name: GameUI
   m_TagString: Untagged
@@ -443,6 +445,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3484394894980011794}
   m_CullTransparentMesh: 1
+--- !u!114 &4217451945324499966
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3484394894980011794}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14228eead6371414d904a8358048cb08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _tfButtonSummaryRule: {fileID: 7010768171553731714}
 --- !u!1 &3496347782178434620
 GameObject:
   m_ObjectHideFlags: 0
@@ -2083,6 +2098,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 485163395444572079}
     m_Modifications:
+    - target: {fileID: 30637022, guid: 5e0eaff6bfcd8dd49a8714d97b87f1c1, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 30637022, guid: 5e0eaff6bfcd8dd49a8714d97b87f1c1, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 92
+      objectReference: {fileID: 0}
     - target: {fileID: 2353484494566618358, guid: 5e0eaff6bfcd8dd49a8714d97b87f1c1, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
       value: 2
@@ -2577,6 +2600,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   step: 108
+--- !u!224 &7010768171553731714 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 6461695718003580623, guid: 5e0eaff6bfcd8dd49a8714d97b87f1c1, type: 3}
+  m_PrefabInstance: {fileID: 4100473056275147341}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &7764135786007137967 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6005566426164602082, guid: 5e0eaff6bfcd8dd49a8714d97b87f1c1, type: 3}

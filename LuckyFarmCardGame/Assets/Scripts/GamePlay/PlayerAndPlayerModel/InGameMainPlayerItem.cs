@@ -77,7 +77,7 @@ public class InGameMainPlayerItem : InGameBasePlayerItem
         }
         else
         {
-            InGameManager.Instance.OnUserEndTurn();
+            InGameManager.Instance.OnUserEndTurn(false);
         }
     }
     public override void ContinueTurn()
@@ -89,12 +89,6 @@ public class InGameMainPlayerItem : InGameBasePlayerItem
     {
         base.Action_ACardPutToPallet(cardID);
 
-    }
-    public override void Action_DecideAndUseCoin(int amountCoinNeeding, int pointAdding)
-    {
-        base.Action_DecideAndUseCoin(amountCoinNeeding, pointAdding);
-
-        InGameManager.Instance.ShowConfirmUsingCoin(amountCoinNeeding, pointAdding);
     }
     public void OnClickEndTurn()
     {
@@ -121,19 +115,24 @@ public class InGameMainPlayerItem : InGameBasePlayerItem
         //Debug.LogError("NOT FOUND CARD " + cardID);
         return 1; //nếu chưa có thu về bao giờ thì card ở default level là 1
     }
-    public override void PullCardToBag(List<InGame_CardDataModel> cardReceive)
+    public void PullCardToBag(bool isPalletConflict, List<InGame_CardDataModel> cardReceive)
     {
-        base.PullCardToBag(cardReceive);
+        //heal 1HP each card, use this for not showing the animation flower
+        if(!isPalletConflict)
+            this.CurrentHP += cardReceive.Count;
+
+        ReceiveCardPoint(cardReceive);
+    }
+    public void ReceiveCardPoint(List<InGame_CardDataModel> cardReceive)
+    {
         if (cardReceive != null && cardReceive.Count > 0)
         {
-            List < InGame_CardDataModelLevels > levelUp = this.MainDataModel.AddCardsToPallet(cardReceive);
-            if(levelUp!=null && levelUp.Count > 0)
+            List<InGame_CardDataModelLevels> levelUp = this.MainDataModel.AddCardsToPallet(cardReceive);
+            if (levelUp != null && levelUp.Count > 0)
             {
                 ListingUpgradedCardsDialog d = ListingUpgradedCardsDialog.ShowDialog();
                 d.ParseData(levelUp, null);
             }
-            //heal 1HP each card, use this for not showing the animation flower
-            this.CurrentHP += cardReceive.Count;
         }
         _tmpCoinValue.SetText($"{(PlayerModel.CurrentCoinPoint).ToString("D2")}");
     }
@@ -367,8 +366,7 @@ public class InGameMainPlayerItem : InGameBasePlayerItem
     }
     public void OnClickShowQuickTutorial()
     {
-        GameManager.Instance.OnShowDialog<BaseDialog>("Dialogs/RuleSummaryDialog");
-
+        RuleSummaryDialog.ShowDialog();
         //GameManager.Instance.OnShowDialog<Instruction_CardEffectQuickthroughDialog>("Dialogs/Instruction_CardEffectQuickthroughDialog");
     }
 }

@@ -112,7 +112,7 @@ public class InGameBotPlayerItem : InGameBasePlayerItem
         if(!isStunning)
             StartPlaningTurn();
         else
-            InGameManager.Instance.OnUserEndTurn();
+            InGameManager.Instance.OnUserEndTurn(false);
     }
     public override void ContinueTurn()
     {
@@ -143,7 +143,10 @@ public class InGameBotPlayerItem : InGameBasePlayerItem
     {
         dmg = base.Attacked(dmg);
         if(dmg > 0)
+        {
+            //VFXAttackedEnemyActionManager.Instance.ShowVFxXAttacked(this);
             this._animator?.ShowAttacked(isDead(), OnDeadComplete);
+        }
         return dmg;
         void OnDeadComplete()
         {

@@ -276,8 +276,8 @@ public class InGameAI
 
         public override IEnumerator Do()
         {
-            yield return new WaitForEndOfFrame(); Debug.Log("Turn action: endturn");
-            InGameManager.Instance.OnUserEndTurn();
+            yield return new WaitForEndOfFrame(); 
+            InGameManager.Instance.OnUserEndTurn(false);
         }
         public override bool IsCanDo()
         {
