@@ -13,11 +13,12 @@ public class CardGameActionController : MonoSingleton<CardGameActionController>
     public CollectUpgradeActionManager collectUpgradeActionManager;
     public VFXAttackedEnemyActionManager vfxEnemyAttacked;
 
+
     public bool IsVFXRunning => vfxActionManager?.IsRunning ?? false;
     public bool IsUpgradeCollectorRunning => collectUpgradeActionManager?.IsRunning ?? false;
     public bool IsVFXEnemyAttacked => vfxEnemyAttacked?.IsRunning ?? false;
 
-    public bool IsAnyRunning => IsVFXRunning || IsUpgradeCollectorRunning || IsAnyPopupShowing || CardAnimationItem.Instance.IsInAnimation; // || IsVFXEnemyAttacked
+    public bool IsAnyRunning => IsVFXRunning || IsUpgradeCollectorRunning || IsAnyPopupShowing || InGameManager.Instance.GameController.IsCardInAnimationDrawing; // || IsVFXEnemyAttacked
 
     public bool IsAnyPopupShowing => TempDialogManager.Instance.IsAnyDialogOnline();
     public void AddCallbackWhenFXComplete(System.Action cb)

@@ -108,6 +108,7 @@ public class CardGameController : MonoBehaviour
     public void InitGame(InGameDeckConfig deckConfig)
     {
         _cardsOnPallet = new List<InGame_CardDataModel>();
+        IsCardInAnimationDrawing = false;
 
         //get deck contain
         _deckConfig = new InGameDeckConfig(deckConfig);
@@ -201,6 +202,7 @@ public class CardGameController : MonoBehaviour
     #region Turn Action
     public void BeginTurn(bool isMainUserTurn)
     {
+        IsCardInAnimationDrawing = false;
         _isMainUserTurn = isMainUserTurn;
         this.EnableDrawingCardFromDeck(_isMainUserTurn);
     }
@@ -299,7 +301,9 @@ public class CardGameController : MonoBehaviour
             _currentDeck.Insert(index: Random.Range(0, _currentDeck.Count), cardID);
         }
         //có ít nhất 1 card sẽ được add trong vòng 8 card đổ lại để user thấy được gợi nhớ (~ avg 1 turn draw 4 card)
-        _currentDeck.Insert(index: Random.Range(2, 8), cardID);
+        int minDeckIndex = Mathf.Min(_currentDeck.Count-1, 2);
+        int maxDeckIndex = Mathf.Min(_currentDeck.Count - 1, 8);
+        _currentDeck.Insert(index: Random.Range(minDeckIndex, maxDeckIndex), cardID);
 
         //add vào deck config để hết deck thì recreate vẫn có
         this._deckConfig.AddNewCard(cardID, amount);
@@ -325,15 +329,21 @@ public class CardGameController : MonoBehaviour
         }
         return res;
     }
+
+    public Coroutine _coAnimationDrawingDeck;
+    public bool IsCardInAnimationDrawing { get; set; }
+
     private void PutACardToPallet(InGame_CardDataModel card)
     {
+        Debug.Log("Anim Play card");
         _cardsOnPallet ??= new List<InGame_CardDataModel>();
+        IsCardInAnimationDrawing = true;
         _cardAnim.PlayDraw(card._id, cb: OnCompleteAnimationDrawFromDeck);
 
         void OnCompleteAnimationDrawFromDeck()
         {
             BaseCardItem newCardItem = CreateCardItem(ref card); //spawn a circle in standing 
-            StartCoroutine(ieDrawAndAddCardToPallet(card, newCardItem));
+            _coAnimationDrawingDeck = StartCoroutine(ieDrawAndAddCardToPallet(card, newCardItem));
         }
     }
 
@@ -357,6 +367,8 @@ public class CardGameController : MonoBehaviour
             //destroying the conflict card
             cardItem.OnDestroyingEffect();
             OnPalletConflict();
+            IsCardInAnimationDrawing = false;
+
         }
         //else: let it in
         else
@@ -367,15 +379,19 @@ public class CardGameController : MonoBehaviour
             _palletUI.AppendItem(cardItem);
             _onCardPutToPallet?.Invoke(card._id);
 
-            yield return new WaitForEndOfFrame(); //this.AnimationTimeConfig._timeACardStayOnActiveEffectPanel
+            //yield return new WaitForEndOfFrame(); //this.AnimationTimeConfig._timeACardStayOnActiveEffectPanel
+            Debug.Log("Place card to pallet");
 
             //activate that card effect
             card?.OnPlacedToPallet();
+
+            IsCardInAnimationDrawing = false;
         }
     }
 
     private void OnPalletConflict()
     {
+
         ///rule mới: thay vì pallet bị destroy, làm quái mạnh lên và bắt buộc thu card nếu pallet bị conflict để reduce pain khi liều bị fail
         InGameManager.OnUserEndTurn(true);
 

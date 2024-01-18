@@ -17,7 +17,6 @@ public class CardAnimationItem : MonoBehaviour
     public Image _imgFace;
 
     public static CardAnimationItem Instance => InGameManager.Instance.GameController?.CardDrawingAnimator;
-    public bool IsInAnimation { get; set; }
 
     #region Anim Key
     private string animDraw = "CardPlayHeroB";
@@ -47,7 +46,6 @@ public class CardAnimationItem : MonoBehaviour
     }
     public void PlayDraw(int cardID, System.Action cb = null)
     {
-        IsInAnimation = true;
         onCompleteDrawInTurn = cb;
 
         InGameCardConfig cardConfig = InGameCardConfigs.Instance.GetCardConfig(cardID);
@@ -70,6 +68,5 @@ public class CardAnimationItem : MonoBehaviour
         onCompleteDrawInTurn?.Invoke();
 
         this.gameObject.SetActive(false);
-        IsInAnimation = false;
     }
 }
