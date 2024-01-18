@@ -32,6 +32,8 @@ public class CardGameController : MonoBehaviour
     [Space(5f)]
 
     [SerializeField] protected CardAnimationItem _cardAnim;
+    public CardAnimationItem CardDrawingAnimator => _cardAnim;
+
     [SerializeField] protected BaseCardCircleItem _cardCirclePrefab;
 
     [SerializeField] protected Transform _tfActEffectPanel, _tfDeckPanel;

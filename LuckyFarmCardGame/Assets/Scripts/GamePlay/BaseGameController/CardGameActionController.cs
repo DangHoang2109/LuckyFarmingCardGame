@@ -11,11 +11,13 @@ public class CardGameActionController : MonoSingleton<CardGameActionController>
 {
     public VFXActionManager vfxActionManager;
     public CollectUpgradeActionManager collectUpgradeActionManager;
+    public VFXAttackedEnemyActionManager vfxEnemyAttacked;
 
     public bool IsVFXRunning => vfxActionManager?.IsRunning ?? false;
     public bool IsUpgradeCollectorRunning => collectUpgradeActionManager?.IsRunning ?? false;
+    public bool IsVFXEnemyAttacked => vfxEnemyAttacked?.IsRunning ?? false;
 
-    public bool IsAnyRunning => IsVFXRunning || IsUpgradeCollectorRunning || IsAnyPopupShowing;
+    public bool IsAnyRunning => IsVFXRunning || IsUpgradeCollectorRunning || IsAnyPopupShowing || CardAnimationItem.Instance.IsInAnimation; // || IsVFXEnemyAttacked
 
     public bool IsAnyPopupShowing => TempDialogManager.Instance.IsAnyDialogOnline();
     public void AddCallbackWhenFXComplete(System.Action cb)
@@ -23,16 +25,31 @@ public class CardGameActionController : MonoSingleton<CardGameActionController>
         DoNoFXRunning act = new DoNoFXRunning(this, cb);
         AddActionAndRun(act);
     }
+    public void AddCallbackEndTurnWhenFXComplete(System.Action cb)
+    {
+        DoNoFXRunning act = new DoNoFXRunning(this, cb);
+        AddActionLastRunning(act);
+    }
     #region Outside Game Manager can add action to control the flow of game
     /// <summary>
     /// Example: Dont get new turn if any vfx or upgrade collector still runing
     /// </summary>
     protected Queue<IDoAction> doSomething = new Queue<IDoAction>();
     protected Coroutine coRunining;
+    protected Coroutine coLastRunining;
+
     public virtual void AddAction(IDoAction action)
     {
         doSomething ??= new Queue<IDoAction>();
         this.doSomething.Enqueue(action);
+    }
+    public virtual void AddActionLastRunning(IDoAction action)
+    {
+        doSomething ??= new Queue<IDoAction>();
+        if (this.coLastRunining == null)
+        {
+            this.coLastRunining = StartCoroutine(RunActionWhenNoVfx(action));
+        }
     }
     public virtual void AddActionAndRun(IDoAction action)
     {
@@ -56,6 +73,19 @@ public class CardGameActionController : MonoSingleton<CardGameActionController>
         }
 
         this.coRunining = null;
+    }
+    protected virtual IEnumerator RunActionWhenNoVfx(IDoAction act)
+    {
+        doSomething ??= new Queue<IDoAction>();
+
+        YieldInstruction yieldInstruction = new WaitForEndOfFrame();
+        while (this.IsVFXRunning)
+        {
+            yield return yieldInstruction;
+        }
+        AddActionAndRun(act);
+
+
     }
     public virtual void AddActionFirst(IDoAction action)
     {

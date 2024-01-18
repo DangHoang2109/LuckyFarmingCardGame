@@ -260,7 +260,7 @@ GameObject:
   - component: {fileID: 412595527768040488}
   - component: {fileID: 807893468923914049}
   - component: {fileID: 2123665904549865678}
-  - component: {fileID: 7176759988476919822}
+  - component: {fileID: 2331607350445746948}
   m_Layer: 5
   m_Name: RuleSummaryDialog
   m_TagString: Untagged
@@ -283,7 +283,7 @@ RectTransform:
   - {fileID: 6488643641143186914}
   - {fileID: 2338095309219582321}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -310,7 +310,7 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!114 &7176759988476919822
+--- !u!114 &2331607350445746948
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -319,7 +319,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1367099207623497877}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 87ba521640ad88244b1795068cef4666, type: 3}
+  m_Script: {fileID: 11500000, guid: 8787a1f730db9a148a4fc449cafca134, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   canvasGroup: {fileID: 2123665904549865678}
@@ -2300,7 +2300,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 7176759988476919822}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: BaseDialog, Assembly-CSharp
         m_MethodName: ClickCloseDialog
         m_Mode: 1

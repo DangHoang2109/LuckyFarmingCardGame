@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class InGameUIManager : MonoSingleton<InGameUIManager>
 {
+    public Transform _tfButtonSummaryRule;
     public void OnClickEndTurn()
     {
         //pull the pallet card
@@ -11,8 +12,7 @@ public class InGameUIManager : MonoSingleton<InGameUIManager>
     }
     public void OnClickShowCardQuickthrough()
     {
-        GameManager.Instance.OnShowDialog<BaseDialog>("Dialogs/RuleSummaryDialog");
-
+        RuleSummaryDialog.ShowDialog();
         //GameManager.Instance.OnShowDialog<Instruction_CardEffectQuickthroughDialog>("Dialogs/Instruction_CardEffectQuickthroughDialog");
     }
 }

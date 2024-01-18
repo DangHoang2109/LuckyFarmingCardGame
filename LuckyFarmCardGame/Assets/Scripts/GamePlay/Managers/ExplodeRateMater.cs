@@ -26,7 +26,6 @@ public class ExplodeRateMater : MonoBehaviour
     {
         //ignore param, call to controller and get rate
         float explodeRate = _controller.GetPalletConflictChance();
-        Debug.Log($"EXPLODE RATE: {explodeRate}");
 
         float oldRate = _imgFillRate.fillAmount;
         DOTween.Kill(this.tweenID);

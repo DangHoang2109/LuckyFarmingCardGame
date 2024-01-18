@@ -367,8 +367,7 @@ public class InGameMainPlayerItem : InGameBasePlayerItem
     }
     public void OnClickShowQuickTutorial()
     {
-        GameManager.Instance.OnShowDialog<BaseDialog>("Dialogs/RuleSummaryDialog");
-
+        RuleSummaryDialog.ShowDialog();
         //GameManager.Instance.OnShowDialog<Instruction_CardEffectQuickthroughDialog>("Dialogs/Instruction_CardEffectQuickthroughDialog");
     }
 }

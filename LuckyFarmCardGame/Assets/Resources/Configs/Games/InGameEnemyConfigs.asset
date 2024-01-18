@@ -151,7 +151,7 @@ MonoBehaviour:
     - _id: 0
       _name: Peaceful Forest
       _waveProgression:
-        _hpProgression: 1.3
+        _hpProgression: 1.2
         _dmgProgression: 1.1
         _shieldProgression: 1
       _waveConfigs:
@@ -166,7 +166,7 @@ MonoBehaviour:
         _enemyIDsInRound: 000000000a000000
       - _type: 0
         _wave: 3
-        _enemyIDsInRound: 010000000200000000000000
+        _enemyIDsInRound: 02000000
       - _type: 0
         _wave: 4
         _enemyIDsInRound: 0100000002000000

@@ -301,9 +301,7 @@ public class InGameManager : MonoSingleton<InGameManager>
     public void StartGame()
     {
         this._gameState = GameState.PLAYING;
-        GameManager.Instance.OnShowDialog<BaseDialog>("Dialogs/RuleSummaryDialog");
-
-        OnBeginRound();
+        RuleSummaryDialog.ShowDialog(OnBeginRound);
     }
 
     #region Round Action
@@ -378,6 +376,18 @@ public class InGameManager : MonoSingleton<InGameManager>
     private void OnACardGoingBeDrawed()
     {
         this.CurrentTurnPlayer?.OnACardGoingBeDrawed();
+    }
+    public void OnAutoEndTurn()
+    {
+        if (!this.CurrentTurnPlayer.IsMainPlayer)
+            return;
+
+        Debug.Log("ADD REQ ENDTURN");
+        CardGameActionController.Instance.AddCallbackEndTurnWhenFXComplete(cb: () =>
+        {
+            Debug.Log("FINAL ENDTURN");
+            OnUserEndTurn();
+        });
     }
     public void OnMainUserEndTurn()
     {
@@ -558,7 +568,14 @@ public class InGameManager : MonoSingleton<InGameManager>
             return;
         }
         else
+        {
             dead.ClearWhenDead();
+            if (!IsHaveEnemy && this.CurrentTurnPlayer.IsMainPlayer)
+            {
+                Debug.Log("AUTO ENDTURN");
+                OnAutoEndTurn();
+            }
+        }
 
         //auto endturn will cause error if card has multiple effect like chain
 
@@ -607,8 +624,10 @@ public class InGameManager : MonoSingleton<InGameManager>
 
     private void OnLogicEndTurn()
     {
+        Debug.Log("ADD REQ ENDTURN");
         CardGameActionController.Instance.AddCallbackWhenFXComplete(cb: () =>
         {
+            Debug.Log("FINAL ENDTURN");
             CurrentTurnPlayer.EndTurn();
 
             //else: keep roll index, if end, go next round

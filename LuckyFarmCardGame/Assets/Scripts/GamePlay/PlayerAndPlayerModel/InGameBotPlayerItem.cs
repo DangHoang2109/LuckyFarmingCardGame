@@ -143,7 +143,10 @@ public class InGameBotPlayerItem : InGameBasePlayerItem
     {
         dmg = base.Attacked(dmg);
         if(dmg > 0)
+        {
+            //VFXAttackedEnemyActionManager.Instance.ShowVFxXAttacked(this);
             this._animator?.ShowAttacked(isDead(), OnDeadComplete);
+        }
         return dmg;
         void OnDeadComplete()
         {
