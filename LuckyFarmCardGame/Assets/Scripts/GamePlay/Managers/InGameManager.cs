@@ -98,6 +98,9 @@ public class InGameManager : MonoSingleton<InGameManager>
     {
         this._gameState = GameState.WAITING;
 
+        ListingUpgradedCardsDialog.ShowDialog().OnCloseDialog();
+
+
         //Init Game
         InitGame();
         //Assign Game Rule Component
@@ -597,12 +600,10 @@ public class InGameManager : MonoSingleton<InGameManager>
 
     private void OnLogicEndTurn()
     {
-        Debug.Log("ADD REQ ENDTURN");
+        CurrentTurnPlayer.EndTurn();
+
         CardGameActionController.Instance.AddCallbackWhenFXComplete(cb: () =>
         {
-            Debug.Log("FINAL ENDTURN");
-            CurrentTurnPlayer.EndTurn();
-
             //else: keep roll index, if end, go next round
             if (_turnIndex == this._playersModels.Count - 1)
             {

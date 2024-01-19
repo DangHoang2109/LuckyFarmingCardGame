@@ -151,7 +151,7 @@ MonoBehaviour:
     - _id: 0
       _name: Peaceful Forest
       _waveProgression:
-        _hpProgression: 1.2
+        _hpProgression: 1.15
         _dmgProgression: 1.1
         _shieldProgression: 1
       _waveConfigs:
