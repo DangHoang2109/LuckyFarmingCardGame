@@ -15,7 +15,8 @@ public class TutorialManager : MonoSingleton<TutorialManager>
     
     [SerializeField]
     private TutorialFaceImage panelFace;
-    [SerializeField] private TutorialTapAnywhere panelTapAnywhere;
+    [SerializeField]
+    private TutorialFaceHighLightNoTap panelHighLight;
 
     private Dictionary<int, List<TutorialHighLight>> dicHightLights = new Dictionary<int, List<TutorialHighLight>>();
     public static System.Action<int> tutorialCallback;
@@ -46,7 +47,7 @@ public class TutorialManager : MonoSingleton<TutorialManager>
             //LogGameAnalytics.Instance.LogTutorialStep(currentStep);
         }
     }
-
+    [SerializeField] private TutorialSpeechPopup _tutorialPopup;
     private TutorialConfig config
     {
         get
@@ -89,6 +90,7 @@ public class TutorialManager : MonoSingleton<TutorialManager>
     {
         if (this.config == null)
         {
+            _tutorialPopup.OnClose();
             return;
         }
 
@@ -98,21 +100,46 @@ public class TutorialManager : MonoSingleton<TutorialManager>
 
     private void ShowTutorialStep(TutorialConfig config)
     {
+        //close previous tut step and popup
         this.ShowFace(false);
-        this.ShowHighLight(this.TutorialCurrentStep, false);
-        this.ShowTapAnyWhere(config.step, false);
+        this.ShowHightLight(false);
+        this.ShowHighLight_NeedTap(this.TutorialCurrentStep, false);
+        this.ShowHightLight_NoTap(this.TutorialCurrentStep, false);
+
+        if (!this._tutorialPopup.gameObject.activeInHierarchy)
+            _tutorialPopup.OnShow();
 
         Debug.Log($"TUT: {config.message}");
-        if (config._isShowHighLight)
+        switch (config._tutType)
         {
-            this.ShowFace(true);
-            this.panelFace.SetClickable(TutorialCurrentStep, config._isNeedTapOnFace);
-            this.ShowHighLight(this.TutorialCurrentStep, true);
+            case TutorialType.TAP:
+                this.ShowFace(true);
+                this.ShowHighLight_NeedTap(this.TutorialCurrentStep, true);
+                _tutorialPopup.SetIsNeedClick(false);
+                _tutorialPopup.SetText(TutorialCurrentStep, config.message);
+                break;
+            case TutorialType.HIGHLIGHT_ONLY:
+                this.ShowHightLight(true);
+                this.ShowHightLight_NoTap(this.TutorialCurrentStep, true);
+                _tutorialPopup.SetText(TutorialCurrentStep, config.message);
+                _tutorialPopup.SetIsNeedClick(true);
+                break;
+            case TutorialType.SPEECH_ONLY:
+                _tutorialPopup.SetText(TutorialCurrentStep, config.message);
+                _tutorialPopup.SetIsNeedClick(true);
+                break;
         }
-        else
-        {
-            this.ShowTapAnyWhere(config.step, true);
-        }
+
+        //if (config._isShowHighLight)
+        //{
+        //    this.ShowFace(true);
+        //    this.panelFace.SetClickable(TutorialCurrentStep, config._isNeedTapOnFace);
+        //    this.ShowHighLight(this.TutorialCurrentStep, true);
+        //}
+        //else
+        //{
+        //    this.ShowTapAnyWhere(config.step, true);
+        //}
     }
 
     public void DoTutorial(int step)
@@ -135,14 +162,45 @@ public class TutorialManager : MonoSingleton<TutorialManager>
         {
             this.nextStep = -1;
             this.ShowFace(false);
-            this.ShowHighLight(this.TutorialCurrentStep, false);
-            this.ShowTapAnyWhere(this.TutorialCurrentStep, false);
+            this.ShowHighLight_NeedTap(this.TutorialCurrentStep, false);
             this.isShow = false;
         }
     }
     
+    public void ShowHightLight_NoTap(int _step, bool _isShow)
+    {
+        if (this.dicHightLights.TryGetValue(_step, out List<TutorialHighLight> values))
+        {
+            HightLight(values);
+        }
+        else
+        {
+            //find that object again
+            List<TutorialHighLight> tutHighlight = new List<TutorialHighLight>(FindObjectsOfType<TutorialHighLight>());
+            if (tutHighlight != null && tutHighlight.Count > 0)
+            {
+                List<TutorialHighLight> highLightsByCode = tutHighlight.FindAll(x => x.step == _step);
+                if (highLightsByCode != null && highLightsByCode.Count > 0)
+                {
+                    this.dicHightLights.Add(_step, highLightsByCode);
+                    HightLight(highLightsByCode);
+                }
+            }
+        }
+        void HightLight(List<TutorialHighLight> values)
+        {
+            foreach (var h in values)
+            {
+                if (_isShow)
+                {
+                    this.panelHighLight.Play(h.rect);
+                }
 
-    public void ShowHighLight(int _step, bool _isShow)
+                h.ShowTutorial(_isShow);
+            }
+        }
+    }
+    public void ShowHighLight_NeedTap(int _step, bool _isShow)
     {
         if(this.dicHightLights.TryGetValue(_step, out List<TutorialHighLight> values))
         {
@@ -176,12 +234,9 @@ public class TutorialManager : MonoSingleton<TutorialManager>
     {
         this.panelFace.gameObject.SetActive(isOn);
     }
-    
-    public void ShowTapAnyWhere(int _step, bool _isShow)
+    private void ShowHightLight(bool isOn)
     {
-        panelTapAnywhere.gameObject.SetActive(_isShow);
-        if(_isShow)
-            panelTapAnywhere.step = _step;
+        this.panelHighLight.gameObject.SetActive(isOn);
     }
 #if UNITY_EDITOR
 

@@ -19,83 +19,63 @@ MonoBehaviour:
     message: Welcome to Lucky Farm, in here we will try to win the stage by drawing
       cards
     nextStep: 101
-    _isShowHighLight: 0
-    _isNeedTapOnFace: 0
+    _tutType: 1
   - step: 101
     title: Draw 1st card
     message: First, Click the Deck button to draw a card.
     nextStep: 102
-    _isShowHighLight: 1
-    _isNeedTapOnFace: 0
+    _tutType: 0
   - step: 102
     title: Pallet
     message: Card drawn will be put to pallet after activated it effect.
     nextStep: 103
-    _isShowHighLight: 1
-    _isNeedTapOnFace: 1
+    _tutType: 1
   - step: 103
     title: View Card
     message: You can click on to the card icon on pallet to view the effect.
     nextStep: 112
-    _isShowHighLight: 1
-    _isNeedTapOnFace: 0
+    _tutType: 0
   - step: 112
     title: Close Card Effect
     message: Tap here to close it
     nextStep: 104
-    _isShowHighLight: 1
-    _isNeedTapOnFace: 0
+    _tutType: 0
   - step: 104
     title: Draw 2nd Card
-    message: Draw your next card, Bucklet is just one among 6 different cards in
-      deck.
+    message: Draw your next card, You can draw many card in turn
     nextStep: 105
-    _isShowHighLight: 1
-    _isNeedTapOnFace: 0
+    _tutType: 2
   - step: 105
     title: End 1st Turn
     message: Let end the turn here!
     nextStep: 106
-    _isShowHighLight: 1
-    _isNeedTapOnFace: 0
+    _tutType: 0
   - step: 106
     title: Points
-    message: Card from pallet will be collected as point, and your card will be upgraded
-      automatically from it, so try to maximize the pallet.
+    message: Card from pallet will be collected as point to be upgraded, so try to
+      maximize the pallet.
     nextStep: 107
-    _isShowHighLight: 1
-    _isNeedTapOnFace: 1
+    _tutType: 1
   - step: 107
     title: Monster Attack
     message: The Monster will try to attack you or activated their skill on their
       turn, you can also tap on to view their skill
-    nextStep: 111
-    _isShowHighLight: 1
-    _isNeedTapOnFace: 0
-  - step: 111
-    title: Close Enemy Eff
-    message: Tap here to close it
     nextStep: 108
-    _isShowHighLight: 1
-    _isNeedTapOnFace: 0
+    _tutType: 1
   - step: 108
     title: 'Draw Card '
     message: It is your turn again, draw first card and see what it is.
     nextStep: 109
-    _isShowHighLight: 1
-    _isNeedTapOnFace: 0
+    _tutType: 2
   - step: 109
     title: Explode
-    message: If you draw an existed card on pallet, the pallet will explode and you
-      will receive nothing, so be careful. This is the chance to be safe when draw
-      next card
+    message: Two same cards on pallet will end your turn and you will not receive
+      bonus HP. Keep an eye to this rate meter
     nextStep: 110
-    _isShowHighLight: 1
-    _isNeedTapOnFace: 1
+    _tutType: 2
   - step: 110
     title: Summary
     message: I believe you can defeat all the monster on your own, You can view the
       summary of rule in here anytime
     nextStep: -1
-    _isShowHighLight: 1
-    _isNeedTapOnFace: 0
+    _tutType: 0

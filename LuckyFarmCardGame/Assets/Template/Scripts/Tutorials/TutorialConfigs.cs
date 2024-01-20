@@ -55,15 +55,7 @@ public class TutorialConfig
     [ValueDropdown("ListNextStepViews", ExpandAllMenuItems = true)]
     public int nextStep = -1;
 
-    /// <summary>
-    /// Làm đen nền + highlight sáng 1 vùng
-    /// False: Ko đen nền, tap anywhere sẽ run next step
-    /// </summary>
-    public bool _isShowHighLight;
-    /// <summary>
-    /// Highlight đang chỉ vào các UI không phải button nên cần bật buttn internal của face để bắt event
-    /// </summary>
-    public bool _isNeedTapOnFace;
+    public TutorialType _tutType;
 #if UNITY_EDITOR
     private IEnumerable ListNextStepViews()
     {
@@ -73,4 +65,12 @@ public class TutorialConfig
         return temp;
     }
     #endif
+}
+
+public enum TutorialType
+{
+    NONE = -1,
+    TAP = 0, //MUST TAP ON THE HIGHLIGH
+    SPEECH_ONLY = 1, //TAP ANYWHERE, NO HIGHLIGHT
+    HIGHLIGHT_ONLY = 2, //TAP ANYWHERE, HIGHLIGHT WHERE YOU NEED
 }
