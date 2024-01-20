@@ -153,7 +153,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &7260995369255967540
 RectTransform:
   m_ObjectHideFlags: 0
@@ -208,11 +208,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f21f7f2ae31ed94429ea250344118af3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  canvasGroup: {fileID: 6031609247369972975}
-  panel: {fileID: 1259721283549505000}
-  backgrounds: []
   _tmpText: {fileID: 8882973165867599804}
   _panelContent: {fileID: 919015011550311143}
+  _blocker: {fileID: 267841109674714120}
   step: 0
   _isClickToNextStep: 0
 --- !u!1 &2036224820378193536

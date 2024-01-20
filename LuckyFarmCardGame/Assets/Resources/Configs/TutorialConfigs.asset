@@ -17,65 +17,82 @@ MonoBehaviour:
   - step: 100
     title: Welcome
     message: Welcome to Lucky Farm, in here we will try to win the stage by drawing
-      cards
+      cards<br>Tap to continue
     nextStep: 101
     _tutType: 1
+    _blockBehind: 1
+    _waitingTime: 0
   - step: 101
     title: Draw 1st card
     message: First, Click the Deck button to draw a card.
     nextStep: 102
     _tutType: 0
+    _blockBehind: 0
+    _waitingTime: 0
   - step: 102
     title: Pallet
-    message: Card drawn will be put to pallet after activated it effect.
+    message: Card drawn will be put to pallet after activated it effect.<br>Tap to
+      continue
     nextStep: 103
     _tutType: 1
+    _blockBehind: 1
+    _waitingTime: 0
   - step: 103
     title: View Card
-    message: You can click on to the card icon on pallet to view the effect.
+    message: You can tap on to the card icon on pallet to view the effect.
     nextStep: 112
     _tutType: 0
+    _blockBehind: 0
+    _waitingTime: 0
   - step: 112
     title: Close Card Effect
     message: Tap here to close it
     nextStep: 104
     _tutType: 0
+    _blockBehind: 0
+    _waitingTime: 0
   - step: 104
     title: Draw 2nd Card
     message: Draw your next card, You can draw many card in turn
     nextStep: 105
     _tutType: 2
+    _blockBehind: 0
+    _waitingTime: 0
   - step: 105
     title: End 1st Turn
     message: Let end the turn here!
     nextStep: 106
     _tutType: 0
+    _blockBehind: 0
+    _waitingTime: 0
   - step: 106
     title: Points
     message: Card from pallet will be collected as point to be upgraded, so try to
-      maximize the pallet.
-    nextStep: 107
-    _tutType: 1
-  - step: 107
-    title: Monster Attack
-    message: The Monster will try to attack you or activated their skill on their
-      turn, you can also tap on to view their skill
+      maximize the pallet.<br>Tap to continue
     nextStep: 108
     _tutType: 1
+    _blockBehind: 1
+    _waitingTime: 0
   - step: 108
     title: 'Draw Card '
     message: It is your turn again, draw first card and see what it is.
     nextStep: 109
     _tutType: 2
+    _blockBehind: 0
+    _waitingTime: 0
   - step: 109
     title: Explode
     message: Two same cards on pallet will end your turn and you will not receive
-      bonus HP. Keep an eye to this rate meter
+      bonus HP.<br>Tap to continue
     nextStep: 110
     _tutType: 2
+    _blockBehind: 0
+    _waitingTime: 0
   - step: 110
     title: Summary
     message: I believe you can defeat all the monster on your own, You can view the
-      summary of rule in here anytime
+      summary of rule in here anytime<br>Tap to end tutorial
     nextStep: -1
-    _tutType: 0
+    _tutType: 2
+    _blockBehind: 0
+    _waitingTime: 0

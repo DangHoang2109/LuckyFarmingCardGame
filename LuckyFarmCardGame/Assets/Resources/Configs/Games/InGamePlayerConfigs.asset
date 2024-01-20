@@ -15,7 +15,7 @@ MonoBehaviour:
   _character:
   - _characterID: 10
     _name: Farmer
-    _maxHP: 70
+    _maxHP: 10
     _baseDamage: 6
     _baseShield: 5
     _baseHeal: 3

@@ -68,6 +68,8 @@ public class EndGameDialog : BaseDialog
     public void OnQuit()
     {
         _tmpTitle.text = "CHƯA LÀM HOMESCENE, REOPEN APP NHA!";
+        TempSceneManager.Instance.UnLoadScene(SceneName.GAME);
+        TestSceneLoader.Instance.gameObject.SetActive(true);
     }
     public void Dev_OnReplay()
     {

@@ -16,6 +16,11 @@ public class RuleSummaryDialog : BaseDialog
     {
         base.OnHide();
     }
+    protected override void AnimationShow()
+    {
+        panel.transform.localPosition = Vector3.zero;
+        base.AnimationShow();
+    }
     protected override void AnimationHide()
     {
         if(_tfButtonShowRuleSummary != null)
@@ -33,6 +38,7 @@ public class RuleSummaryDialog : BaseDialog
     {
         this.cbComplete?.Invoke();
         base.OnCompleteHide();
+        cbComplete = null;
     }
     public static RuleSummaryDialog ShowDialog(System.Action cbComplete = null)
     {

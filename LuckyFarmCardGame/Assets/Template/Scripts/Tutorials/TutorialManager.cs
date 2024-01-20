@@ -97,17 +97,35 @@ public class TutorialManager : MonoSingleton<TutorialManager>
         this.isShow = true;
         ShowTutorialStep(this.config);
     }
-
+    void ShowTutSpeechPopup(bool isShowm, bool isBlockBehin = false)
+    {
+        if (isShowm)
+            _tutorialPopup.OnShow(isBlockBehin);
+        else
+            _tutorialPopup.OnClose();
+    }
     private void ShowTutorialStep(TutorialConfig config)
     {
         //close previous tut step and popup
+        StartCoroutine(ieShowTutorial(config));
+    }
+    void HideAllTutorial()
+    {
         this.ShowFace(false);
         this.ShowHightLight(false);
         this.ShowHighLight_NeedTap(this.TutorialCurrentStep, false);
         this.ShowHightLight_NoTap(this.TutorialCurrentStep, false);
+        ShowTutSpeechPopup(false);
+    }
+    private IEnumerator ieShowTutorial(TutorialConfig config)
+    {
+        yield return new WaitForSeconds(0.1f);
 
-        if (!this._tutorialPopup.gameObject.activeInHierarchy)
-            _tutorialPopup.OnShow();
+        HideAllTutorial();
+
+        yield return new WaitUntil(() => !CardGameActionController.Instance.IsAnyVfxShowing);
+
+        ShowTutSpeechPopup(true, config._blockBehind);
 
         Debug.Log($"TUT: {config.message}");
         switch (config._tutType)
@@ -116,6 +134,7 @@ public class TutorialManager : MonoSingleton<TutorialManager>
                 this.ShowFace(true);
                 this.ShowHighLight_NeedTap(this.TutorialCurrentStep, true);
                 _tutorialPopup.SetIsNeedClick(false);
+                _tutorialPopup.SetTimer(false);
                 _tutorialPopup.SetText(TutorialCurrentStep, config.message);
                 break;
             case TutorialType.HIGHLIGHT_ONLY:
@@ -123,25 +142,15 @@ public class TutorialManager : MonoSingleton<TutorialManager>
                 this.ShowHightLight_NoTap(this.TutorialCurrentStep, true);
                 _tutorialPopup.SetText(TutorialCurrentStep, config.message);
                 _tutorialPopup.SetIsNeedClick(true);
+                _tutorialPopup.SetTimer(true);
                 break;
             case TutorialType.SPEECH_ONLY:
                 _tutorialPopup.SetText(TutorialCurrentStep, config.message);
                 _tutorialPopup.SetIsNeedClick(true);
+                _tutorialPopup.SetTimer(true);
                 break;
         }
-
-        //if (config._isShowHighLight)
-        //{
-        //    this.ShowFace(true);
-        //    this.panelFace.SetClickable(TutorialCurrentStep, config._isNeedTapOnFace);
-        //    this.ShowHighLight(this.TutorialCurrentStep, true);
-        //}
-        //else
-        //{
-        //    this.ShowTapAnyWhere(config.step, true);
-        //}
     }
-
     public void DoTutorial(int step)
     {
         if (step != this.TutorialCurrentStep)
@@ -160,10 +169,7 @@ public class TutorialManager : MonoSingleton<TutorialManager>
         }
         else
         {
-            this.nextStep = -1;
-            this.ShowFace(false);
-            this.ShowHighLight_NeedTap(this.TutorialCurrentStep, false);
-            this.isShow = false;
+            HideAllTutorial();
         }
     }
     

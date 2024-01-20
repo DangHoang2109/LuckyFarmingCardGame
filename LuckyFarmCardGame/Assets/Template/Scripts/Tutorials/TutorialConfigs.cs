@@ -55,7 +55,12 @@ public class TutorialConfig
     [ValueDropdown("ListNextStepViews", ExpandAllMenuItems = true)]
     public int nextStep = -1;
 
+    [TabGroup("Setting")]
     public TutorialType _tutType;
+    [TabGroup("Setting")]
+    public bool _blockBehind; //false neu61 tut lien quan toi tap vao button
+    [TabGroup("Setting")]
+    public bool _waitingTime;
 #if UNITY_EDITOR
     private IEnumerable ListNextStepViews()
     {

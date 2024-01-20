@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TestSceneLoader : MonoBehaviour
+public class TestSceneLoader : MonoSingleton<TestSceneLoader>
 {
     //Will be remove when have joingame datas and joingamemanager
     public static bool _isTutorial = false;

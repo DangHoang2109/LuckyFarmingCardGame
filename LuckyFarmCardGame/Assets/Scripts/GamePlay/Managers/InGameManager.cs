@@ -96,14 +96,18 @@ public class InGameManager : MonoSingleton<InGameManager>
     /// </summary>
     public void PrepareGame()
     {
-        RuleSummaryDialog.ShowDialog(TrulyPrepare);
+        ListingUpgradedCardsDialog.ShowDialog().OnCloseDialog();
+
+        if (TestSceneLoader._isTutorial)
+            TrulyPrepare();
+        else
+        {
+            RuleSummaryDialog.ShowDialog(TrulyPrepare);
+        }
 
         void TrulyPrepare()
         {
             this._gameState = GameState.WAITING;
-
-            ListingUpgradedCardsDialog.ShowDialog().OnCloseDialog();
-
 
             //Init Game
             InitGame();
@@ -139,7 +143,8 @@ public class InGameManager : MonoSingleton<InGameManager>
         {
             2, //bucklet
             0, //Sword
-            4, //magic eye
+            3, //Pill
+            0, //Sword
         };
         GameController?.PlaceCardOnTopDeck(cardPlaceOnTop);
     }
