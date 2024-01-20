@@ -96,36 +96,41 @@ public class InGameManager : MonoSingleton<InGameManager>
     /// </summary>
     public void PrepareGame()
     {
-        this._gameState = GameState.WAITING;
+        RuleSummaryDialog.ShowDialog(TrulyPrepare);
 
-        ListingUpgradedCardsDialog.ShowDialog().OnCloseDialog();
-
-
-        //Init Game
-        InitGame();
-        //Assign Game Rule Component
-
-        //Init Game Controller
-        GameController?.AddCallback_CardOnGoingDrawed(this.OnACardGoingBeDrawed);
-        GameController?.AddCallback_CardPutToPallet(this.OnLetUserActionWhenCardActiveEffectWhenPutToPallet);
-        GameController?.AddCallback_PalletConflict(this.OnPalletConflict);
-        GameController?.AddCallback_PalletDestroyed(this.OnPalletDestroyed);
-
-        GameController?.InitGame(this.MainUserPlayer.DeckConfig);
-
-        //Will be remove when have joingame datas and joingamemanager
-        if (TestSceneLoader._isTutorial)
-            InitTutorialDeck();
-
-        //Start the game
-        StartGame();
-
-        //Will be remove when have joingame datas and joingamemanager
-        if (TestSceneLoader._isTutorial)
+        void TrulyPrepare()
         {
-            DoTutorialAction openBag = new DoTutorialAction(100);
-            DoActionManager.Instance.AddAction(openBag);
-            DoActionManager.Instance.RunningAction();
+            this._gameState = GameState.WAITING;
+
+            ListingUpgradedCardsDialog.ShowDialog().OnCloseDialog();
+
+
+            //Init Game
+            InitGame();
+            //Assign Game Rule Component
+
+            //Init Game Controller
+            GameController?.AddCallback_CardOnGoingDrawed(this.OnACardGoingBeDrawed);
+            GameController?.AddCallback_CardPutToPallet(this.OnLetUserActionWhenCardActiveEffectWhenPutToPallet);
+            GameController?.AddCallback_PalletConflict(this.OnPalletConflict);
+            GameController?.AddCallback_PalletDestroyed(this.OnPalletDestroyed);
+
+            GameController?.InitGame(this.MainUserPlayer.DeckConfig);
+
+            //Will be remove when have joingame datas and joingamemanager
+            if (TestSceneLoader._isTutorial)
+                InitTutorialDeck();
+
+            //Start the game
+            StartGame();
+
+            //Will be remove when have joingame datas and joingamemanager
+            if (TestSceneLoader._isTutorial)
+            {
+                DoTutorialAction openBag = new DoTutorialAction(100);
+                DoActionManager.Instance.AddAction(openBag);
+                DoActionManager.Instance.RunningAction();
+            }
         }
     }
     public void InitTutorialDeck()
@@ -302,7 +307,7 @@ public class InGameManager : MonoSingleton<InGameManager>
     public void StartGame()
     {
         this._gameState = GameState.PLAYING;
-        RuleSummaryDialog.ShowDialog(OnBeginRound);
+        OnBeginRound();
     }
 
     #region Round Action
