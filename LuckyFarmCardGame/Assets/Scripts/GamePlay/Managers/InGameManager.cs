@@ -149,6 +149,14 @@ public class InGameManager : MonoSingleton<InGameManager>
             if (TestSceneLoader._isTutorial)
                 InitTutorialDeck();
 
+#if UNITY_EDITOR
+            List<int> cardPlaceOnTop = new List<int>()
+            {
+                15, //Shadow Cloak
+            };
+            GameController?.PlaceCardOnTopDeck(cardPlaceOnTop);
+#endif
+
             //Start the game
             StartGame();
 

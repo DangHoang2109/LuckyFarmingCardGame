@@ -379,6 +379,9 @@ public class InGameCardEffectActivator_ReduceDmgNAttackSingle : InGameBaseCardEf
     public override void ActiveEffectWhenPlaceToPallet()
     {
         base.ActiveEffectWhenPlaceToPallet();
+        this._host?.AttackSingleUnit(GetStatAsInt());
+        this._host?.SetReduceDamage(50f, 1);//reduce 50%
+
         InGameManager.Instance.OnTellControllerContinueTurn();
     }
     public override void ActiveEffectWhenDestroyed()
@@ -395,6 +398,7 @@ public class InGameCardEffectActivator_ReduceDmgNAttackSingle : InGameBaseCardEf
         {
             notifies = new List<string>()
             {
+                $"Reduce 50% damage next turn",
                 $"Attack {GetStat()} damages"
             };
         }
@@ -550,6 +554,7 @@ public class InGameCardEffectActivator_MultiplierCardEffect : InGameBaseCardEffe
 }
 public class InGameCardEffectActivator_ReduceDamage : InGameBaseCardEffectActivator
 {
+    //Shadow cloak
     public override InGameBaseCardEffectID ID => InGameBaseCardEffectID.REDUCE_DMG;
 
     public override void ActiveEffectWhenDrawed()
@@ -559,8 +564,9 @@ public class InGameCardEffectActivator_ReduceDamage : InGameBaseCardEffectActiva
     public override void ActiveEffectWhenPlaceToPallet()
     {
         base.ActiveEffectWhenPlaceToPallet();
-        InGameManager.Instance.OnTellControllerContinueTurn();
+        this._host?.SetReduceDamage(GetStat(), 3);//reduce 50%
 
+        InGameManager.Instance.OnTellControllerContinueTurn();
     }
     public override void ActiveEffectWhenDestroyed()
     {
@@ -570,11 +576,17 @@ public class InGameCardEffectActivator_ReduceDamage : InGameBaseCardEffectActiva
     {
         base.ActiveEffectWhenPulledToBag();
     }
-    public override void ShowingNotification()
+    public override List<string> NotifyText()
     {
-
+        if (notifies == null || notifies.Count == 0)
+        {
+            notifies = new List<string>()
+            {
+                $"Reduce {GetStat()}% damage next 3 turns",
+            };
+        }
+        return base.NotifyText();
     }
-
     public override float GetStat()
     {
         return this.CurrentLevelConfig._stat;
