@@ -33,14 +33,14 @@ public class InGamePlayerUpgradePalletAnim : MonoBehaviour
         DoCollectUpgrade act = new DoCollectUpgrade(anim);
         CollectUpgradeActionManager.Instance.AddActionAndRun(act);
     }
-
-    //private void Update()
-    //{
-    //    if(Input.GetKeyDown(KeyCode.Space)) 
-    //    {
-    //        ShowCollectUpgrade(0, 0, 1, 2);
-    //        ShowCollectUpgrade(1, 0, 1, 2);
-    //        ShowCollectUpgrade(2, 0, 1, 2);
-    //    }
-    //}
+    public void ClearItems()
+    {
+        if(_dicItem != null)
+        {
+            foreach (var item in _dicItem.Values)
+            {
+                item.SetData(0, 0, 1, _tfFrom, _tfTo);
+            }
+        }
+    }
 }

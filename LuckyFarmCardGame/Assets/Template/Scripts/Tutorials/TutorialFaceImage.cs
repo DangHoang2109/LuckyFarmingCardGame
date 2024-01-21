@@ -12,7 +12,7 @@ public class TutorialFaceImage : MaskableGraphic, ICanvasRaycastFilter
     private RectTransform _targetArea;
     [SerializeField]
     private RectTransform targetPanel;
-    public bool IsRaycastLocationValid(Vector2 sp, Camera eventCamera)
+    public virtual bool IsRaycastLocationValid(Vector2 sp, Camera eventCamera)
     {
         if(_isClickable)
             return RectTransformUtility.RectangleContainsScreenPoint(_targetArea, sp, eventCamera);
@@ -30,7 +30,7 @@ public class TutorialFaceImage : MaskableGraphic, ICanvasRaycastFilter
         gameObject.SetActive(false);
     }
 
-    public void Play(RectTransform target)
+    public virtual void Play(RectTransform target)
     {
         gameObject.SetActive(true);
         
@@ -150,9 +150,8 @@ public class TutorialFaceImage : MaskableGraphic, ICanvasRaycastFilter
         }
     }
 
-    private int _step;
-    private bool _isClickable;
-    [SerializeField] private Button _btnClickOn;
+    protected int _step;
+    protected bool _isClickable;
     /// <summary>
     /// Use this if you need to highlight anywhere need tap, but it not be a button
     /// </summary>
@@ -161,12 +160,6 @@ public class TutorialFaceImage : MaskableGraphic, ICanvasRaycastFilter
     public void SetClickable(int step, bool isClickable)
     {
         _isClickable = isClickable;
-        //this._btnClickOn.gameObject.SetActive(isClickable);
         this._step = step;
-    }
-    public void Click()
-    {
-        if(_isClickable)
-            TutorialManager.Instance.DoTutorial(_step);
     }
 }

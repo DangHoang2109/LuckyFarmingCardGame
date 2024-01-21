@@ -573,7 +573,6 @@ public class InGame_CardDataModelWithAmount
 public class BaseInGameMainPlayerDataModel : BaseInGamePlayerDataModel
 {
     public InGamePlayerConfig _statConfig;
-    public InGameDeckConfig DeckConfig => this._statConfig?.DeckConfig;
  
     public List<InGame_CardDataModelLevels> _bag;
     public Dictionary<int, InGame_CardDataModelLevels> _dictionaryBags;

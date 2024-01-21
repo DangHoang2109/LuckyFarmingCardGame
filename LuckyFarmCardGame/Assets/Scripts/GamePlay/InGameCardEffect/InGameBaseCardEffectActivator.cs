@@ -258,7 +258,7 @@ public class InGameCardEffectActivator_AttackAllUnit : InGameBaseCardEffectActiv
         }
         return base.NotifyText();
     }
-    public override float GetStat() => ((int)this.CurrentLevelConfig?._stat * _host?.BaseDamagePerTurn) ?? 0;
+    public override float GetStat() => (int)(this.CurrentLevelConfig?._stat * _host?.BaseDamagePerTurn);
 }
 public class InGameCardEffectActivator_Defense : InGameBaseCardEffectActivator
 {

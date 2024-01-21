@@ -17,9 +17,27 @@ public class InGameMainPlayerItem : InGameBasePlayerItem
             return _mainDataModel;
         }
     }
-    public InGameDeckConfig DeckConfig => this.MainDataModel?.DeckConfig;
+    public override int CurrentHP { get => base.CurrentHP; 
+        set
+        {
+            base.CurrentHP = value;
 
+            //if(value > 0)
+            //{
+            //    _hpAddNotification.gameObject.SetActive(true);
+            //    _hpAddNotification.ShowText(
+            //        content: $"+{value} HP",
+            //        mainPlayerTurn: true,
+            //        playerShowPos: _hpAddNotification.transform.position,
+            //        delay: 0.25f,
+            //        timeStay: 0.25f,
+            //        isNoisePosition: false,
+            //        onComplete: (r) => { _hpAddNotification.gameObject.SetActive(false); }
+            //        );
+            //}
 
+        } 
+    }
     #region Prop on editor
     public Button _btnDeck;
     public Button _btnEndTurn;
@@ -32,6 +50,7 @@ public class InGameMainPlayerItem : InGameBasePlayerItem
     public Image _imgAvatar;
 
     public GameObject _gVFXAttacked, _gVFXShieldDefAttack;
+    [SerializeField] private InGameTurnNotificationItem _hpAddNotification;
 
     #endregion Prop on editor
 
@@ -117,9 +136,14 @@ public class InGameMainPlayerItem : InGameBasePlayerItem
     }
     public void PullCardToBag(bool isPalletConflict, List<InGame_CardDataModel> cardReceive)
     {
+        int _hpPerCard = 2;
         //heal 1HP each card, use this for not showing the animation flower
-        if(!isPalletConflict)
-            this.CurrentHP += cardReceive.Count;
+        if (!isPalletConflict)
+        {
+            int hpAdd = cardReceive.Count * _hpPerCard;
+            InGameManager.Instance.ShowNotificationCardAction($"+{hpAdd} HP");
+            this.CurrentHP += hpAdd;
+        }
 
         ReceiveCardPoint(cardReceive);
     }
@@ -131,7 +155,8 @@ public class InGameMainPlayerItem : InGameBasePlayerItem
             if (levelUp != null && levelUp.Count > 0)
             {
                 ListingUpgradedCardsDialog d = ListingUpgradedCardsDialog.ShowDialog();
-                d.ParseData(levelUp, null);
+                if(d != null)
+                    d.ParseData(levelUp, null);
             }
         }
         _tmpCoinValue.SetText($"{(PlayerModel.CurrentCoinPoint).ToString("D2")}");
@@ -279,7 +304,8 @@ public class InGameMainPlayerItem : InGameBasePlayerItem
             void OnCallbackProjectileHit(VFXBaseObject _)
             {
                 InGameManager.Instance.OnPlayerAttacking(frontEnemy.SeatID, stat);
-                this.AddHP(stat);
+                //this.AddHP(stat); this will show flower efect
+                this.CurrentHP += stat;
 
                 InGameManager.Instance.OnTellControllerContinueTurn();
             }
@@ -356,9 +382,11 @@ public class InGameMainPlayerItem : InGameBasePlayerItem
     public override void ClearWhenDead()
     {
         base.ClearWhenDead();
-
-        this._btnDeck.gameObject.SetActive(false);
-        this._btnEndTurn.gameObject.SetActive(false);
+        this._mainDataModel = null;
+        _gVFXAttacked.SetActive(false);
+        _gVFXShieldDefAttack.SetActive(false);
+        //this._btnDeck.gameObject.SetActive(false);
+        //this._btnEndTurn.gameObject.SetActive(false);
     }
     public override void CustomUpdate()
     {

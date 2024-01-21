@@ -90,8 +90,6 @@ public class CardGameController : MonoBehaviour
 
     public int DeckCardAmount => _currentDeck?.Count ?? 0;
 
-    protected int _currentTurnDiceResult;
-    public int CurrentTurnDiceResult => _currentTurnDiceResult;
     protected Coroutine _coroutineWaitDecidingUseGameCoin;
 
     protected bool _isMainUserTurn = false;
@@ -104,7 +102,7 @@ public class CardGameController : MonoBehaviour
     public int CoinForEachDicePoint => _coinForEachDicePoint;
 
     #endregion
-
+    
     public void InitGame(InGameDeckConfig deckConfig)
     {
         _cardsOnPallet = new List<InGame_CardDataModel>();
@@ -125,6 +123,12 @@ public class CardGameController : MonoBehaviour
         this._onCardPutToPallet -= _explodeMeter.OnChangeDeckOrPalletInfo;
         this._onCardPutToPallet += _explodeMeter.OnChangeDeckOrPalletInfo;
         _onDeckAmountChanging?.Invoke(this.DeckCardAmount);
+    }
+    public void ClearGame()
+    {
+        _currentDeck?.Clear();
+        _palletUI?.ClearPallet();
+        _upgradeCollectorAnim?.ClearItems();
     }
     #region Action with Deck
     protected virtual void RecreateTheDeck()

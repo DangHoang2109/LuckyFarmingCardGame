@@ -72,4 +72,20 @@ public class InGamePlayerConfig
         SHIELD,
         HEAL,
     }
+
+    public InGamePlayerConfig()
+    {
+
+    }
+    public InGamePlayerConfig(InGamePlayerConfig c)
+    {
+        this._characterID = c._characterID;
+        this._name = c._name;
+        this._baseDamage = c._baseDamage;
+        this._baseHeal = c._baseHeal;
+        this._baseShield = c._baseShield;
+        this._maxHP = c._maxHP;
+        this._icon = c._icon;
+        this._deckLink = c._deckLink;
+    }
 } 

@@ -320,19 +320,19 @@ MonoBehaviour:
       - _ID: 6
         _level: 2
         _require: 4
-        _stat: 2.5
+        _stat: 3
       - _ID: 6
         _level: 3
         _require: 8
-        _stat: 3
+        _stat: 4
       - _ID: 6
         _level: 4
         _require: 16
-        _stat: 3.5
+        _stat: 5
       - _ID: 6
         _level: 5
         _require: 32
-        _stat: 4
+        _stat: 6
     - _ID: 7
       levels:
       - _ID: 7

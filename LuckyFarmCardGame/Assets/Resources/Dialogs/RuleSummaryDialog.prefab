@@ -515,8 +515,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "K\xEA\u0301t thu\u0301c l\u01B0\u01A1\u0323t va\u0300 nh\xE2\u0323n \u0111i\xEA\u0309m
-    upgrade"
+  m_text: "K\u1EBFt th\xFAc l\u01B0\u1EE3t, nh\u1EADn \u0111i\u1EC3m upgrade v\xE0
+    HP"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: f1948a5c0f092c14a870dc33dd0d07c9, type: 2}
   m_sharedMaterial: {fileID: -6501775814756472322, guid: f1948a5c0f092c14a870dc33dd0d07c9, type: 2}
@@ -1859,7 +1859,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "B\xE2\u0301m va\u0300o 'Deck' \u0111\xEA\u0309 l\xE2\u0323t the\u0309"
+  m_text: "B\u1EA5m l\u1EADt th\u1EBB, tho\u1EA3i m\xE1i r\xFAt th\xEAm!"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: f1948a5c0f092c14a870dc33dd0d07c9, type: 2}
   m_sharedMaterial: {fileID: -6501775814756472322, guid: f1948a5c0f092c14a870dc33dd0d07c9, type: 2}
@@ -2702,8 +2702,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Tr\xEAn ba\u0300n kh\xF4ng \u0111\u01B0\u01A1\u0323c co\u0301 2 the\u0309
-    cu\u0300ng loa\u0323i nha!"
+  m_text: "Tr\xF9ng th\u1EBB = K\u1EBFt th\xFAc l\u01B0\u1EE3t, kh\xF4ng HP Bonus!"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: f1948a5c0f092c14a870dc33dd0d07c9, type: 2}
   m_sharedMaterial: {fileID: -6501775814756472322, guid: f1948a5c0f092c14a870dc33dd0d07c9, type: 2}

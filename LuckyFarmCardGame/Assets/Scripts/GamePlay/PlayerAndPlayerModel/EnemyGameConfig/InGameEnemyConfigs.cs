@@ -69,15 +69,23 @@ public class InGameEnemyConfigs : ScriptableObject
 [System.Serializable]
 public class InGameMapConfigs
 {
+
     public List<InGameMapConfig> _configs;
     public InGameMapConfig GetMapConfig(int mapID) => _configs.Find(x=>x._id == mapID);
 }
 [System.Serializable]
 public class InGameMapConfig
 {
+    [TabGroup("Asset")]
     public int _id;
+    [TabGroup("Asset")]
     public string _name;
+    [TabGroup("Asset")]
+    public Sprite _backgroundImage;
+    [TabGroup("Wave")]
     public InGameMapStatProgression _waveProgression;
+    [TabGroup("Wave")]
+    [TableList]
     public List<InGameEnemyWaveConfig> _waveConfigs;
 
     public InGameEnemyWaveConfig GetWaveConfig(int wave)

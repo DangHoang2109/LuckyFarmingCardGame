@@ -194,7 +194,8 @@ public class InGameBotPlayerItem : InGameBasePlayerItem
     public override void ClearWhenDead()
     {
         base.ClearWhenDead();
-        Destroy(this._animator.gameObject);
+        if(this._animator != null)
+            Destroy(this._animator.gameObject);
     }
     #endregion Turn Action
 
