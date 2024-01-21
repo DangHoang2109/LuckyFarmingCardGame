@@ -2730,6 +2730,7 @@ MonoBehaviour:
   _imgAvatar: {fileID: 5612100448907548556}
   _gVFXAttacked: {fileID: 775200548478035231}
   _gVFXShieldDefAttack: {fileID: 8828062391907614455}
+  _hpAddNotification: {fileID: 0}
 --- !u!1001 &899113517375626255
 PrefabInstance:
   m_ObjectHideFlags: 0

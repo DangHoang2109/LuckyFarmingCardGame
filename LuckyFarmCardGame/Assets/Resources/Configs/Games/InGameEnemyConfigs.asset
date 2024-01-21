@@ -125,7 +125,7 @@ MonoBehaviour:
     - enemyID: 5
       _skills:
       - _skillID: 0
-        _statValue: 20
+        _statValue: 15
         _statIntervall: 0
         _statID: 0
       - _skillID: 4
@@ -150,6 +150,7 @@ MonoBehaviour:
     _configs:
     - _id: 0
       _name: Peaceful Forest
+      _backgroundImage: {fileID: 21300000, guid: 902656789f3fdce44a4dedef36de58e2, type: 3}
       _waveProgression:
         _hpProgression: 1.15
         _dmgProgression: 1.1
@@ -176,18 +177,6 @@ MonoBehaviour:
       - _type: 0
         _wave: 6
         _enemyIDsInRound: 0300000000000000
-      - _type: 0
+      - _type: 2
         _wave: 7
         _enemyIDsInRound: 05000000
-      - _type: 1
-        _wave: 8
-        _enemyIDsInRound: feffffffffffffff
-      - _type: 0
-        _wave: 9
-        _enemyIDsInRound: 010000000200000004000000
-      - _type: 0
-        _wave: 10
-        _enemyIDsInRound: 000000000100000004000000
-      - _type: 2
-        _wave: 11
-        _enemyIDsInRound: 06000000

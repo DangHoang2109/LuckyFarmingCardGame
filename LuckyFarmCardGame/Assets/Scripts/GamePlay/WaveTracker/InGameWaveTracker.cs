@@ -10,7 +10,11 @@ public class InGameWaveTracker : MonoBehaviour
     public Transform _panel;
 
     private InGameMapConfig _map;
-    
+    public void Clear()
+    {
+        if(items != null && items.Count > 0)
+            items.ForEach(x => { x.gameObject.SetActive(false); x.SetIsIn(false); });
+    }
     public void ParseData(InGameMapConfig _map)
     {
         this._map = _map;
@@ -47,9 +51,9 @@ public class InGameWaveTracker : MonoBehaviour
     private void UpdateCenterItem()
     {
         InGameWaveTrackerItem item = this.GetCurrentStepItem();
-        item.SetIsIn(true);
         if (item != null)
         {
+            item.SetIsIn(true);
             this.scroll.OnMoveToCenter(item.transform as RectTransform);
         }
     }

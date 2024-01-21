@@ -17,7 +17,7 @@ public class TutorialHighLight : MonoBehaviour
         }
     }
 
-    private RectTransform _rect;
+    protected RectTransform _rect;
     public RectTransform rect
     {
         get

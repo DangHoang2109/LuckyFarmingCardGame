@@ -54,6 +54,8 @@ public class InGameManager : MonoSingleton<InGameManager>
     /// có từng revise chưa
     /// </summary>
     protected bool _isContinued = false;
+
+    private TempJoinGameData JoinGameData { get; set; }
     #endregion Data
 
     #region Getter
@@ -90,12 +92,34 @@ public class InGameManager : MonoSingleton<InGameManager>
         }
     }
     #endregion Getter
+    public void ClearGame()
+    {
+        _gameState = GameState.WAITING;
+        for (int i = 0; i < _players.Count; i++)
+        {
+            if(_players[i].IsPlaying)
+                _players[i].ClearWhenDead();
+        }
 
+        _playersModels.Clear();
+        idsMainPlayersAlive.Clear();
+        idsEnemysAlive.Clear();
+
+        _enemyWaveIndex = 0;
+        _waveTracker.Clear();
+        _turnIndex = 0;
+
+        this.GameController.ClearGame();
+        _isContinued = false;
+
+        JoinGameData = null;
+    }
     /// <summary>
     /// Call this function firstly
     /// </summary>
-    public void PrepareGame()
+    public void PrepareGame(TempJoinGameData joinGameData)
     {
+        JoinGameData = joinGameData;
         ListingUpgradedCardsDialog.ShowDialog().OnCloseDialog();
 
         if (TestSceneLoader._isTutorial)
@@ -119,7 +143,7 @@ public class InGameManager : MonoSingleton<InGameManager>
             GameController?.AddCallback_PalletConflict(this.OnPalletConflict);
             GameController?.AddCallback_PalletDestroyed(this.OnPalletDestroyed);
 
-            GameController?.InitGame(this.MainUserPlayer.DeckConfig);
+            GameController?.InitGame(JoinGameData._playerDeck);
 
             //Will be remove when have joingame datas and joingamemanager
             if (TestSceneLoader._isTutorial)
@@ -162,6 +186,7 @@ public class InGameManager : MonoSingleton<InGameManager>
         _waveTracker.ParseData(_mapConfig);
 
         //inti enemy wave 0;
+        _enemyWaveIndex = 0;
         NewStage(out _);
     }
 
@@ -179,7 +204,7 @@ public class InGameManager : MonoSingleton<InGameManager>
                     continue;
 
                 BaseInGameMainPlayerDataModel main = new BaseInGameMainPlayerDataModel();
-                InGamePlayerConfig characterConfig = InGamePlayerConfigs.Instance.GetCharacterConfig(10);
+                InGamePlayerConfig characterConfig = JoinGameData._playerConfig;
                 if (characterConfig != null)
                 {
                     main.SetStatConfig(characterConfig);
@@ -421,12 +446,6 @@ public class InGameManager : MonoSingleton<InGameManager>
             OnLogicEndTurn();
         }
     }
-    private void OnUserPullCardFromPalletToBag(bool isPalletConflict, List<InGame_CardDataModel> cardsReceive)
-    {
-        if (!IsPlaying)
-            return;
-
-    }
     /// <summary>
     /// Một card có effect đã được đưa vào trong pallet
     /// inform cho user biết để xử lý
@@ -549,7 +568,6 @@ public class InGameManager : MonoSingleton<InGameManager>
         //check none enemy left -> auto end turn
         if (dead.IsMainPlayer && idsMainPlayersAlive.Count == 0)
         {
-            Debug.Log("PLAYER DEAD");
             MainPlayerDied();
             return;
         }

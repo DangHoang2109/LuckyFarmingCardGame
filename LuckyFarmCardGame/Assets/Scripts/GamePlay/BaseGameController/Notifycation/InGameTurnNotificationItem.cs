@@ -22,14 +22,15 @@ public class InGameTurnNotificationItem : MonoBehaviour
         this.transform.localPosition = Vector3.zero;
         return this;
     }
-    public Sequence ShowText(string content, bool mainPlayerTurn, Vector3 playerShowPos, float delay, float timeStay = 0.5f, System.Action<InGameTurnNotificationItem> onComplete = null)
+    public Sequence ShowText(string content, bool mainPlayerTurn, Vector3 playerShowPos, float delay, float timeStay = 0.5f, System.Action<InGameTurnNotificationItem> onComplete = null, bool isNoisePosition = true)
     {
         isInUse = true;
         DOTween.Kill(this.GetInstanceID());
         this._tmpText.SetText(content);
 
         this.transform.position = playerShowPos;
-        this.transform.localPosition += new Vector3(Random.Range(-77, 67), Random.Range(-50f, 50f), 0);
+        if(isNoisePosition)
+            this.transform.localPosition += new Vector3(Random.Range(-77, 67), Random.Range(-50f, 50f), 0);
 
         //this.transform.localPosition = new Vector3(this.transform.localPosition.x, mainPlayerTurn ? _yPostionForPlayer : _yPostionForBot);
         this._canvas.alpha = 0;

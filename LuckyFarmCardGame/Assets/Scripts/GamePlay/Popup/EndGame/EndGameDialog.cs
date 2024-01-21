@@ -67,13 +67,17 @@ public class EndGameDialog : BaseDialog
     }
     public void OnQuit()
     {
-        _tmpTitle.text = "CHƯA LÀM HOMESCENE, REOPEN APP NHA!";
+        InGameManager.Instance.ClearGame();
         TempSceneManager.Instance.UnLoadScene(SceneName.GAME);
         TestSceneLoader.Instance.gameObject.SetActive(true);
+        ClickCloseDialog();
     }
     public void Dev_OnReplay()
     {
-        InGameManager.Instance.PrepareGame();
+        InGameManager.Instance.ClearGame();
+        TempSceneManager.Instance.UnLoadScene(SceneName.GAME);
+        TestSceneLoader.Instance.gameObject.SetActive(true);
+        ClickCloseDialog();
     }
 
     public static EndGameDialog ShowEndGameDialog()

@@ -12,19 +12,6 @@ public class TutorialHighlightNoTap : TutorialHighLight
         }
     }
 
-    private RectTransform _rect;
-    public RectTransform rect
-    {
-        get
-        {
-            if (this._rect == null)
-            {
-                this._rect = this.GetComponent<RectTransform>();
-            }
-
-            return this._rect;
-        }
-    }
 #if UNITY_EDITOR
     private void OnValidate()
     {

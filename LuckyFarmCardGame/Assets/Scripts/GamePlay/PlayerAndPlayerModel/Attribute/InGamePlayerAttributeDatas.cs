@@ -14,6 +14,13 @@ public class InGamePlayerAttributeDatas
     public void ClearAll()
     {
         _seatID = -1;
+        foreach (var item in _datas.Values)
+        {
+            if (item.GetTurnLeft() <= 0 || item.GetValue() <= 0)
+            {
+                item._onChangeValue?.Invoke(item._id, 0, 0);
+            }
+        }
         _datas?.Clear();
     }
     public bool TryGetData(AttributeID id, out AttributeDataValue item)
