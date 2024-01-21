@@ -31,15 +31,14 @@ MonoBehaviour:
     _waitingTime: 0
   - step: 102
     title: Pallet
-    message: Card drawn will be put to pallet after activated it effect.<br>Tap to
-      continue
+    message: Card drawn will be here and activate it effect.<br>Tap to continue
     nextStep: 103
     _tutType: 1
     _blockBehind: 1
     _waitingTime: 0
   - step: 103
     title: View Card
-    message: You can tap on to the card icon on pallet to view the effect.
+    message: You can tap on to the card icon to view its effect.
     nextStep: 112
     _tutType: 0
     _blockBehind: 0
@@ -53,7 +52,7 @@ MonoBehaviour:
     _waitingTime: 0
   - step: 104
     title: Draw 2nd Card
-    message: Draw your next card, You can draw many card in turn
+    message: Draw your next card, You can draw many card in turn.
     nextStep: 105
     _tutType: 2
     _blockBehind: 0
@@ -67,8 +66,8 @@ MonoBehaviour:
     _waitingTime: 0
   - step: 106
     title: Points
-    message: Card from pallet will be collected as point to be upgraded, so try to
-      maximize the pallet.<br>Tap to continue
+    message: Cards drawn will be collected as point to be upgraded, so try to maximize
+      the pallet.<br>Tap to continue
     nextStep: 108
     _tutType: 1
     _blockBehind: 1

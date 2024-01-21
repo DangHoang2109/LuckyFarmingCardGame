@@ -103,6 +103,18 @@ public class InGameBasePlayerItem : MonoBehaviour
                 return 1f;
         }
     }
+    public float ReducerDamage
+    {
+        get
+        {
+            if (AttributeDatas == null)
+                return 1f;
+            if (AttributeDatas.TryGetData(AttributeID.REDUCE_DAMAGE, out var item))
+                return 1f - (item.GetValue() / 100f);
+            else
+                return 1f;
+        }
+    }
     /// <summary>
     /// Số turn miễn đụng
     /// </summary>
@@ -253,8 +265,9 @@ public class InGameBasePlayerItem : MonoBehaviour
     }
     public virtual int Attacked(int dmg, System.Action<InGameBasePlayerItem> deaded = null)
     {
-        
-        if(this.CurrentShield > 0)
+        float dmgReduce = this.ReducerDamage;
+        dmg = Mathf.CeilToInt(dmg* dmgReduce);
+        if (this.CurrentShield > 0)
         {
             int cacheShield = CurrentShield;
             this.CurrentShield -= dmg;
@@ -350,6 +363,7 @@ public class InGameBasePlayerItem : MonoBehaviour
         Heal(stat);
     }
 
+
     #endregion Turn Action
 
     public virtual bool isDead()
@@ -373,6 +387,7 @@ public class InGameBasePlayerItem : MonoBehaviour
         this.AttributeDatas?.ClearAll();
         this._playerModel = null;
     }
+
     #region Skill & Card Affect
     public virtual void AssignCallbackToAttributeData(AttributeID id, System.Action<AttributeID, int, int> cb)
     {
@@ -401,6 +416,11 @@ public class InGameBasePlayerItem : MonoBehaviour
     {
         if (amountTurn > 0)
             AddAttribute(AttributeID.INVULNERABLE, value: 1, turnActive: amountTurn);
+    }
+    public virtual void SetReduceDamage(float reducePercent,int amountTurn)
+    {
+        if (amountTurn > 0)
+            AddAttribute(AttributeID.REDUCE_DAMAGE, (int)(reducePercent), turnActive: amountTurn);
     }
     public virtual int CurrentShield
     {

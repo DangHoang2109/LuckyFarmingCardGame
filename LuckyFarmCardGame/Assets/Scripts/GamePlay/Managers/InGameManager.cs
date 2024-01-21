@@ -146,6 +146,14 @@ public class InGameManager : MonoSingleton<InGameManager>
             if (TestSceneLoader._isTutorial)
                 InitTutorialDeck();
 
+#if UNITY_EDITOR
+            List<int> cardPlaceOnTop = new List<int>()
+            {
+                15, //Shadow Cloak
+            };
+            GameController?.PlaceCardOnTopDeck(cardPlaceOnTop);
+#endif
+
             //Start the game
             StartGame();
 
@@ -380,6 +388,7 @@ public class InGameManager : MonoSingleton<InGameManager>
     {
         if (!IsPlaying)
             return;
+        IsEndingTurn = false;
         this.GameController?.BeginTurn(CurrentTurnPlayer.IsMainPlayer);
         Debug.Log($"GAME MANGE: Player seat {this._turnIndex} begin turn");
         CurrentTurnPlayer.BeginTurn();
@@ -420,6 +429,7 @@ public class InGameManager : MonoSingleton<InGameManager>
             OnUserEndTurn(false);
         });
     }
+    private bool  IsEndingTurn { get; set; }
     public void OnMainUserEndTurn()
     {
         if (this.CurrentTurnPlayer.IsMainPlayer)
@@ -427,9 +437,13 @@ public class InGameManager : MonoSingleton<InGameManager>
     }
     public void OnUserEndTurn(bool isPalletConflict)
     {
+        if (IsEndingTurn)
+            return;
+
+        IsEndingTurn = true;
         //pull the card by user choice if he is main player
         //else if creep just end the turn
-        if(this.CurrentTurnPlayer.IsMainPlayer)
+        if (this.CurrentTurnPlayer.IsMainPlayer)
             GameController?.PullCardFromPalletToUser(isPalletConflict, OnPullingAnimationComplete);
         else
             OnLogicEndTurn();
@@ -571,9 +585,8 @@ public class InGameManager : MonoSingleton<InGameManager>
         else
         {
             dead.ClearWhenDead();
-            if (!IsHaveEnemy && this.CurrentTurnPlayer.IsMainPlayer)
+            if (!IsHaveEnemy && this.CurrentTurnPlayer.IsMainPlayer && !IsEndingTurn)
             {
-                Debug.Log("AUTO ENDTURN");
                 OnAutoEndTurn();
             }
         }

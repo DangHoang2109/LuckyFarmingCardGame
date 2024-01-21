@@ -315,7 +315,6 @@ public class InGameMainPlayerItem : InGameBasePlayerItem
             InGameManager.Instance.OnTellControllerContinueTurn();
         }
     }
-
     public void AttackAllUnitAndStunFront(int dmg, int turnStun)
     {
         if (dmg <= 0)
@@ -371,6 +370,17 @@ public class InGameMainPlayerItem : InGameBasePlayerItem
         void OnCallbackProjectileHit(VFXBaseObject _)
         {
             base.SetVulnerable(amountTurn);
+            InGameManager.Instance.OnTellControllerContinueTurn();
+        }
+    }
+    public override void SetReduceDamage(float reducePercent, int amountTurn)
+    {
+        //create attack vfx
+        VFXActionManager.Instance.ShowVFxXBycard(vfxId: VFXGameID.BuffGreen, amount: 1, desPos: _playerAttributePallet.Panel, delay: 0.25f, cb: OnCallbackProjectileHit);
+
+        void OnCallbackProjectileHit(VFXBaseObject _)
+        {
+            base.SetReduceDamage(reducePercent, amountTurn);
             InGameManager.Instance.OnTellControllerContinueTurn();
         }
     }
