@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
-using static UnityEditor.Progress;
+//using static UnityEditor.Progress;
 using Spine;
 
 

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class GameEditor
 {
+#if UNITY_EDITOR
     [UnityEditor.MenuItem("Cosinas/Game/TestInCreaseMaxHP")]
     public static void TestInCreaseMaxHP()
     {
@@ -15,4 +16,5 @@ public class GameEditor
         List<InGame_CardDataModel> topCards = InGameManager.Instance.GameController.GetDeckTopCards(100, isWillPopThatCardOut: false);
         Debug.Log(topCards.Count);
     }
+#endif
 }
