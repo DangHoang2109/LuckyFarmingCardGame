@@ -10,6 +10,8 @@ namespace LuckyAdventure.GameFlow
         }
         void OnStartComplete()
         {
+            //Begin player turn
+            InGameManager.Instance.ChangeGameState(GameState.Player_Turn);
         }
         public override void Exit()
         {

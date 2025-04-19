@@ -7,12 +7,59 @@ namespace LuckyAdventure.GameFlow
         public override void Enter()
         {
             base.Enter();
+            Debug.Log($"Enter state PlayerEndTurnState");
             OnEnterState?.Invoke();
-            //Player end his turn -> Check win wave: Defeat all enemies in wave -> Check win game: Win all the waves
-
-            //If still have enemies left: Begin enemies turn
-            InGameManager.Instance.ChangeGameState(GameState.Enemy_Turn);
-            //else go to next wave
+            
+            // 5. End of Turn from GDD:
+            // During this phase, the system will:
+            // - Reduce durations of ongoing effects (buffs, debuffs) by 1
+            // - Check if the wave is complete (all enemies defeated)
+            // - Check if the game is complete (all waves defeated)
+            
+            // TODO: Implement reduction of durations for status effects
+            ReduceStatusEffectDurations();
+            
+            // TODO: Implement proper wave completion checks
+            bool isWaveComplete = CheckWaveCompletion();
+            if (isWaveComplete)
+            {
+                // TODO: Implement wave transition mechanics
+                // This should handle things like bonus stages, merchant encounters, etc.
+                StartNextWave();
+            }
+            else
+            {
+                // If wave is not complete, start the next turn
+                // If there are still enemies, go to enemy turn
+                InGameManager.Instance.ChangeGameState(GameState.Enemy_Turn);
+            }
+        }
+        
+        private void ReduceStatusEffectDurations()
+        {
+            // TODO: Implement reduction of status effect durations
+            // Both player and enemy status effects should have their durations reduced by 1
+            Debug.Log("Status effect duration reduction not yet implemented");
+        }
+        
+        private bool CheckWaveCompletion()
+        {
+            // TODO: Implement check to see if all enemies in the current wave are defeated
+            Debug.Log("Wave completion check not yet implemented");
+            
+            // For now, return false so the game continues to the enemy turn
+            return false;
+        }
+        
+        private void StartNextWave()
+        {
+            // TODO: Implement logic to start the next wave
+            // This should handle the 10-stage structure mentioned in the GDD:
+            // 4 battle waves - Bonus Stage - 4 battle waves - Boss wave
+            Debug.Log("Next wave transition not yet implemented");
+            
+            // After setting up the next wave, begin with player turn again
+            InGameManager.Instance.ChangeGameState(GameState.Player_Turn);
         }
         public override void Exit()
         {
