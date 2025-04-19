@@ -19,8 +19,8 @@ namespace LuckyAdventure.GameFlow
             // TODO: Implement reduction of durations for status effects
             ReduceStatusEffectDurations();
             
-            // TODO: Implement proper wave completion checks
-            bool isWaveComplete = CheckWaveCompletion();
+            // Check if wave is complete using InGameManager
+            bool isWaveComplete = InGameManager.Instance.IsWaveCompleted();
             if (isWaveComplete)
             {
                 // TODO: Implement wave transition mechanics
@@ -42,14 +42,7 @@ namespace LuckyAdventure.GameFlow
             Debug.Log("Status effect duration reduction not yet implemented");
         }
         
-        private bool CheckWaveCompletion()
-        {
-            // TODO: Implement check to see if all enemies in the current wave are defeated
-            Debug.Log("Wave completion check not yet implemented");
-            
-            // For now, return false so the game continues to the enemy turn
-            return false;
-        }
+
         
         private void StartNextWave()
         {

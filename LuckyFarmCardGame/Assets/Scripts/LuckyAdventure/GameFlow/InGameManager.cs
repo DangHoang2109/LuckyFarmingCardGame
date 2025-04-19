@@ -19,22 +19,6 @@ namespace LuckyAdventure.GameFlow
         public TurnState CurrentTurnState => _turnState;
         protected ITurnState currentTurnState;
         
-        // Mind Points system for the current turn
-        [SerializeField] private int _mindPoints = 0;
-        public int MindPoints => _mindPoints;
-        
-        // TODO: Implement Mind Gauge determination with 3 dice rolls
-        // and Perfect Roll Bonus (if all 3 dice show the same value, multiply by 3)
-        public void DetermineMindPoints()
-        {
-            // Placeholder for dice rolling mechanism
-            // Will be implemented later
-            Debug.Log("Mind Points determination not yet implemented");
-            
-            // Temporary random value between 3-18 (3 dice)
-            _mindPoints = UnityEngine.Random.Range(3, 19);
-        }
-        
         // TODO: Add card palette system to store cards played before resolving
         // Palette will be used to stack cards during Main Phase before resolution
         
@@ -98,9 +82,55 @@ namespace LuckyAdventure.GameFlow
 
         public void ResetTheGame()
         {
-            //Clear previous state
-            ChangeGameState(GameState.Reset_ClearingGame);
+        //Clear previous state
+        ChangeGameState(GameState.Reset_ClearingGame);
         }
+    
+    /// <summary>
+    /// Check if all enemies in the current encounter have been defeated
+    /// </summary>
+    /// <returns>True if all enemies are defeated</returns>
+    public bool AreAllEnemiesDefeated()
+    {
+        // TODO: Implement actual enemy checking logic
+        // This is a placeholder - in a real implementation, you would check all active enemies
+        // to see if any are still alive
+        return false; // Always return false for now
+    }
+    
+    /// <summary>
+    /// Add shields to the player based on remaining MP
+    /// </summary>
+    /// <param name="shieldAmount">Amount of shields to add</param>
+    public void AddPlayerShields(int shieldAmount)
+    {
+        // TODO: Implement actual shield application to the player
+        Debug.Log($"Added {shieldAmount} shields to player");
+        
+        // This would interact with the player unit to apply shields
+    }
+    
+    /// <summary>
+    /// Check if the game is over (win or lose condition reached)
+    /// </summary>
+    /// <returns>True if the game is over</returns>
+    public bool IsGameOver()
+    {
+        // TODO: Implement actual game over checking logic
+        // This would check if player has reached victory condition or has been defeated
+        return false; // Always return false for now
+    }
+    
+    /// <summary>
+    /// Check if end of wave has been reached (all enemies in wave defeated)
+    /// </summary>
+    /// <returns>True if wave is completed</returns>
+    public bool IsWaveCompleted()
+    {
+        // TODO: Implement actual wave completion checking
+        // This would check if all enemies in the current wave are defeated
+        return false; // Always return false for now
+    }
         #region Test
         private void Start()
         {

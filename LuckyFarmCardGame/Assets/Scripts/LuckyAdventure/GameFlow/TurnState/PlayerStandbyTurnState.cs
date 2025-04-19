@@ -1,3 +1,5 @@
+using LuckyFantasy; // Add reference to our card namespace
+
 namespace LuckyAdventure.GameFlow
 {
     public class PlayerStandbyTurnState : ITurnState
@@ -10,8 +12,8 @@ namespace LuckyAdventure.GameFlow
             // 1. Start of Turn - Standby Phase steps from GDD:
             
             // Step 1: Mind Gauge Determination - Roll 3 dice to establish the player's Mind Points (MP)
-            // TODO: Implement proper dice rolling with visual feedback
-            InGameManager.Instance.DetermineMindPoints();
+            // Use our MindPointsSystem for proper dice rolling mechanics
+            MindPointsSystem.Instance.RollForMindPoints();
             
             // Step 2: Apply buff/debuff on player
             // TODO: Implement buff/debuff system for the player
@@ -34,9 +36,18 @@ namespace LuckyAdventure.GameFlow
         
         private void DrawPlayerCards()
         {
-            // TODO: Draw cards until the player's hand has 5 cards total
-            // This limit will be extendable by meta features in the future
-            UnityEngine.Debug.Log("Card drawing system not yet implemented");
+            // Use CardManager to handle card drawing logic
+            var cardManager = CardManager.Instance;
+            if (cardManager != null)
+            {
+                cardManager.DrawCardsToHandLimit();
+                UnityEngine.Debug.Log("Cards drawn to hand limit");
+            }
+            else
+            {
+                // Fallback if CardManager is not available
+                UnityEngine.Debug.Log("Card drawing system not yet implemented - CardManager not found");
+            }
         }
 
         public override void Exit()

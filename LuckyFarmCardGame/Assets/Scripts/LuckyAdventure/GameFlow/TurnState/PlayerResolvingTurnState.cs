@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using LuckyFantasy; // Add reference to our card namespace
 
 namespace LuckyAdventure.GameFlow
 {
@@ -29,17 +30,46 @@ namespace LuckyAdventure.GameFlow
         
         private void ResolveCardsInPalette()
         {
-            // TODO: Implement resolving all cards from the palette
-            // This should execute the effects of each card in the order they were played
-            // Cards might deal damage, apply buffs/debuffs, heal, etc.
-            Debug.Log("Resolving cards in palette not yet implemented");
+            var cardManager = CardManager.Instance;
+            if (cardManager != null)
+            {
+                cardManager.ResolveAllCards();
+                Debug.Log("Cards in palette resolved");
+                
+                InGameManager.Instance.ChangeTurnState(TurnState.End_Turn);
+            }
+            else
+            {
+                Debug.LogError("CardManager not found - cannot resolve cards in palette");
+            }
         }
+        
+
         
         private void ConvertRemainingMPToShields()
         {
-            // TODO: Implement conversion of any leftover Mind Points to shields
-            // This is a key mechanic mentioned in the GDD that rewards efficient MP usage
-            Debug.Log("Converting remaining MP to shields not yet implemented");
+            var mindPointsSystem = MindPointsSystem.Instance;
+            if (mindPointsSystem != null)
+            {
+                int remainingMP = mindPointsSystem.CurrentMP;
+                if (remainingMP > 0)
+                {
+                    // TODO: Implement proper shield creation for the player
+                    // For now, we'll just log the conversion
+                    Debug.Log($"Converting {remainingMP} MP to shields for the player");
+                    
+                    // Reset MP after conversion
+                    mindPointsSystem.ResetMP();
+                }
+                else
+                {
+                    Debug.Log("No MP remaining to convert to shields");
+                }
+            }
+            else
+            {
+                Debug.LogError("MindPointsSystem not found - cannot convert MP to shields");
+            }
         }
         
 

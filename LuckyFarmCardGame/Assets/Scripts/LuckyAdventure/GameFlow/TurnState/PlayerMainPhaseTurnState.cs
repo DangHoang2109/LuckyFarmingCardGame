@@ -1,4 +1,5 @@
 using UnityEngine;
+using LuckyFantasy; // Add reference to our card namespace
 
 namespace LuckyAdventure.GameFlow
 {
@@ -28,14 +29,40 @@ namespace LuckyAdventure.GameFlow
             Debug.Log("Player Main Phase: Player should now play cards from hand using Mind Points");
         }
         
-        // TODO: Implement method to play card from hand to palette
-        private void PlayCardToPalette(/* Card card */)
+        // Implemented method to play card from hand to palette
+        public void PlayCardToPalette(int cardIndex)
         {
-            // 1. Check if player has enough MP to play the card
-            // 2. Subtract card's MP cost from Mind Gauge
-            // 3. Add card to the palette queue for later resolution
-            // 4. Remove card from player's hand
-            Debug.Log("PlayCardToPalette not yet implemented");
+            var cardManager = CardManager.Instance;
+            if (cardManager == null)
+            {
+                Debug.LogError("CardManager not found");
+                return;
+            }
+
+            // Check if player has enough MP and play the card
+            bool cardPlayed = cardManager.PlayCard(cardIndex);
+
+            // if (cardPlayed)
+            // {
+            //     Debug.Log($"Card at index {cardIndex} played to palette");
+            //     
+            //     // Check if player has no more playable cards or MP
+            //     if (cardManager.GetPlayableCardsCount() == 0)
+            //     {
+            //         // Automatically end turn if no playable cards remain
+            //         Debug.Log("No more playable cards - automatically ending turn");
+            //         OnEndTurnButtonPressed();
+            //     }
+            // }
+        }
+        
+        // Helper method to check if a specific card can be played
+        public bool CanPlayCard(int cardIndex)
+        {
+            var cardManager = CardManager.Instance;
+            if (cardManager == null) return false;
+            
+            return cardManager.CanPlayCardAt(cardIndex);
         }
         
         // This method will be called by the UI when the player clicks End Turn button
